@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<title>cie10MC FICHA [[${enfermedadcie10Model.cie10Id}]]</title>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+       var routeBase = /*[[${route.baseUrl}]]*/ '';	
+		var enfermedades;
+		var enfermedadesLiterales;
+		$(document).ready(function() {
+			
+			$('.dropdown-toggle').dropdown();
+			$('.close').on('click' , function() { 
+				  $('#modalEnf').modal('hide');
+				});
+			$.ajax({
+				dataType : "json",
+				url :  routeBase + "json",
+				contentType : "application/json; charset=utf-8",
+				success : function(data) {
+					enfermedades = data;
+					enfermedadesLiterales = $.map(enfermedades, function(v) {
+						return  v.cie10Id + ' ' +  v.literal;
+					});
+					$("#enfermedadAutocomplete").autocomplete({
+						source : enfermedadesLiterales,
+						search : function(event, ui) {
+							
+						},
+						select : function(event, ui) {
+							agregaBotonesEnlace(ui.item.value);
+						},
+						minLength : 3
+					});
+					if($("#enfermedadAutocomplete").val()!='')
+					{
+						agregaBotonesEnlace($("#enfermedadAutocomplete").val());
+					}
+				}
+			});
+		});
+ /*]]>*/
+</script>
+
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+		<div class="row">
+			<h4 class="span10" th:text="|${enfermedadCie10Model.cie10Id} ${enfermedadCie10Model.literal}|">Enfermedades cie10</h4>
+		</div>		
+		<div>
+			<input class='btn btn-success' type="button" th:onclick="@{|location.assign('/rarasclm/enfermedades/cie10/edit/${enfermedadCie10Model.cie10Id}')|}" value="Editar"></input>
+		</div>
+		<div>
+			<p><a  th:href="${enfermedadCie10Model.url}" th:text="${enfermedadCie10Model.url}" target="_blank"></a></p>
+			<div th:utext="${enfermedadCie10Model.notas}"></div>
+		</div>
+		<!-- Modal de enfermedades -->
+		<div id="modalEnf" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3>Selección de Enfermedad cie10MC</h3>
+			</div>
+			<div class="modal-body">
+				<div id="cuadro" style="height: 300px; overflow: scroll">
+					<ul th:each="cie : ${allcie10mc}">
+						<li class="rclmEnfermedadModal"><a
+							th:href="@{|${route.baseUrl}show/${cie.cie10Id}|}"
+							th:text="|${cie.cie10Id} ${cie.literal}|"></a><a
+							style="margin-left: 5px" class="btn btn-success btn-mini"
+							type="button" th:href="@{|${route.baseUrl}edit/${cie.cie10Id}|}">Editar</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="modal-footer"></div>
+		</div>
+	</div>
+</body>
+</html>

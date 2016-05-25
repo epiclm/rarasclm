@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<title>EDITAR enfRaras</title>
+<script type="text/javascript" th:src="@{/js/ckeditor.js}"></script>
+<script type="text/javascript" th:src="@{/js/rarasclm-fauxiliares.js}"></script>
+
+
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var routeBase = /*[[${route.baseUrl}]]*/'';
+var enfermedades;
+var enfermedadeses;
+var showErrorModalOnStart = /*[[${resultado.error}]]*/'';
+var showSuccessModalOnStart = /*[[${resultado.success}]]*/'';
+var modificadosFormulariosEnfAsociadas = false;
+
+function mensajeError(mensaje) {
+	$('#mensajes').html('<div class="alert alert-error"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
+	$('#mensajes').modal('show');
+}
+
+function mensajeSuccess(mensaje) {
+	$('#mensajes').html('<div class="alert alert-success"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
+	$('#mensajes').modal('show');
+}
+
+function coloreaAsociacionesEnfermedades()
+{
+	$(".selectTipoAsociacion").each(function() {
+			switch($(this).val())
+			{
+				case "0":
+					$(this).css("backgroundColor","#EEA");
+					break;
+				case "1":
+					$(this).css("backgroundColor","#CCF");
+					break;
+				default:
+					$(this).css("backgroundColor","#FFF");
+					break;
+			}
+	});
+}
+	
+function borraEnfermedadAsociadaCIE9MC(accionUrl) {		
+	$.ajax({
+		method: "POST",
+		dataType : "json",
+		url : accionUrl,
+		}).done(function(respuesta,textStatus,jqXHR) {
+			if(respuesta.success)
+			{
+				id='#asociada-cie9mc-'+respuesta.id.replace('.','\\.');
+				el=$(id);
+				el.fadeOut( 1000, function() {
+				    $( this ).remove();
+				  });
+				mensajeSuccess(respuesta.mensaje);
+			}
+			if(respuesta.error)
+			{
+				mensajeError(respuesta.mensaje);
+			}
+		}).fail(function(jqXHR,textStatus,error) {
+			mensajeError("ERROR! respuesta HTTP: "+jqXHR.status+" "+jqXHR.statusText);
+	});
+ }
+
+$(document)
+.ready(
+function() {
+
+	coloreaAsociacionesEnfermedades();
+	$(".selectTipoAsociacion").change(function(){
+		coloreaAsociacionesEnfermedades();
+	})
+	
+	var actualizar = false;
+	var showModal = showErrorModalOnStart | showSuccessModalOnStart;
+	
+	if(showModal) {
+		$('#mensajes').modal('show');
+	}
+
+	if (CKEDITOR.env.ie && CKEDITOR.env.version < 9)
+		CKEDITOR.tools.enableHtml5Elements(document);
+
+	var editorElement = CKEDITOR.document.getById('notas');
+	CKEDITOR.replace(editorElement);
+	CKEDITOR.config.height = 250;
+	CKEDITOR.config.width = 'auto';
+	
+	
+	$(".formAsociaCIE9MC")
+	.on('submit', function(ev)
+		{
+		    ev.preventDefault();
+			$.ajax({
+				method: "POST",
+				dataType : "json",
+				url  : $(this).attr("action"),
+				data : $(this).serialize()
+				}).done(function(respuesta,textStatus,jqXHR) {
+					if(respuesta.success)
+					{
+						mensajeSuccess(respuesta.mensaje);
+					}
+					if(respuesta.error)
+					{
+						mensajeError(respuesta.mensaje);
+					}
+				}).fail(function(jqXHR,textStatus,error) {
+					mensajeError("ERROR! respuesta HTTP: "+jqXHR.status+" "+jqXHR.statusText);
+			});
+		});
+	var validator = $('#edit-enfrara')
+			.validate(
+					{
+					   rules : {
+							literal : {
+								required : true,
+								minlength : 3
+							}
+						},
+						messages : {
+							literal : {
+								required :  "El literal de la enfermedad es necesario",
+								minlength : "El literal de la enfermedad no supera el tamaño mínimo"
+							}
+						},
+						highlight : function(element) {
+							$(element).closest(
+									'.control-group').addClass('error');
+						},
+						success : function(element) {
+							$(element).closest('.control-group').removeClass('error');
+							valor = $(element).parent().find('input').val();
+							if ($(element).parent().find('input').attr("id") != 'url') {
+								$(element).parent().find('input').val(valor.toUpperCase());
+							} else if (valor.trim().length > 0) {
+								if ((/^https?:\/\/[\S]*/.test(valor.trim()))) {
+									valor = $(element).parent().find('input').val();
+								} else {
+									$(element).parent().find('input').val('http://'+ valor);
+								}
+							}
+						},
+						submitHandler : function(form) {
+							if (!actualizar) {
+								$(".btn").attr("disabled",true);
+								form.submit();
+							}
+						},
+						errorClass : "error-label",
+						onkeyup : false,
+						onclick : false
+					});
+	
+	$('#borrar-btn').on('click',
+						function() {
+							alert("Esta funfición debe ser a nivel de rol de administración");
+							actualizar = true;
+					});
+	
+	$('.borrar-asociacion').on('click').on('click',
+						function() {
+							alert("Esta funfición debe ser a nivel de rol de administración");
+							actualizar = true;
+						});
+	
+	$('#ver-btn').on('click', function() {
+		actualizar = true;
+	});
+	
+	$('#guardar-btn').on('click', function() {
+		actualizar = false;
+		$('#edit-enfrara').submit();
+	});
+	
+	$('.submitCie9Mc').on('click', function() {
+		actualizar = false;
+	});
+	
+	$('.dropdown-toggle').dropdown();
+	
+	$('#btnModalEnfermedades').on('click',function() {
+		$('#modalEnfermedades').modal('show');		
+	});
+	
+	//Lista autocomplete de enfermedades cie9mc
+	$.ajax({ 
+		dataType : "json",
+		url : routeBase + "../cie9mc/" + "json",
+		contentType : "application/json; charset=utf-8",
+		success : function(data) {
+			enfermedades = data;
+			enfermedadesLiterales = $.map(
+					enfermedades, function(v) {
+						return v.cie9Id + ' ' + v.literal;
+					});
+			$("#enfermedadCie9Autocomplete")
+			.autocomplete(
+				{
+					source : enfermedadesLiterales,
+					search : function(
+							vent, ui) {
+
+					},
+					select : function(
+							event, ui) {
+						//Accion de seleccionar una enfermedad CIE9MC en el AutoComplete para asociar
+						//ui.item.value es el texto que aparece en el autocomplete seleccionado
+						base = /*[[|${route.baseUrl}addcie9mc/${enfermedadRaraModel.enfermedadRaraId}/|]]*/'';
+						$(location).attr('href',base + extraeCIE9mc(ui.item.value));
+					},
+					minLength : 3
+				});
+			
+	//Lista autocomplete de enfermedades cie10
+	$.ajax({
+		dataType : "json",
+		url : routeBase	+ "../cie10/" + "json",
+		contentType : "application/json; charset=utf-8",
+		success : function(data) {
+			enfermedades = data;
+			enfermedadesLiterales = $.map(
+					enfermedades,function(v) {
+						return v.cie10Id + ' ' + v.literal;
+					});
+			$("#enfermedadCie10Autocomplete")
+			.autocomplete(
+				{
+					source : enfermedadesLiterales,
+					search : function(
+							event,
+							ui) {
+
+					},
+					select : function(
+							event,
+							ui) {
+						//Accion de seleccionar una enfermedad CIE10 en el AutoComplete para asociar
+						//ui.item.value es el texto que aparece en el autocomplete seleccionado
+						base = /*[[|${route.baseUrl}addcie10/${enfermedadRaraModel.enfermedadRaraId}/|]]*/'';
+						$(location).attr('href',base+ extraeCIE10(ui.item.value));
+					},
+					minLength : 3
+				});
+			if ($("#enfermedadCie10Autocomplete").val() != '') {
+				agregaBotonesEnlace($("#enfermedadCie10Autocomplete").val());
+			}
+		}
+	});
+
+	if ($("#enfermedadCie9Autocomplete").val() != '') {
+		agregaBotonesEnlace($("#enfermedadCie9Autocomplete").val());
+	}
+}
+});
+});
+/*]]>*/
+</script>
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+		<div class="row">
+			<div class="span8">
+				<h4 style="display: inline !important">Enfermedades Raras</h4>
+			</div>
+		</div>
+		<form id="edit-enfrara" class="form-inline" method='POST'
+			th:object="${enfermedadRaraModel}">
+			<input type="hidden" id="enfermedadRaraId" name="enfermedadRaraId"
+				th:value="${enfermedadRaraModel.enfermedadRaraId}" />
+			<fieldset th:if="${enfermedadRaraModel != null}">
+				<legend th:text="|${enfermedadRaraModel.enfermedadRaraId} ${enfermedadRaraModel.literal}|">
+					codXXX.XX
+				</legend>
+				<!-- Mensajes -->
+				<div id="mensajes" class="modal fade">
+					<div th:if="${resultado.error}" class="alert alert-error">
+						<p th:if="${resultado.mensaje} != null"
+							th:text="${resultado.mensaje}">
+						</p>
+					</div>
+					<div th:if="${resultado.success}" class="alert alert-success">
+						<p th:if="${resultado.mensaje} != null"
+							th:text="${resultado.mensaje}">
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group row-fluid control-group">
+						<div class="span10 offset1">
+							<input id="guardar-btn" class="btn btn-success" type="submit" value="GUARDAR" /> 
+							<input id="borrar-btn"
+								class="btn btn-danger" type="button" value="BORRAR" /> 
+							<input id="ver-btn" class='btn btn-primary'
+								type="button"
+								th:onclick="@{|location.assign('/rarasclm/enfermedades/enfrara/show/${enfermedadRaraModel.enfermedadRaraId}')|}"
+								value="Ver" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group row-fluid control-group">
+					<label class="control-label span1 offset1" for="literal">Literal:</label>
+					<div class="span10">
+						<input class="input-xxlarge" name="literal" id="literal"
+							type="text" th:value="${enfermedadRaraModel.literal}" />
+					</div>
+				</div>
+				<!-- Editor HTML -->
+				<div class="form-group row-fluid control-group">
+					<div class="span10 offset1">
+						<div class='navbar navbar-fixed-top'>
+							<div id="toolbar"></div>
+						</div>
+						<div id="wrapper">
+							<textarea id="notas" class="clear" name="notas"
+								th:utext="${enfermedadRaraModel.notas}">
+							</textarea>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+		<!-- ENFERMEDAD RELACIONADA EN OTRAS CLASIFICACIONES -->
+		<div>
+			<h5>Enfermedades relacionadas en otras clasificaciones:</h5>
+			<button id="btnModalEnfermedades" style="margin-bottom:10px;">Asociar una nueva enfermedad</button>
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#cie9mc" data-toggle="tab">CIE9MC:</a></li>
+				<li><a href="#cie10" data-toggle="tab">CIE10:</a></li>
+			</ul>
+			<div id="tabEnfermedadesAsociadas" class="tab-content">
+				<div id="cie9mc" class="tab-pane fade in active">
+					<div th:if="${enfermedadRaraModel.enfermedadRaraHasEnfermedadRaraCie9mcs}!=null">
+						<div class="listaEnfermedadAsociada" th:id="|asociada-cie9mc-${enf.enfermedadRaraCie9mc.cie9Id}|"
+							th:each="enf, rowStat : ${enfermedadRaraModel.enfermedadRaraHasEnfermedadRaraCie9mcs}">
+							<div class="row offset1 enfRelacionada">
+								<h6 th:text="|${enf.enfermedadRaraCie9mc.cie9Id} - ${enf.enfermedadRaraCie9mc.literal}|"></h6>
+								<form class="formAsocia offset1 formAsociaCIE9MC" 
+									  th:action="|${route.baseUrl}updatecie9mc/${enfermedadRaraModel.enfermedadRaraId}/${enf.id.cie9Id}|" method="POST">
+									<div class="etiquetaEntrada">
+										<label for="notas">Notas:</label> 
+										<input type="text" th:id="|notas_${rowStat.index}|" name="notas" th:value="${enf.notas}" />
+									</div>
+									<div class="etiquetaEntrada">
+										<label for="numPrioridad">Tipo de Asociación:</label> 
+										<select class="selectTipoAsociacion" th:id="|numPrioridad_${rowStat.index}|" name="numPrioridad">
+											<option th:selected="${enf.numPrioridad}==-1" value="-1">SIN ASOCIAR</option>
+											<option th:selected="${enf.numPrioridad}==0"  value="0">RELACIÓN NO ESPECÍFICA</option>
+											<option th:selected="${enf.numPrioridad}==1"  value="1">ESPECÍFICA</option>
+										</select>
+									</div>
+									<input class="update-asociacion" type="submit" value="modifica" /> 
+									<input class="borrar-asociacion" type="button"
+										th:onclick="|borraEnfermedadAsociadaCIE9MC('${route.baseUrl}deletecie9mc/${enf.id.enfermedadRaraId}/${enf.id.cie9Id}')|"
+										value="borrar" />
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="cie10" class="tab-pane fade">
+					<div class="tab-content" th:if="${enfermedadRaraModel.enfermedadRaraHasEnfermedadRaraCie10s}!=null">
+						<div class="listaEnfermedadAsociada"
+							 th:each="enf : ${enfermedadRaraModel.enfermedadRaraHasEnfermedadRaraCie10s}">
+							<h5 th:text="|${enf.enfermedadRaraCie10.cie10Id} - ${enf.enfermedadRaraCie10.literal}|"></h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!-- Fin de formuarios de enfermedades relacionadas -->
+		<div id="modalEnfermedades" class="modal fade">
+			<!-- AUTOCOMPLETE BUSCAR ENF CIE9 -->
+			<div class="row">
+				<p class="labelModal span2" style="margin-bottom: 0px">Añadir CIE9MC:</p>
+				<div class="span6 input-append">
+					<form>
+						<input class="input-xxlarge" style="margin-left: 5px" placeholder="Búsqueda por literal o código CLASIFICACIÓN CIE9MC"
+							id="enfermedadCie9Autocomplete" type="text" name="enfermedad" />
+					</form>
+				</div>
+			</div>
+			<!-- AUTOCOMPLETE BUSCAR ENF CIE10 -->
+			<div class="row">
+				<p class="labelModal span2" style="margin-bottom: 0px">Añadir CIE10:</p>
+				<div class="span6 input-append">
+					<form>
+						<input class="input-xxlarge" style="margin-left: 5px" placeholder="Búsqueda por literal o código CLASIFICACIÓN CIE10"
+							id="enfermedadCie10Autocomplete" type="text" name="enfermedad" />
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+			</div>
+		</div>
+		<!-- Fin modales con autocomplete de enfermedades -->
+	</div> <!-- Fin contenido -->
+</body>
+</html>

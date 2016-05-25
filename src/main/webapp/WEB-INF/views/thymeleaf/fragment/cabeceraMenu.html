@@ -1,0 +1,25 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+ <div class="navbar-inner">
+  <div class="container">
+    <ul  class="nav navbar-nav" th:each="modulo : ${baseModel.menuModel.modulosMenu}">
+	  <li class="dropdown">
+		<a th:if="${modulo.id}==${route.modulo}"  class="dropdown-toggle active" th:href="@{|/${modulo.id}|}" th:text="${modulo.deno}"><b class="caret"></b></a>
+		<a th:if="${modulo.id}!=${route.modulo}"  class="dropdown-toggle" th:href="@{|/${modulo.id}|}" th:text="${modulo.deno}"><b class="caret"></b></a>	
+			<ul class="dropdown-menu" role="menu">
+				 <li th:each="item : ${modulo.itemsMenu}">
+					<a th:if="${item.id}==|${route.modulo}/${route.entidad}|" class="active" th:href="@{|/${item.id}|}" th:text="${item.deno}"></a>
+					<a th:if="${item.id}!=|${route.modulo}/${route.entidad}|"  th:href="@{|/${item.id}|}" th:text="${item.deno}"></a>
+			     </li>
+		    </ul>
+	   </li>
+	</ul>
+   </div>
+ </div>
+ <div th:if="${route}!=null">
+	 <ul class="breadcrumb" id="menuPath">
+	 	<li th:if="${route.modulo}!=null"><a th:href="@{|/${route.modulo}|}" th:text="${route.modulo}"></a></li>
+	 	<li th:if="${route.entidad}!=null">/</li>
+	 	<li th:if="${route.entidad}!=null"><a th:href="@{|/${route.modulo}/${route.entidad}|}" th:text="${route.entidad}"></a></li>
+	 </ul>
+ </div>
+</nav>

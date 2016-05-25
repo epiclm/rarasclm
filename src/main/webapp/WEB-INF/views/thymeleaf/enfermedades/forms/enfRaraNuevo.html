@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<title>EDITAR CIE9MC</title>
+<script type="text/javascript" th:src="@{/js/ckeditor.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var routeBase = /*[[${route.baseUrl}]]*/'';
+var enfermedades;
+var enfermedadeses;
+
+function probarUrl(url) {
+	var urlt = url.trim();
+	$('#url').val(urlt);
+	var form = document.createElement("form");
+	form.method = "GET";
+	if (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+			.test(urlt))
+		form.action = urlt;
+	else
+		form.action = 'http://' + urlt;
+	form.target = "_blank";
+	document.body.appendChild(form);
+	form.submit();
+}
+
+$(document)
+		.ready(
+				function() {
+
+					if (CKEDITOR.env.ie && CKEDITOR.env.version < 9)
+						CKEDITOR.tools.enableHtml5Elements(document);
+
+					var editorElement = CKEDITOR.document.getById('notas');
+					CKEDITOR.replace(editorElement);
+
+					// The trick to keep the editor in the sample quite small
+					// unless user specified own height.
+					CKEDITOR.config.height = 250;
+					CKEDITOR.config.width = 'auto';
+
+					var baseRaraEnf = window.location.protocol + '//'
+							+ window.location.host + routeBase + 'show/';
+
+					$("#purl").text(baseRaraEnf);
+
+					jQuery.validator
+							.addMethod(
+									"complete_url",
+									function(val, elem) {
+										if (val.trim() != '') {
+											var result = false;
+											var pre = "http://"
+											if (/^https?:\/\/[\S]*/
+													.test(val.trim())) {
+												return /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+														.test(val.trim());
+											} else {
+												return /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+														.test(val.trim());
+											}
+										}
+										return true;
+									});
+
+					jQuery.validator.addMethod("enfRara", function(val,
+							elem) {
+						if (val.trim() != '') {
+							if (val.length == 10) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+						return false;
+					});
+
+					var validator = $('#edit-enfrara')
+							.validate(
+									{
+										rules : {
+											enfermedadRaraId : {
+												required : true,
+												enfRara : true,
+											},
+											literal : {
+												required : true,
+												minlength : 3
+											},
+											url : {
+												complete_url : true,
+												minlength : false,
+											}
+										},
+										messages : {
+											enfermedadRaraId : {
+												required : "CÓDIGO REQUERIDO",
+												enfRara : "El código está formado por 10 caracteres"
+											},
+											literal : {
+												required : "El literal de la enfermedad es necesario",
+												minlength : "El literal de la enfermedad no supera el tamaño mínimo"
+											},
+											url : {
+												complete_url : "url no válida"
+											}
+
+										},
+										highlight : function(element) {
+											$(element).closest(
+													'.control-group')
+													.addClass('error');
+										},
+										success : function(element) {
+											$(element).closest(
+													'.control-group')
+													.removeClass('error');
+											valor = $(element).parent()
+													.find('input').val();
+											if ($(element).parent().find(
+													'input').attr("id") != 'url') {
+												$(element)
+														.parent()
+														.find('input')
+														.val(
+																valor
+																		.toUpperCase());
+												actualizaUrl();
+											} else if (valor.trim().length > 0) {
+												if ((/^https?:\/\/[\S]*/
+														.test(valor.trim()))) {
+													valor = $(element)
+															.parent()
+															.find('input')
+															.val();
+												} else {
+													$(element)
+															.parent()
+															.find('input')
+															.val('http://'+ valor);
+												}
+											}
+										},
+										errorClass : "error-label",
+										submitHandler : function(form) {
+											$(".btn").attr("disabled", true);
+											form.submit();
+										},
+										onkeyup : false,
+										onclick : false
+									});
+					
+					$('.dropdown-toggle').dropdown();
+					
+					$('.close').on('click', function() {
+						$('#modalEnf').modal('hide');
+					});
+					
+					jQuery('#enfermedadRaraId').on(
+							'input propertychange paste', function() {
+								actualizaUrl();
+							});
+
+					//Lista autocomplete de enfermedades cie10
+					$.ajax({ 
+								dataType : "json",
+								url : routeBase + "../cie10/" + "json",
+								contentType : "application/json; charset=utf-8",
+								success : function(data) {
+									enfermedades = data;
+									enfermedadesLiterales = $.map(
+											enfermedades, function(v) {
+												return v.cie10Id + ' '
+														+ v.literal;
+											});
+									$("#enfermedadCie10Autocomplete")
+											.autocomplete(
+													{
+														source : enfermedadesLiterales,
+														search : function(
+																event, ui) {
+
+														},
+														select : function(
+																event, ui) {
+															//agregaBotonesEnlace(ui.item.value);
+														},
+														minLength : 3
+													});
+									if ($("#enfermedadCie10Autocomplete")
+											.val() != '') {
+										agregaBotonesEnlace($(
+												"#enfermedadCie10Autocomplete")
+												.val());
+									}
+								}
+							});
+					
+					$.ajax({ //Lista autocomplete de enfermedades cie9mc
+						dataType : "json",
+						url : routeBase + "../cie9mc/" + "json",
+						contentType : "application/json; charset=utf-8",
+						success : function(data) {
+							enfermedades = data;
+							enfermedadesLiterales = $.map(
+									enfermedades, function(v) {
+										return v.cie9Id + ' ' + v.literal;
+									});
+							$("#enfermedadCie9Autocomplete")
+									.autocomplete(
+											{
+												source : enfermedadesLiterales,
+												search : function(
+														event, ui) {
+
+												},
+												select : function(
+														event, ui) {
+													//agregaBotonesEnlace(ui.item.value);
+												},
+												minLength : 3
+											});
+							if ($("#enfermedadCie9Autocomplete")
+									.val() != '') {
+								agregaBotonesEnlace($(
+										"#enfermedadCie9Autocomplete")
+										.val());
+							}
+						}
+					});
+
+					function actualizaUrl() {
+						var baseRaraEnf = window.location.protocol + '//'
+								+ window.location.host + routeBase
+								+ 'show/';
+						$('#purl').text(
+								baseRaraEnf + $("#enfermedadRaraId").val());
+						$('#url').val(
+								baseRaraEnf + $("#enfermedadRaraId").val());
+					}
+					
+					$("#showcie9-btn").on('click', function() {
+						actualizar = true;
+						$('#modalEnfCie9mc').modal('show');
+					});
+					$("#showcie10-btn").on('click', function() {
+						actualizar = true;
+						$('#modalEnfCie10').modal('show');
+					});
+
+					
+				});
+	/*]]>*/
+</script>
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+		<div class="row">
+			<div class="span8">
+				<h4 style="display: inline !important">Enfermedad Rara (nueva)</h4>
+			</div>
+			<hr />
+		</div>
+		<form id="edit-enfrara" class="form-inline" method='POST'>
+
+			<fieldset th:if="${enfermedadRaraModel != null}">
+
+				<div class="form-group row-fluid control-group">
+					<label class="control-label span1 offset1" for="enfermedadRaraId">CÓDIGO:</label>
+					<div class="span5">
+						<input name="enfermedadRaraId" id="enfermedadRaraId" type="text"
+							maxlength="10" th:value="${enfermedadRaraModel.enfermedadRaraId}" />
+					</div>
+				</div>
+
+				<div class="form-group row-fluid control-group">
+					<label class="control-label span1 offset1" for="literal">Literal:</label>
+					<div class="span10">
+						<input class="input-xxlarge" name="literal" id="literal"
+							type="text" th:value="${enfermedadRaraModel.literal}" />
+					</div>
+				</div>
+
+				<div class="form-group row-fluid control-group">
+					<label class="control-label span1 offset1" for="url">URL:</label>
+					<div class="span10">
+						<input name="url" id="url" type="hidden"
+							th:value="${enfermedadRaraModel.url}" />
+						<p th:text="${enfermedadRaraModel.url}" id="purl"></p>
+					</div>
+				</div>
+
+
+				<div class="form-group row-fluid control-group">
+					<div class="span10 offset1">
+						<div class='navbar navbar-fixed-top'>
+							<div id="toolbar"></div>
+						</div>
+						<div id="wrapper">
+							<textarea id="notas" class="clear" name="notas"
+								th:utext="${enfermedadRaraModel.notas}"></textarea>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row-fluid control-group">
+					<div class="span10 offset1">
+						<input class="btn btn-success" type="submit" value="GUARDAR" />
+					</div>
+				</div>
+			</fieldset>
+			<input id="showcie9-btn" class='raras-modal-btn btn' type="button" value="modalEnfCIE9MC"></input> 
+			<input id="showcie10-btn" class='raras-modal-btn btn' type="button" value="modalEnfCIE10"></input>
+		</form>
+        <!-- prueba git -->
+
+		<!-- MODALES -->
+		<div id="modalEnfCie9mc" class="modal hide fade">
+			 <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>Selección de Enfermedad CIE9</h3>
+			</div>
+			<form>
+				<!-- AUTOCOMPLETE BUSCAR ENF CIE9 -->
+				<div class="input-append" style="width: 100%">
+					<input class="enf-raras-input-modal" placeholder="Búsqueda por literal o código" id="enfermedadCie9Autocomplete" type="text" name="enfermedad"/>
+				</div>
+				<div class="modal-footer">
+			
+				</div>
+			</form>
+		</div>
+		
+		<div id="modalEnfCie10" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3>Selección de Enfermedad CIE10</h3>
+			</div>
+			<form>
+				<!-- AUTOCOMPLETE BUSCAR ENF CIE10 -->
+				<div class="input-append" style="width: 100%">
+					<input class="enf-raras-input-modal" placeholder="Búsqueda por literal o código" id="enfermedadCie10Autocomplete" type="text" name="enfermedad"/>
+				</div>
+				<div class="modal-footer">
+				
+				</div>
+			</form>
+		</div>
+		
+	</div>
+	
+</body>
+</html>

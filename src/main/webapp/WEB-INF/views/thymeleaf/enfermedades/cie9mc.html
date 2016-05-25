@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<title>Enfermedades CIE9MC</title>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var routeBase = /*[[${route.baseUrl}]]*/'';
+	var enfermedades;
+	//mod
+	var enfermedadesLiterales;
+	$(document)
+			.ready(
+					function() {
+						//Métodos auxiliares
+						function agregaBotonesEnlace(enfermedad) {
+							var regCie9mc = /(\b[\d]{3}\.[\d]{1,2}\b|\b[\d]{3}\b)/g;
+							var coincidencias = enfermedad.match(regCie9mc);
+							if (coincidencias != null) {
+								$('#botonesNavegacion').html('');
+								$('#botonesNavegacion')
+										.append(
+												"<label>&nbsp;</label><input class='btn btn-primary' type='button' value='ir a "
+														+ coincidencias[0]
+														+ "' onclick='location.assign(\"" + routeBase + "show/"
+														+ encodeURIComponent(coincidencias[0])
+														+ "\")'/>");
+								$('#botonesNavegacion')
+										.append(
+												"<label>&nbsp;</label><input class='btn btn-success' type='button' value='Editar "
+														+ coincidencias[0]
+														+ "' onclick='location.assign(\"" + routeBase + "edit/"
+														+ encodeURIComponent(coincidencias[0])
+														+ "\")'/>");
+							}
+						}
+
+						$('#enfermedadAutocomplete').on('change',
+								function(evt) {
+									if (evt.target.value == '') {
+										$('#botonesNavegacion').html('');
+									}
+								});
+
+						$('.dropdown-toggle').dropdown();
+						$('.close').on('click', function() {
+							$('#modalEnf').modal('hide');
+						});
+						$.ajax({
+							dataType : "json",
+							url :  routeBase + "json",
+							contentType : "application/json; charset=utf-8",
+							success : function(data) {
+								enfermedades = data;
+								enfermedadesLiterales = $.map(enfermedades,
+										function(v) {
+											return v.cie9Id + ' ' + v.literal;
+										});
+								$("#enfermedadAutocomplete").autocomplete({
+									source : enfermedadesLiterales,
+									search : function(event, ui) {
+
+									},
+									select : function(event, ui) {
+										agregaBotonesEnlace(ui.item.value);
+									},
+									minLength : 3
+								});
+								if ($("#enfermedadAutocomplete").val() != '') {
+									agregaBotonesEnlace($(
+											"#enfermedadAutocomplete").val());
+								}
+							}
+						});
+					});
+	/*]]>*/
+</script>
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+		<div class="row">
+			<h4 class="span8">Enfermedades CIE9MC</h4>
+		</div>
+		
+		<form class="form-inline">
+			<input id="routeUrl" name="routeUrl" type="hidden"
+				th:value="${route.baseUrl}"></input>
+			<div class="row">
+				<div id="colBusqueda" class="controls controls-row offset1">
+					<label for="enfermedad"><strong>Búsqueda:</strong></label>
+					<div class="input-append" style="width: 100%">
+						<input class="span8" placeholder="Búsqueda por literal o código"
+							id="enfermedadAutocomplete" type="text" name="enfermedad"/>
+						<a class="btn add-on" data-toggle="modal" data-target="#modalEnf"
+							href="" type="button"><i class="icon-search"></i>
+						</a> 
+					</div>
+					<div id="botonesNavegacion"></div>
+				</div>
+			</div>
+		</form>
+		
+		
+		<div class="row">
+			<a href="cie9mc/create" class="btn btn-primary span3">Nueva
+				Enfermedad CIE9MC</a>
+		</div>
+		
+		
+		<!-- Modal de enfermedades -->
+		<div id="modalEnf" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3>Selección de Enfermedad CIE9MC</h3>
+			</div>
+			<div class="modal-body">
+				<div id="cuadro" style="height: 300px; overflow: scroll">
+					<ul th:each="cie : ${allCie9mc}">
+						<li class="rclmEnfermedadModal">
+							<a th:href="|${route.baseUrl}show/${cie.cie9Id}|" th:text="|${cie.cie9Id} ${cie.literal}|"></a>
+							<a style="margin-left:5px" class="btn btn-success btn-mini" type="button" th:href="|${route.baseUrl}edit/${cie.cie9Id}|">Editar</a> 
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</body>
+</html>

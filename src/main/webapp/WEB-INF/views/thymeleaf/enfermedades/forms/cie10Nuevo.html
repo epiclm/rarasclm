@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<title>NUEVO CIE10</title>
+<script type="text/javascript" th:src="@{/js/ckeditor.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var routeBase = /*[[${route.baseUrl}]]*/'';
+	var enfermedades;
+	var enfermedadeses;
+
+	function probarUrl(url) {
+		var urlt = url.trim();
+		$('#url').val(urlt);
+		var form = document.createElement("form");
+		form.method = "GET";
+		if (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+				.test(urlt))
+			form.action = urlt;
+		else
+			form.action = 'http://' + urlt;
+		form.target = "_blank";
+		document.body.appendChild(form);
+		form.submit();
+	}
+
+$(document)
+.ready(
+function() {
+
+	if (CKEDITOR.env.ie && CKEDITOR.env.version < 9)
+		CKEDITOR.tools.enableHtml5Elements(document);
+
+	var editorElement = CKEDITOR.document.getById('notas');
+	CKEDITOR.replace(editorElement);
+
+	// The trick to keep the editor in the sample quite small
+	// unless user specified own height.
+	CKEDITOR.config.height = 250;
+	CKEDITOR.config.width = 'auto';
+
+	jQuery.validator
+			.addMethod(
+					"complete_url",
+					function(val, elem) {
+						if (val.trim() != '') {
+							var result = false;
+							var pre = "http://"
+							if (/^https?:\/\/[\S]*/.test(val.trim())) {
+								return /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(val.trim());
+							} else {
+								return /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(val.trim());
+							}
+						}
+						return true;
+					});
+
+	jQuery.validator.addMethod("cie10", function(val, elem) {
+		if (val.trim() != '' && val.trim().length!=4) {
+			if (/(^[A-Z]\d{2}.\d{1})|^([A-Z]\d{2})/g.test(val.trim())) {
+				return true
+			}
+		}
+		return false;
+	});
+
+	var validator = $('#edit-cie10')
+			.validate(
+					  {
+						rules : {
+							cie10Id : {
+								required : true,
+								cie10 : true,
+							},
+							literal : {
+								required : true,
+								minlength : 3
+							},
+							url : {
+								complete_url : true,
+								minlength : false,
+							}
+						},
+						messages : {
+							cie10Id : {
+								required : "CÓDIGO CIE REQUERIDO",
+								cie10 : "El código cie es incorrecto"
+							},
+							literal : {
+								required : "El literal de la enfermedad es necesario",
+								minlength : "El literal de la enfermedad no supera el tamaño mínimo"
+							},
+							url : {
+								complete_url : "url no válida"
+							}
+						},
+						highlight : function(element) {
+							$(element).closest(
+									'.control-group')
+									.addClass('error');
+						},
+						success : function(element) {
+							$(element).closest('.control-group').removeClass('error');
+							valor = $(element).parent().find('input').val();
+							if ($(element).parent().find(
+									'input').attr("id") != 'url') {
+								$(element).parent().find('input').val(valor.toUpperCase());
+							} else if (valor.trim().length > 0) {
+								if ((/^https?:\/\/[\S]*/.test(valor.trim()))) {
+									valor = $(element).parent().find('input').val();
+								} else {
+									$(element).parent().find('input').val('http://'+ valor);
+								}
+							}
+						},
+						errorClass : "error-label",
+						submitHandler : function(form) {
+							$(".btn").attr("disabled", true);
+							form.submit();
+						},
+						onkeyup : false,
+						onclick : false
+					});
+	$('.dropdown-toggle').dropdown();
+	$('.close').on('click', function() {
+		$('#modalEnf').modal('hide');
+	});
+});
+/*]]>*/
+</script>
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+		<div class="row">
+			<div class="span8">
+				<h4 style="display: inline !important">Enfermedades CIE10 (nueva)</h4>
+			</div>
+			<hr />
+		</div>
+		<form id="edit-cie10" class="form-inline" method='POST'>
+			<fieldset th:if="${enfermedadCie10Model != null}">
+
+				<div class="form-group row-fluid control-group">
+					<label class="control-label span1 offset1" for="cie10Id">cie10:</label>
+					<div class="span5">
+						<input name="cie10Id" id="cie10Id" type="text" maxlength="6"
+							th:value="${enfermedadCie10Model.cie10Id}" />
+					</div>
+				</div>
+
+				<div class="form-group row-fluid control-group">
+					<label class="control-label span1 offset1" for="literal">Literal:</label>
+					<div class="span10">
+						<input class="input-xxlarge" name="literal" id="literal"
+							type="text" th:value="${enfermedadCie10Model.literal}" />
+					</div>
+				</div>
+
+				<div class="form-group row-fluid control-group">
+					<label class="control-label span1 offset1" for="url">URL:</label>
+					<div class="span10">
+						<input class="input-xxlarge" name="url" id="url" type="text"
+							th:value="${enfermedadCie10Model.url}" />
+					</div>
+				</div>
+
+				<div class="form-group row-fluid control-group">
+					<div class="span3 offset9">
+						<a class="btn" onclick="probarUrl($('#url').val())">Probar URL</a>
+						<a id="pruebaUrl"></a>
+					</div>
+				</div>
+
+				<div class="form-group row-fluid control-group">
+					<div class="span10 offset1">
+						<div class='navbar navbar-fixed-top'>
+							<div id="toolbar"></div>
+						</div>
+						<div id="wrapper">
+							<textarea id="notas" class="clear" name="notas"
+								th:utext="${enfermedadCie10Model.notas}"></textarea>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row-fluid control-group">
+					<div class="span10 offset1">
+						<input class="btn btn-success" type="submit" value="GUARDAR" />
+					</div>
+				</div>
+
+			</fieldset>
+		</form>
+
+	</div>
+</body>
+</html>

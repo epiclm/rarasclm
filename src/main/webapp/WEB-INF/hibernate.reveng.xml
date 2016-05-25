@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+
+	<table-filter match-name="enfermedad_rara"
+		match-catalog="RARASCLM">
+	</table-filter>
+	<table-filter match-name="enfermedad_rara_cie10"
+		match-catalog="RARASCLM">
+	</table-filter>
+	<table-filter match-name="enfermedad_rara_cie9mc"
+		match-catalog="RARASCLM">
+	</table-filter>
+	<table-filter match-name="enfermedad_rara_has_enfermedad_rara_cie10"
+		match-catalog="RARASCLM">
+	</table-filter>
+	<table-filter
+		match-name="enfermedad_rara_has_enfermedad_rara_cie9mc"
+		match-catalog="RARASCLM">
+	</table-filter>
+	<table-filter match-name="enfermedad_rara_has_enfermedad_rara_omin"
+		match-catalog="RARASCLM">
+	</table-filter>
+	<table-filter
+		match-name="enfermedad_rara_has_enfermedad_rara_orphanet"
+		match-catalog="RARASCLM">
+	</table-filter>
+	<table-filter
+		match-name="enfermedad_rara_has_enfermedad_rara_snomed"
+		match-catalog="RARASCLM">
+	</table-filter>
+	<table-filter match-name="enfermedad_rara_omin"
+		match-catalog="RARASCLM">
+	</table-filter>
+	<table-filter match-name="enfermedad_rara_orphanet"
+		match-catalog="RARASCLM">
+	</table-filter>
+	<table-filter match-name="enfermedad_rara_snomed"
+		match-catalog="RARASCLM">
+	</table-filter>
+	<table-filter match-name="enfermedad_renal"
+		match-catalog="RARASCLM">
+	</table-filter>
+</hibernate-reverse-engineering>
