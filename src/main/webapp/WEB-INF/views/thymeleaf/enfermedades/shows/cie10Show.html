@@ -3,7 +3,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout/rarasClmLayout">
 <head>
-<title>cie10MC FICHA [[${enfermedadcie10Model.cie10Id}]]</title>
+<title th:text="|CIE10 ${enfermedadCie10Model.cie10Id} - ${enfermedadCie10Model.literal}|">CIE9MC FICHA XXX</title>
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
        var routeBase = /*[[${route.baseUrl}]]*/ '';	
