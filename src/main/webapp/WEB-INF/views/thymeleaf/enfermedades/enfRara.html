@@ -20,10 +20,11 @@
 							var coincidencias = enfermedad.match(regEnfRara);
 							if(coincidencias!=null)
 							{
-								$('#colBusqueda').append("<label>&nbsp;</label><input class='btn btn-primary' type='button' value='ir a "
-									+ coincidencias[0] +  "' onclick='location.assign(\"/rarasclm/enfermedades/enfrara/show/" + encodeURIComponent(coincidencias[0]) + "\")'/>");
-								$('#colBusqueda').append("<label>&nbsp;</label><input class='btn btn-success' type='button' value='Editar "
-									+ coincidencias[0] +  "' onclick='location.assign(\"/rarasclm/enfermedades/enfrara/edit/" + encodeURIComponent(coincidencias[0]) + "\")'/>");
+								$('#botonesNavegacion').html('');
+								$('#botonesNavegacion').append("<label>&nbsp;</label><input class='btn btn-primary' type='button' value='ir a "
+									+ coincidencias[0] +  "' onclick='location.assign(\"" + routeBase + "show/" + encodeURIComponent(coincidencias[0]) + "\")'/>");
+								$('#botonesNavegacion').append("<label>&nbsp;</label><input class='btn btn-success' type='button' value='Editar "
+									+ coincidencias[0] +  "' onclick='location.assign(\"" + routeBase + "edit/" + encodeURIComponent(coincidencias[0]) + "\")'/>");
 							}
 						}
 			

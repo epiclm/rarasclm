@@ -62,7 +62,8 @@
 		<security:form-login
 			login-page="/autentica" 
 			username-parameter="username" 
-			password-parameter="password" />
+			password-parameter="password" 
+			authentication-success-handler-ref="mySuccessAuthenticationHandler"/>
 	</security:http>
 
 
@@ -74,6 +75,8 @@
 	</security:authentication-manager>
 
 
+	<bean id="mySuccessAuthenticationHandler"
+		  class="es.jclm.cs.rarasclm.listeners.RarasCLMAuthSuccess" />
 	<bean id="rarasCLMAuthSuccess"
 		  class="es.jclm.cs.rarasclm.listeners.RarasCLMAuthSuccess" />
 	<bean id="rarasClmAuthenticationService" 

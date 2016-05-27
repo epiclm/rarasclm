@@ -7,8 +7,11 @@
 </head>
 <body>
 	<div id="contenido"  layout:fragment="content">
-		<div class="row">
+		<div class="row offset1">
 			<h3>!!!!!!!!!!!!!INICIO</h3>
+			<p th:text="${userCLM.username}"></p>
+			<p th:text="|${userCLM.apellido01} ${userCLM.apellido02}, ${userCLM.nombre}|"></p>
+			<p th:text="${#dates.format(userCLM.ultimoAcceso, 'dd/MM/YYYY HH:mm')}"></p>
 		</div>
 	</div>
 </body>

@@ -10,18 +10,30 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
-public class RarasCLMAuthSuccess implements AuthenticationSuccessHandler {
+public class RarasCLMAuthSuccess extends SimpleUrlAuthenticationSuccessHandler {
 	
 	static Log log = LogFactory.getLog(RarasCLMAuthSuccess.class.getName());
 
-	public void onAuthenticationSuccess(HttpServletRequest request, 
+	/*public void onAuthenticationSuccess(HttpServletRequest request, 
 			HttpServletResponse response, 
 			Authentication auth)
 			throws IOException, ServletException {
 		
 		log.info("Login OK");
 
+	}*/
+	
+	
+	@Override
+	public void onAuthenticationSuccess(HttpServletRequest request,
+			HttpServletResponse response, Authentication authentication)
+			throws IOException, ServletException {
+
+		super.onAuthenticationSuccess(request,response,authentication);
+		log.info("Login OK");
 	}
+
 
 }

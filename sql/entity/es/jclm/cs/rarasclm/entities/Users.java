@@ -20,12 +20,8 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "users", catalog = "RARASCLM")
-public class UserRarasCLM implements java.io.Serializable {
+public class Users implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7017333840706051012L;
 	private String username;
 	private String password;
 	private byte enabled;
@@ -36,19 +32,19 @@ public class UserRarasCLM implements java.io.Serializable {
 	private Date ultimoAcceso;
 	private Integer numIntentos;
 	private String puesto;
-	private Set<RolesRarasCLM> roleses = new HashSet<RolesRarasCLM>(0);
+	private Set<Roles> roleses = new HashSet<Roles>(0);
 
-	public UserRarasCLM() {
+	public Users() {
 	}
 
-	public UserRarasCLM(String username, String password, byte enabled) {
+	public Users(String username, String password, byte enabled) {
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
 	}
 
-	public UserRarasCLM(String username, String password, byte enabled, String nombre, String apellido01, String apellido02,
-			Integer seccion, Date ultimoAcceso, Integer numIntentos, String puesto, Set<RolesRarasCLM> roleses) {
+	public Users(String username, String password, byte enabled, String nombre, String apellido01, String apellido02,
+			Integer seccion, Date ultimoAcceso, Integer numIntentos, String puesto, Set<Roles> roleses) {
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
@@ -154,20 +150,16 @@ public class UserRarasCLM implements java.io.Serializable {
 		this.puesto = puesto;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_role", catalog = "RARASCLM", joinColumns = {
 			@JoinColumn(name = "username", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "user_rol", nullable = false, updatable = false) })
-	public Set<RolesRarasCLM> getRoleses() {
+	public Set<Roles> getRoleses() {
 		return this.roleses;
 	}
 
-	public void setRoleses(Set<RolesRarasCLM> roleses) {
+	public void setRoleses(Set<Roles> roleses) {
 		this.roleses = roleses;
-	}
-	
-	public boolean isEnabled() {
-		return this.enabled>0;
 	}
 
 }

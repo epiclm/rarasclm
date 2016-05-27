@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import es.jclm.cs.rarasclm.dao.UserRarasCLMDao;
 import es.jclm.cs.rarasclm.entities.RolesRarasCLM;
@@ -27,6 +30,9 @@ public class RarasCLMUserService implements UserDetailsService {
 	
 	@Autowired
 	private UserRarasCLMDao userDao;
+	
+	@Autowired
+	private HttpServletRequest request;
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserRarasCLM userCLM = null;
@@ -34,6 +40,7 @@ public class RarasCLMUserService implements UserDetailsService {
 		if(username!=null || username=="") {
 			userCLM = userDao.findByUserName(username);
 			authorities = buildUserAuthority(userCLM.getRoleses());
+			request.getSession().setAttribute("userCLM",userCLM);
 			return  buildUserForAuthentication(userCLM,authorities); 
 		} else {
 			throw new UsernameNotFoundException("El nombre de usuario no puede estar vacío");

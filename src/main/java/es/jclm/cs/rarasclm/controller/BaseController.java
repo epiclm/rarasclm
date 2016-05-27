@@ -16,6 +16,7 @@ import es.jclm.cs.rarasclm.entities.AccionRespuesta;
 import es.jclm.cs.rarasclm.entities.BaseModelViewReflex;
 import es.jclm.cs.rarasclm.entities.IBaseModelView;
 import es.jclm.cs.rarasclm.entities.RouteParameters;
+import es.jclm.cs.rarasclm.entities.UserRarasCLM;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -42,6 +43,13 @@ public class BaseController {
 		String baseApp = request.getContextPath().replace("/", "");
 		base.setBaseapp(baseApp);
 		return base;
+	}
+	
+	
+	@ModelAttribute("userCLM")
+	private UserRarasCLM getUserCLM() {
+		UserRarasCLM user = (UserRarasCLM)request.getSession().getAttribute("userCLM");
+		return user;
 	}
 	
 	@ModelAttribute("resultado")

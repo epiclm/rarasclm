@@ -136,14 +136,14 @@ public class EnfermedadRaraController extends BaseController {
 		return "enfermedades/shows/enfRaraShow";
 	}
 
-	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
+	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String nuevo(Model model) {
 		EnfermedadRara enfRara = new EnfermedadRara();
 		model.addAttribute("enfermedadRaraModel", enfRara);
 		return "enfermedades/forms/enfRaraNuevo";
 	}
 
-	@RequestMapping(value = "/nuevo", method = RequestMethod.POST)
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String submitNuevoForm(@ModelAttribute("enfermedadRara") EnfermedadRara enf, BindingResult result,
 			SessionStatus status) {
 
