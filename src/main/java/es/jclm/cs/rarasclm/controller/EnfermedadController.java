@@ -20,7 +20,7 @@ import es.jclm.cs.rarasclm.entities.MenuModulo;
  */
 @Controller
 @RequestMapping("/enfermedades")
-@RarasClmItemModulo(caption="Enfermedades",deno="Enfermedades",modulo="enfermedades",orden=1)
+@RarasClmItemModulo(caption="Enfermedades",deno="Enfermedades",modulo="enfermedades",orden=2)
 @RarasClmItemMenu(caption="Enfermedades",deno="Enfermedades",modulo="enfermedades",orden=1)
 @SessionAttributes("enfermedades")
 public class EnfermedadController extends BaseController {

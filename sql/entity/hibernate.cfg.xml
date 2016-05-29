@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory name="hbnrarasclm">
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password">alberto01</property>
+        <property name="hibernate.connection.url">jdbc:mysql://192.168.1.213:3306/RARASCLM</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+        <property name="hibernate.search.autoregister_listeners">false</property>
+        <property name="hibernate.validator.apply_to_ddl">false</property>
+        <mapping class="es.jclm.cs.rarasclm.entities.Ccaa" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRaraOrphanet" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRara" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRaraCie9mc" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRaraHasEnfermedadRaraCie9mc" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRaraOmin" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRenal" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRaraHasEnfermedadRaraOmin" />
+        <mapping class="es.jclm.cs.rarasclm.entities.Pacientes" />
+        <mapping class="es.jclm.cs.rarasclm.entities.Municipios" />
+        <mapping class="es.jclm.cs.rarasclm.entities.Roles" />
+        <mapping class="es.jclm.cs.rarasclm.entities.Users" />
+        <mapping class="es.jclm.cs.rarasclm.entities.Provincias" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRaraHasEnfermedadRaraSnomed" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRaraHasEnfermedadRaraOrphanet" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRaraSnomed" />
+        <mapping class="es.jclm.cs.rarasclm.entities.Casos" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRaraHasEnfermedadRaraCie10" />
+    </session-factory>
+</hibernate-configuration>

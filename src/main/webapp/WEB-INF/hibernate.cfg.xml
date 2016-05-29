@@ -9,5 +9,8 @@
         <property name="hibernate.connection.url">jdbc:mysql://192.168.1.213:3306/RARASCLM</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+    	<mapping package="es.jclm.cs.rarasclm.entities"/>
+    	<mapping class="es.jclm.cs.rarasclm.entities.Caso"/>
+    	<mapping class="es.jclm.cs.rarasclm.entities.Paciente"/>
     </session-factory>
 </hibernate-configuration>

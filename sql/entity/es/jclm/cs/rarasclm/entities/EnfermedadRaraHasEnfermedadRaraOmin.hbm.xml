@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28-may-2016 19:43:36 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="es.jclm.cs.rarasclm.entities.EnfermedadRaraHasEnfermedadRaraOmin" table="enfermedad_rara_has_enfermedad_rara_omin" catalog="RARASCLM" optimistic-lock="version">
+        <composite-id name="id" class="es.jclm.cs.rarasclm.entities.EnfermedadRaraHasEnfermedadRaraOminId">
+            <key-property name="enfermedadRaraId" type="string">
+                <column name="enfermedad_rara_id" length="10" />
+            </key-property>
+            <key-property name="ominId" type="string">
+                <column name="omin_id" length="10" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="enfermedadRara" class="es.jclm.cs.rarasclm.entities.EnfermedadRara" update="false" insert="false" fetch="select">
+            <column name="enfermedad_rara_id" length="10" not-null="true" />
+        </many-to-one>
+        <many-to-one name="enfermedadRaraOmin" class="es.jclm.cs.rarasclm.entities.EnfermedadRaraOmin" update="false" insert="false" fetch="select">
+            <column name="omin_id" length="10" not-null="true" />
+        </many-to-one>
+        <property name="numPrioridad" type="java.lang.Integer">
+            <column name="num_prioridad" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28-may-2016 19:43:36 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="es.jclm.cs.rarasclm.entities.Pacientes" table="pacientes" catalog="RARASCLM" optimistic-lock="version">
+        <id name="paciente" type="int">
+            <column name="paciente" />
+            <generator class="assigned" />
+        </id>
+        <property name="idpacnac" type="string">
+            <column name="idpacnac" length="10" />
+        </property>
+        <property name="cip" type="string">
+            <column name="cip" length="16" />
+        </property>
+        <property name="dni" type="string">
+            <column name="dni" length="12" />
+        </property>
+        <property name="numeroSegSocial" type="string">
+            <column name="numero_seg_social" length="12" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="apellido01" type="string">
+            <column name="apellido_01" length="60" />
+        </property>
+        <property name="apellido02" type="string">
+            <column name="apellido_02" length="60" />
+        </property>
+        <property name="fechaNacimiento" type="date">
+            <column name="fecha_nacimiento" length="10" />
+        </property>
+        <property name="sexo" type="java.lang.Character">
+            <column name="sexo" length="1" />
+        </property>
+        <property name="municipioNacimiento" type="string">
+            <column name="municipio_nacimiento" length="5" />
+        </property>
+        <property name="paisNacimiento" type="string">
+            <column name="pais_nacimiento" length="3" />
+        </property>
+        <property name="domTipoVia" type="string">
+            <column name="dom_tipo_via" length="6" />
+        </property>
+        <property name="domNombreVia" type="string">
+            <column name="dom_nombre_via" length="60" />
+        </property>
+        <property name="domNumero" type="string">
+            <column name="dom_numero" length="4" />
+        </property>
+        <property name="domPisopuerta" type="string">
+            <column name="dom_pisopuerta" length="4" />
+        </property>
+        <property name="domOtros" type="string">
+            <column name="dom_otros" length="60" />
+        </property>
+        <property name="municipioResidencia" type="string">
+            <column name="municipio_residencia" length="5" />
+        </property>
+        <property name="fallecido" type="java.lang.Byte">
+            <column name="fallecido" />
+        </property>
+        <property name="fallecidoFechaComprobacion" type="timestamp">
+            <column name="fallecido_fecha_comprobacion" length="19" />
+        </property>
+        <property name="fallecidoEtiquetaComprobacion" type="string">
+            <column name="fallecido_etiqueta_comprobacion" length="45" />
+        </property>
+        <property name="fallecidoNumbol" type="java.lang.Integer">
+            <column name="fallecido_numbol" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" />
+        </property>
+        <property name="telefono" type="string">
+            <column name="telefono" length="12" />
+        </property>
+        <set name="casoses" table="casos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="paciente" />
+            </key>
+            <one-to-many class="es.jclm.cs.rarasclm.entities.Casos" />
+        </set>
+    </class>
+</hibernate-mapping>

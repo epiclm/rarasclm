@@ -1,5 +1,5 @@
 package es.jclm.cs.rarasclm.entities;
-// Generated 27-may-2016 13:20:43 by Hibernate Tools 4.3.1.Final
+// Generated 28-may-2016 19:43:36 by Hibernate Tools 4.3.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -59,6 +59,7 @@ public class Users implements java.io.Serializable {
 	}
 
 	@Id
+
 	@Column(name = "username", unique = true, nullable = false, length = 45)
 	public String getUsername() {
 		return this.username;

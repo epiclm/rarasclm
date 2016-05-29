@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28-may-2016 19:43:36 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10" table="enfermedad_rara_cie10" catalog="RARASCLM" optimistic-lock="version">
+        <id name="cie10Id" type="string">
+            <column name="cie10_id" length="5" />
+            <generator class="assigned" />
+        </id>
+        <property name="literal" type="string">
+            <column name="literal" />
+        </property>
+        <property name="url" type="string">
+            <column name="url" />
+        </property>
+        <property name="notas" type="string">
+            <column name="notas" />
+        </property>
+        <set name="enfermedadRaraHasEnfermedadRaraCie10s" table="enfermedad_rara_has_enfermedad_rara_cie10" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cie10_id" length="5" not-null="true" />
+            </key>
+            <one-to-many class="es.jclm.cs.rarasclm.entities.EnfermedadRaraHasEnfermedadRaraCie10" />
+        </set>
+    </class>
+</hibernate-mapping>
