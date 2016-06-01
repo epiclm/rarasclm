@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var routeBase = /*[[${route.baseUrl}]]*/'';
+	var enfermedades;
+	var enfermedadesLiterales;
+	$(document)
+			.ready(
+					function() {
+						alert("Hola Pacientes!");	
+					});
+	/*]]>*/
+</script>
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+	
+		<div id="tabEnfermedadesAsociadas" class="tab-content row  span10">
+		
+			<ul class="nav nav-tabs">
+				<li th:attr="class=${pacientes.pacientes==null ? 'active' : ''}"><a href="#tab-paciente-busqueda" data-toggle="tab">Búsqueda Pacientes:</a></li>
+				<li th:attr="class=${pacientes.pacientes!=null ? 'active' : ''}"><a href="#tab-paciente-resultados" data-toggle="tab">Resultados</a></li>
+			</ul>
+			
+			<!-- BUSQUEDAS -->
+			<div class="tab-content">
+				<div id="tab-paciente-busqueda" class="tab-pane fade in active">
+				<div class="offset1">
+					<form id="form-search-paciente" class="form-horizontal" method='POST'>
+						<div  class="form-group row-fluid control-group">
+							<label class="control-label span2" for="busquedaNumeroPaciente">Num. Paciente:</label>
+								<div class="input-append">
+									<input class="span4" id="busquedaNumeroPaciente" name="busquedaNumeroPaciente" type="text" maxlength="7"/>
+									<a class="btn add-on" href="" type="button"><i class="icon-search"></i></a>
+								</div>
+						</div>
+						<div  class="form-group row-fluid control-group">
+							<label class="control-label span2" for="busquedaNumeroPaciente">CIP:</label>
+							<input  class="span3 ui-autocomplete-input" id="busquedaCIP" name="busquedaCIP" type="text" maxlength="16" th:value="${pacientes.busquedaCIP}"/>
+						</div>
+						<div class="form-group row-fluid control-group">
+							<label class="control-label span2" for="busquedaApellido1">Apellidos:</label>
+								<input name="busquedaApellido1" id="busquedaApellido1" type="text" maxlength="55" placeholder="Primero" th:value="${pacientes.busquedaApellido1}" />
+								<input name="busquedaApellido2" id="busquedaApellido2" type="text" maxlength="55" placeholder="Segundo" th:value="${pacientes.busquedaApellido2}" />
+						</div>
+						<div class="form-group row-fluid control-group">
+							<label class="control-label span2 " for="busquedaNombre">Nombre:</label>
+								<input name="busquedaNombre" id="busquedaNombre" type="text" maxlength="55" placeholder="Nombre" th:value="${pacientes.busquedaNombre}" />
+						</div>
+						<div class="form-group row-fluid control-group">
+							<label class="control-label span2" for="busquedaProvincia">Provincia:</label>
+								<select name="busquedaProvincia" class="span3" th:field="${pacientes.busquedaProvincia}" >
+									<option value="02">Albacete</option>
+									<option value="13">Ciudad Real</option>
+									<option value="16">Cuenca</option>
+									<option value="19">Guadalajara</option>
+									<option value="45">Toledo</option>
+								</select>
+						 </div>
+						<div class="form-group row-fluid control-group">
+							<label class="control-label span2" for="busquedaMunicipio">Municipio:</label>
+								<select name="busquedaMunicipio" class="span4" th:field="${pacientes.busquedaProvincia}" >
+									<option value="02">Albacete</option>
+									<option value="13">Ciudad Real</option>
+									<option value="16">Cuenca</option>
+									<option value="19">Guadalajara</option>
+									<option value="45">Toledo</option>
+								</select>
+						</div>
+						<div class="form-group row-fluid control-group">
+							<label class="control-label span2 " for="busquedaFechaNacimiento">Fec. Nac.:</label>
+								<input name="busquedaFechaNacimiento" id="busquedaFechaNacimiento" type="date" maxlength="55" placeholder="Nombre" th:value="${pacientes.busquedaNombre}" />
+						</div>
+						<div class="form-group row-fluid control-group">
+							<label class="control-label span2" for="busquedaNombre"></label>
+								<input class="btn" type="submit" value="Buscar" />
+						</div>
+
+					</form>
+				  </div>
+				</div><!-- Fin Tab Formuliario de Búsqueda -->
+
+				<!-- PACIENTES -->
+				<div id="tab-paciente-resultados" class="tab-pane fade">
+					<h2>Resultados!</h2>
+				</div>
+				
+			</div><!-- Fin de Tabs Content-->
+		</div><!--  Fin div de Tabs -->
+	</div><!-- Fin Contenido -->
+</body>
+</html>

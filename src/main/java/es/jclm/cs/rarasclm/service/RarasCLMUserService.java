@@ -57,7 +57,6 @@ public class RarasCLMUserService implements UserDetailsService {
 	
 	private List<GrantedAuthority> buildUserAuthority(Set<RolesRarasCLM> userRoles) {
 		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
-		// Build user's authorities
 		for (RolesRarasCLM userRole : userRoles) {
 			setAuths.add(new SimpleGrantedAuthority(userRole.getDeno()));
 		}

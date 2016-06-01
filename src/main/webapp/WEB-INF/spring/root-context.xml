@@ -77,12 +77,8 @@
 
 	<bean id="mySuccessAuthenticationHandler"
 		  class="es.jclm.cs.rarasclm.listeners.RarasCLMAuthSuccess" />
-	<bean id="rarasCLMAuthSuccess"
-		  class="es.jclm.cs.rarasclm.listeners.RarasCLMAuthSuccess" />
 	<bean id="rarasClmAuthenticationService" 
 		  class="es.jclm.cs.rarasclm.service.RarasCLMUserService" />
-	<bean id="myUserRarasCLMDetailsService" 
-	      class="es.jclm.cs.rarasclm.service.RarasCLMUserService" />
 	<bean id="csrfTokenRepository"
 		  class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository"/>
 	<bean id="requestDataValueProcessor"

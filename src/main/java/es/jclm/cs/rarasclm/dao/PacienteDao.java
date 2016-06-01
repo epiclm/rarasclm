@@ -2,7 +2,9 @@ package es.jclm.cs.rarasclm.dao;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import es.jclm.cs.rarasclm.entities.Paciente;
  
@@ -14,10 +16,11 @@ public class PacienteDao extends BaseEntityDao<Paciente,Integer> {
 			String apellido1,
 			String apellid2) {
 		Session session = this.sf.openSession();
-		String hql = "select p from Paciente p where p.nombre like :nombre";
-		List<Paciente> pacientes = (List<Paciente>)session.createQuery(hql)
-				.setParameter("nombre", nombre).list();
-		return pacientes;
+		//String hql = "select p from Paciente p where p.nombre like :nombre";
+		//List<Paciente> pacientes = (List<Paciente>)session.createQuery(hql)
+		//		.setParameter("nombre", nombre).list();
+		//return pacientes;
+		Criteria cr = session.createCriteria(Paciente.class);
+		return cr.add(Restrictions.like("nombre", "%"+nombre+"%")).list();
 	}
-	
 }
