@@ -16,18 +16,17 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `enfermedad_rara_omin`
+-- Table structure for table `ccaa`
 --
 
-DROP TABLE IF EXISTS `enfermedad_rara_omin`;
+DROP TABLE IF EXISTS `ccaa`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `enfermedad_rara_omin` (
-  `omin_id` varchar(10) CHARACTER SET utf8 NOT NULL,
-  `literal` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `url` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  PRIMARY KEY (`omin_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+CREATE TABLE `ccaa` (
+  `ccaa` varchar(2) NOT NULL,
+  `deno` varchar(70) DEFAULT NULL,
+  PRIMARY KEY (`ccaa`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -39,4 +38,4 @@ CREATE TABLE `enfermedad_rara_omin` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-01 20:04:50
+-- Dump completed on 2016-06-01 20:04:37

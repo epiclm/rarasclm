@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `RARASCLM` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `RARASCLM`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: localhost    Database: RARASCLM
@@ -26,20 +24,10 @@ DROP TABLE IF EXISTS `roles`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
-  `deno` varchar(45) NOT NULL,
+  `deno` varchar(45) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `roles`
---
-
-LOCK TABLES `roles` WRITE;
-/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (0,'ROLE_ADMIN'),(1,'ROLE_USER');
-/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -50,4 +38,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-17 18:41:05
+-- Dump completed on 2016-06-01 20:04:42

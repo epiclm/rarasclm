@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `RARASCLM` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `RARASCLM`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: localhost    Database: RARASCLM
@@ -25,7 +23,7 @@ DROP TABLE IF EXISTS `enfermedad_rara_has_enfermedad_rara_snomed`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `enfermedad_rara_has_enfermedad_rara_snomed` (
-  `enfermedad_rara_id` varchar(10) NOT NULL,
+  `enfermedad_rara_id` varchar(10) CHARACTER SET utf8 NOT NULL,
   `snomed_id` bigint(20) NOT NULL,
   `num_prioridad` int(11) DEFAULT NULL,
   PRIMARY KEY (`enfermedad_rara_id`,`snomed_id`),
@@ -33,17 +31,8 @@ CREATE TABLE `enfermedad_rara_has_enfermedad_rara_snomed` (
   KEY `fk_enfermedad_rara_has_enfermedad_rara_snomed_enfermedad_ra_idx1` (`enfermedad_rara_id`),
   CONSTRAINT `fk_enfermedad_rara_has_enfermedad_rara_snomed_enfermedad_rara1` FOREIGN KEY (`enfermedad_rara_id`) REFERENCES `enfermedad_rara` (`enfermedad_rara_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_enfermedad_rara_has_enfermedad_rara_snomed_enfermedad_rara2` FOREIGN KEY (`snomed_id`) REFERENCES `enfermedad_rara_snomed` (`snomed_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `enfermedad_rara_has_enfermedad_rara_snomed`
---
-
-LOCK TABLES `enfermedad_rara_has_enfermedad_rara_snomed` WRITE;
-/*!40000 ALTER TABLE `enfermedad_rara_has_enfermedad_rara_snomed` DISABLE KEYS */;
-/*!40000 ALTER TABLE `enfermedad_rara_has_enfermedad_rara_snomed` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -54,4 +43,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-17 18:41:04
+-- Dump completed on 2016-06-01 20:04:33

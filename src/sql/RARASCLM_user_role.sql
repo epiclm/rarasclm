@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `RARASCLM` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `RARASCLM`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: localhost    Database: RARASCLM
@@ -25,24 +23,14 @@ DROP TABLE IF EXISTS `user_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_role` (
-  `username` varchar(45) NOT NULL,
+  `username` varchar(45) CHARACTER SET latin1 NOT NULL,
   `user_rol` int(11) NOT NULL,
   PRIMARY KEY (`username`,`user_rol`),
   KEY `fk_has_rol_idx` (`user_rol`),
   CONSTRAINT `fk_has_rol` FOREIGN KEY (`user_rol`) REFERENCES `roles` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_has_user` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_role`
---
-
-LOCK TABLES `user_role` WRITE;
-/*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES ('ricardo',0),('alex',1),('mkyong',1);
-/*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -53,4 +41,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-17 18:41:11
+-- Dump completed on 2016-06-01 20:04:36
