@@ -5,15 +5,38 @@
 <head>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
-	var routeBase = /*[[${route.baseUrl}]]*/'';
-	var enfermedades;
-	var enfermedadesLiterales;
-	$(document)
-			.ready(
-					function() {
-						alert("Hola Pacientes!");	
-					});
-	/*]]>*/
+var routeBase = /*[[${route.baseUrl}]]*/'';
+var enfermedades;
+var enfermedadesLiterales;
+$(document)
+.ready(function() {	
+	
+		$("#imgEsperaNumeroPaciente").css('display','none');
+	
+		$("#form-search-paciente").on('submit',function(e){
+		    //e.preventDefault();
+		  });
+	
+		$("#busquedaCIP,#busquedaApellido1,#busquedaApellido2,#busquedaNombre")
+			.focusout( 
+				function() {
+					$(this).val($(this).val().toUpperCase());
+					if($(this).attr("id")==="busquedaCIP")
+					{
+						if($(this).val().length>0)
+						{
+							//alert("CIP: "+$(this).val())
+						}
+					}
+			  	});
+		
+	   $("#btnBusquedaNumeroPaciente").on('click',function() {
+		   $("#imgEsperaNumeroPaciente").css('display','inline-block');
+		   alert($("#busquedaNumeroPaciente").val());
+		   $("#imgEsperaNumeroPaciente").css('display','none');
+	   });
+});
+/*]]>*/
 </script>
 </head>
 <body>
@@ -33,14 +56,18 @@
 					<form id="form-search-paciente" class="form-horizontal" method='POST'>
 						<div  class="form-group row-fluid control-group">
 							<label class="control-label span2" for="busquedaNumeroPaciente">Num. Paciente:</label>
-								<div class="input-append">
-									<input class="span4" id="busquedaNumeroPaciente" name="busquedaNumeroPaciente" type="text" maxlength="7"/>
-									<a class="btn add-on" href="" type="button"><i class="icon-search"></i></a>
-								</div>
+							<div class="input-append" >
+								<input id="busquedaNumeroPaciente" class="span5" name="busquedaNumeroPaciente" type="text" maxlength="7"/>
+								<a id="btnBusquedaNumeroPaciente" class="btn add-on" href="#"><i class="icon-search"></i></a>
+							</div>		
+							<img id="imgEsperaNumeroPaciente" style="width:24px;margin-left:10px" alt="Esperando..." th:src="@{/img/espera.gif}"></img>	
 						</div>
 						<div  class="form-group row-fluid control-group">
-							<label class="control-label span2" for="busquedaNumeroPaciente">CIP:</label>
-							<input  class="span3 ui-autocomplete-input" id="busquedaCIP" name="busquedaCIP" type="text" maxlength="16" th:value="${pacientes.busquedaCIP}"/>
+							<label class="control-label span2" for="busquedaCIP">CIP:</label>
+							<div class="input-append">
+								<input  class="span12" id="busquedaCIP" name="busquedaCIP" type="text" maxlength="16" th:value="${pacientes.busquedaCIP}"/>
+								<!-- <a id="btnBusquedaCIPPaciente" class="btn add-on" href="" type="button"><i class="icon-search"></i></a> -->
+							</div>
 						</div>
 						<div class="form-group row-fluid control-group">
 							<label class="control-label span2" for="busquedaApellido1">Apellidos:</label>
@@ -63,7 +90,7 @@
 						 </div>
 						<div class="form-group row-fluid control-group">
 							<label class="control-label span2" for="busquedaMunicipio">Municipio:</label>
-								<select name="busquedaMunicipio" class="span4" th:field="${pacientes.busquedaProvincia}" >
+								<select name="busquedaMunicipio" class="span4" th:field="${pacientes.busquedaMunicipio}" >
 									<option value="02">Albacete</option>
 									<option value="13">Ciudad Real</option>
 									<option value="16">Cuenca</option>
@@ -73,13 +100,12 @@
 						</div>
 						<div class="form-group row-fluid control-group">
 							<label class="control-label span2 " for="busquedaFechaNacimiento">Fec. Nac.:</label>
-								<input name="busquedaFechaNacimiento" id="busquedaFechaNacimiento" type="date" maxlength="55" placeholder="Nombre" th:value="${pacientes.busquedaNombre}" />
+								<input name="busquedaFechaNacimiento" id="busquedaFechaNacimiento" type="date"  th:value="${pacientes.busquedaFechaNacimiento!=null ? #dates.format(pacientes.busquedaFechaNacimiento, 'yyyy-MM-dd') : ''}" />
 						</div>
 						<div class="form-group row-fluid control-group">
 							<label class="control-label span2" for="busquedaNombre"></label>
 								<input class="btn" type="submit" value="Buscar" />
 						</div>
-
 					</form>
 				  </div>
 				</div><!-- Fin Tab Formuliario de Búsqueda -->

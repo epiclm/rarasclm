@@ -19,7 +19,6 @@ public class PacientesModelView extends BaseGrillaModelView<Paciente>{
 	private String busquedaNombre;
 	private String busquedaApellido1;
 	private String busquedaApellido2;
-	private int busquedaNumeroPaciente;
 	private String busquedaCIP;
 	private String busquedaProvincia;
 	private String busquedaMunicipio;
@@ -48,12 +47,6 @@ public class PacientesModelView extends BaseGrillaModelView<Paciente>{
 	}
 	public void setBusquedaApellido2(String busquedaApellido2) {
 		this.busquedaApellido2 = busquedaApellido2;
-	}
-	public int getBusquedaNumeroPaciente() {
-		return busquedaNumeroPaciente;
-	}
-	public void setBusquedaNumeroPaciente(int busquedaNumeroPaciente) {
-		this.busquedaNumeroPaciente = busquedaNumeroPaciente;
 	}
 	public String getBusquedaCIP() {
 		return busquedaCIP;

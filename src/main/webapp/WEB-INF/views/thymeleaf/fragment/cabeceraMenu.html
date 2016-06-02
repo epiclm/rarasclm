@@ -17,6 +17,8 @@
  </div>
  <div th:if="${route}!=null">
 	 <ul class="breadcrumb" id="menuPath">
+	 	<li th:if="${route.modulo}!=null"><a th:href="|/${baseModel.baseApp}|">inicio</a></li>
+	 	<li th:if="${route.modulo}!=null">/</li>
 	 	<li th:if="${route.modulo}!=null"><a th:href="@{|/${route.modulo}|}" th:text="${route.modulo}"></a></li>
 	 	<li th:if="${route.entidad}!=null">/</li>
 	 	<li th:if="${route.entidad}!=null"><a th:href="@{|/${route.modulo}/${route.entidad}|}" th:text="${route.entidad}"></a></li>

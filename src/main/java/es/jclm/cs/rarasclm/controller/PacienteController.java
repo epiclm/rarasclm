@@ -1,8 +1,14 @@
 package es.jclm.cs.rarasclm.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +28,12 @@ import es.jclm.cs.rarasclm.entities.PacientesModelView;
 public class PacienteController extends BaseController {
 	
 	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+	    binder.registerCustomEditor(Date.class, editor);
+	}
+	
 	// Página inicial del módulo
 	@RequestMapping(method = RequestMethod.GET)
 	public String inicioEnvio(Model model) {
@@ -33,7 +45,6 @@ public class PacienteController extends BaseController {
 		pacientesMV.setBusquedaApellido2("");
 		pacientesMV.setBusquedaNombre("");
 		pacientesMV.setBusquedaCIP("");
-		pacientesMV.setBusquedaNumeroPaciente(-1);
 	
 		model.addAttribute("pacientes", pacientesMV);
 		getRoute().setId("");

@@ -116,16 +116,13 @@
 														$(element)
 																.parent()
 																.find('input')
-																.val(
-																		'http://'
-																				+ valor);
+																.val('http://' + valor);
 													}
 												}
 											},
 											submitHandler : function(form) {
 												if (!mensaje_borrar) {
-													$(".btn").attr("disabled",
-															true);
+													$(".btn").attr("disabled",true);
 													form.submit();
 												}
 											},

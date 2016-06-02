@@ -303,7 +303,7 @@ function() {
 								class="btn btn-danger" type="button" value="BORRAR" /> 
 							<input id="ver-btn" class='btn btn-primary'
 								type="button"
-								th:onclick="@{|location.assign('/rarasclm/enfermedades/enfrara/show/${enfermedadRaraModel.enfermedadRaraId}')|}"
+								th:onclick="@{|location.assign('${route.baseUrl}enfrara/show/${enfermedadRaraModel.enfermedadRaraId}')|}"
 								value="Ver" />
 						</div>
 					</div>

@@ -65,8 +65,7 @@
 							if (val.trim() != '') {
 								var result = false;
 								var pre = "http://"
-								if (/(^\d{3})|(^\d{3}.\d{1,2})/
-										.test(val.trim())) {
+								if (/(^\d{3})|(^\d{3}.\d{1,2})/.test(val.trim())) {
 									if (val.trim().length == 4) {
 										return false
 									}
@@ -115,22 +114,15 @@
 														.addClass('error');
 											},
 											success : function(element) {
-												$(element).closest(
-														'.control-group')
-														.removeClass('error');
-												valor = $(element).parent()
-														.find('input').val();
-												if ($(element).parent().find(
-														'input').attr("id") != 'url') {
+												$(element).closest('.control-group').removeClass('error');
+												valor = $(element).parent().find('input').val();
+												if ($(element).parent().find('input').attr("id") != 'url') {
 													$(element)
 															.parent()
 															.find('input')
-															.val(
-																	valor
-																			.toUpperCase());
+															.val(valor.toUpperCase());
 												} else if (valor.trim().length > 0) {
-													if ((/^https?:\/\/[\S]*/
-															.test(valor.trim()))) {
+													if ((/^https?:\/\/[\S]*/.test(valor.trim()))) {
 														valor = $(element)
 																.parent()
 																.find('input')
@@ -139,16 +131,13 @@
 														$(element)
 																.parent()
 																.find('input')
-																.val(
-																		'http://'
-																				+ valor);
+																.val('http://' + valor);
 													}
 												}
 											},
 											errorClass : "error-label",
 											submitHandler : function(form) {
-												$(".btn")
-														.attr("disabled", true);
+												$(".btn").attr("disabled", true);
 												form.submit();
 											},
 											onkeyup : false,
