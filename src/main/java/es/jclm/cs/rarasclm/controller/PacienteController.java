@@ -74,7 +74,7 @@ public class PacienteController extends BaseController {
 	
 	
 	@RequestMapping(value = "/show/json/{id}", method = RequestMethod.GET)
-	public  @ResponseBody Paciente showJsonPaciente(@PathVariable String id, Model model) {
+	public  @ResponseBody Paciente showJsonPaciente(@PathVariable String id) {
 		Integer clave = Integer.valueOf(id);
 		try {
 			Paciente ret = servicio.Buscar(clave);
@@ -84,6 +84,21 @@ public class PacienteController extends BaseController {
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
 	}
+	
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+	public String  showPaciente(@PathVariable String id, Model model) {
+		Integer clave = Integer.valueOf(id);
+		try {
+			Paciente paciente = servicio.Buscar(clave);
+			model.addAttribute("paciente", paciente);
+		} catch (ServiceRarasCLMException ex) {
+			ex.printStackTrace();
+			return null; //TO DO Mandar mensaje de error a la vista
+		}
+		return "pacientes/forms/pacienteEdit";
+		
+	}
+	
 	
 	
 

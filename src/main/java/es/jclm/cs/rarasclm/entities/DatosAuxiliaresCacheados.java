@@ -28,6 +28,15 @@ public class DatosAuxiliaresCacheados {
 	/** The raras clm. */
 	private List<EnfermedadRara> rarasClm;
 	
+	/** Municipios. */
+	private List<Municipios> municipios;
+	
+	/** Provincias. */
+	private List<Municipios> provincias;
+	
+	/** CCAA */
+	private List<Ccaa> ccaas;
+	
 	
 	public DatosAuxiliaresCacheados() {
 		log.info("Se instancia cache de datos y tablas auxiliares");
@@ -134,5 +143,39 @@ public class DatosAuxiliaresCacheados {
 		}
 		return null;
 	}
+
+	public List<EnfermedadRara> getRarasClm() {
+		return rarasClm;
+	}
+
+	public void setRarasClm(List<EnfermedadRara> rarasClm) {
+		this.rarasClm = rarasClm;
+	}
+
+	public List<Municipios> getMunicipios() {
+		return municipios;
+	}
+
+	public void setMunicipios(List<Municipios> municipios) {
+		this.municipios = municipios;
+	}
+
+	public List<Municipios> getProvincias() {
+		return provincias;
+	}
+
+	public void setProvincias(List<Municipios> provincias) {
+		this.provincias = provincias;
+	}
+
+	public List<Ccaa> getCcaas() {
+		return ccaas;
+	}
+
+	public void setCcaas(List<Ccaa> ccaas) {
+		this.ccaas = ccaas;
+	}
+	
+	
 
 }

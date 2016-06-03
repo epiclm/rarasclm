@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<title>EDITAR Paciente</title>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+           
+           
+/*]]>*/
+</script>
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+	<form id="form-edit-paciente" class="form-inline" method='POST'>
+	<legend>Edición Paciente <span th:text="${paciente.paciente}"></span></legend>
+				<div class="row span10">
+						<div id="grupo-apellido01-paciente" class="form-group">
+							<label class="control-label span3" for="apellido01">1er Apellido:</label>
+							<input id="apellido01" class="span3" name="apellido01" type="text" maxlength="65" th:value="${paciente.apellido01}" placeholder="1er apellido"/>
+						</div>
+						<div id="grupo-apellido02-paciente" class="form-group ">	
+							<label class="control-label span3" for="apellido02">2o Apellido:</label>
+							<input id="apellido02" class="span3" name="apellido02" type="text" maxlength="65" th:value="${paciente.apellido02}" placeholder="2o apellido"/>
+						</div>
+						<div id="grupo-nombre-paciente" class="form-group ">		
+							<label class="control-label span3" for="nombre">Nombre:</label>
+							<input id="nombre" class="span3" name="nombre" type="text" maxlength="65" th:value="${paciente.nombre}" placeholder="nombre"/>
+						</div>
+					</div>
+					<div class="row span10">
+						<div  class="form-group">
+							<label class="control-label span2" for="cip">CIP:</label>
+							<input  class="span2" id="cip" name="cip" type="text" maxlength="16" th:value="${paciente.cip}"/>
+						</div>
+						<div  class="form-group">
+							<label class="control-label span2" for="dni">DNI-NIE:</label>
+							<input  class="span2" id="dni" name="dni" type="text" maxlength="12" th:value="${paciente.dni}"/>
+						</div>
+						<div  class="form-group">
+							<label class="control-label span2" for="numeroSegSocial">NSS:</label>
+							<input  class="span2" id="numeroSegSocial" name="numeroSegSocial" type="text" maxlength="12" th:value="${paciente.numeroSegSocial}"/>
+						</div>
+					</div>
+					<div class="row span10">
+						<div class="form-group">
+							<label class="control-label span2 " for="fechaNacimiento">Fecha Nacimiento:</label>
+							<input name="fechaNacimiento" class="span2" id="fechaNacimiento" type="date"  th:value="${paciente.fechaNacimiento!=null ? #dates.format(paciente.fechaNacimiento, 'yyyy-MM-dd') : ''}" />
+						</div>
+						<div class="form-group">
+							<label class="control-label span2 " for="sexo">Sexo:</label>
+							<select name="sexo" class="span2" id="sexo"  th:field="${paciente.sexo}" >
+								<option value="1">VARÓN</option>
+								<option value="6">MUJER</option>
+								<option value="9">DESCONOCIDO</option>
+							</select>
+						</div>
+					</div>
+					<div class="row span10">
+						<p style="margin-top:10px">DOMICILIO:</p>
+					</div>
+					<div class="row span10">
+						<div class="form-group">
+							<label class="control-label span1 " for="domTipoVia">Tipo Vía:</label>
+							<input name="domTipoVia" class="span1" id="domTipoVia" type="text"  th:value="${paciente.domTipoVia}" />
+						</div>
+						<div class="form-group">
+							<label class="control-label span4 " for="domNombreVia">Nombre de la Vía:</label>
+							<input name="domNombreVia" class="span4" id="domNombreVia" type="text"  th:value="${paciente.domNombreVia}" />
+						</div>
+						<div class="form-group">
+							<label class="control-label span1 " for="domNumero">Número:</label>
+							<input name="domNumero" class="span1" id="domNumero" type="text" maxlength="4" th:value="${paciente.domNumero}" />
+						</div>
+						<div class="form-group">
+							<label class="control-label span1 " for="domPisopuerta">Piso Puerta:</label>
+							<input name="domPisopuerta" class="span1" id="domPisopuerta" type="text" maxlength="4"  th:value="${paciente.domPisopuerta}" />
+						</div>
+						<div class="form-group">
+							<label class="control-label span3 " for="domOtros">Otros:</label>
+							<input name="domOtros" class="span3" id="domOtros" type="text"  th:value="${paciente.domOtros}" />
+						</div>
+					</div>
+		</form>
+	</div> <!-- Fin contenido -->
+</body>
+</html>
