@@ -31,9 +31,22 @@ $(document)
 			  	});
 		
 	   $("#btnBusquedaNumeroPaciente").on('click',function() {
+		   var val = $("#busquedaNumeroPaciente").val();
 		   $("#imgEsperaNumeroPaciente").css('display','inline-block');
-		   alert($("#busquedaNumeroPaciente").val());
-		   $("#imgEsperaNumeroPaciente").css('display','none');
+		   
+		   $.ajax({
+			  url: routeBase + "show/json/" + val,
+			  dataType: 'json',
+			  type: 'GET'
+		   }).done(function(data,textStatus,jqXHR) {
+			   $("#grupo-busqueda-numero-paciente").append("<p style='display:inline-block'>nombre: "+data.apellido01.toUpperCase()+" "+data.apellido02.toUpperCase()+", "+data.nombre.toUpperCase()+"</p>");
+		   }).fail(function(jqXHR, textStatus, errorThrown) {
+			   $("#grupo-busqueda-numero-paciente").append("<p class='error'>No se encuentra</p>");
+		   }).always(function(dataJq,errorOrJqXHR) {
+			   $("#imgEsperaNumeroPaciente").css('display','none'); 
+		   });
+		   
+		   
 	   });
 });
 /*]]>*/
@@ -54,7 +67,7 @@ $(document)
 				<div id="tab-paciente-busqueda" class="tab-pane fade in active">
 				<div class="offset1">
 					<form id="form-search-paciente" class="form-horizontal" method='POST'>
-						<div  class="form-group row-fluid control-group">
+						<div id="grupo-busqueda-numero-paciente" class="form-group row-fluid control-group">
 							<label class="control-label span2" for="busquedaNumeroPaciente">Num. Paciente:</label>
 							<div class="input-append" >
 								<input id="busquedaNumeroPaciente" class="span5" name="busquedaNumeroPaciente" type="text" maxlength="7"/>

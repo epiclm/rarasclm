@@ -85,13 +85,13 @@ public class EnfermedadRaraService {
 	 * @param enf
 	 *            the enf
 	 */
-	public void update(EnfermedadRara enf) throws ServiceException {
+	public void update(EnfermedadRara enf) throws ServiceRarasCLMException {
 		try {
 			dao.actualizar(enf);
 			actualizaCache(enf.getEnfermedadRaraId());
 		} catch (Exception ex) {
 			log.error(String.format("ERROR CAPA SERVICIO %s",ex.getMessage()), ex);
-			throw new ServiceException(ex.getMessage());
+			throw new ServiceRarasCLMException(ex.getMessage());
 		}
 	}
 
@@ -137,7 +137,7 @@ public class EnfermedadRaraService {
 	}
 
 	public void updateHasCie9mc(String enfRaraId, String cie9mcId, String notas, int numPrioridad)
-			throws ServiceException {
+			throws ServiceRarasCLMException {
 		try {
 			EnfermedadRaraHasEnfermedadRaraCie9mcId id = new EnfermedadRaraHasEnfermedadRaraCie9mcId(enfRaraId,
 					cie9mcId);
@@ -147,13 +147,13 @@ public class EnfermedadRaraService {
 				hasCie9.setNumPrioridad(numPrioridad);
 				daoHasCie9mc.actualizar(hasCie9);
 			} else {
-				throw new ServiceException(String.format(
+				throw new ServiceRarasCLMException(String.format(
 						"Error al modificar enfermedad rara %s asociada a CIE9 %s no existe relacion previa para modificar",
 						enfRaraId, cie9mcId));
 			}
 		} catch (Exception ex) {
 			log.error(String.format("%s", ex.getMessage()), ex);
-			throw new ServiceException(String.format("Error al modificar enfermedad rara %s asociada a CIE9 %s - %s",
+			throw new ServiceRarasCLMException(String.format("Error al modificar enfermedad rara %s asociada a CIE9 %s - %s",
 					enfRaraId, cie9mcId, ex.getMessage()));
 		}
 	}
@@ -186,7 +186,7 @@ public class EnfermedadRaraService {
 		return false;
 	}
 
-	public boolean deleteHasCie9mc(String enfRaraId, String cie9mcId) throws ServiceException {
+	public boolean deleteHasCie9mc(String enfRaraId, String cie9mcId) throws ServiceRarasCLMException {
 		try {
 			EnfermedadRara enfRara = getEnfermedadRaraById(enfRaraId);
 			EnfermedadRaraHasEnfermedadRaraCie9mc hasCie9mc = daoHasCie9mc
@@ -198,13 +198,13 @@ public class EnfermedadRaraService {
 				String mensaje = String.format("Error al desasociar la enfermedad cie9mc %s de la enfermedad %s %s",
 						cie9mcId, enfRara.getEnfermedadRaraId(), enfRara.getLiteral());
 				log.error(String.format("ERROR EN LA CAPA DE SERVICIO - %s", mensaje));
-				throw new ServiceException(mensaje);
+				throw new ServiceRarasCLMException(mensaje);
 			}
 		} catch (Exception ex) {
 			String mensaje = String.format("Error al desasociar la enfermedad cie9mc %s de la enfermedad %s ", cie9mcId,
 					enfRaraId);
 			log.error(String.format("ERROR EN LA CAPA DE SERVICIO %s - %s", mensaje, ex.getMessage()));
-			throw new ServiceException(mensaje);
+			throw new ServiceRarasCLMException(mensaje);
 		}
 	}
 }

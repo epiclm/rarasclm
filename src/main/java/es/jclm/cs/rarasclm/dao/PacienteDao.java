@@ -2,12 +2,16 @@ package es.jclm.cs.rarasclm.dao;
 
 import java.util.List;
 
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.jclm.cs.rarasclm.entities.Paciente;
- 
+@Repository
+@Transactional
 @SuppressWarnings("unchecked") /*JAVA ugly*/
 public class PacienteDao extends BaseEntityDao<Paciente,Integer> {
 
