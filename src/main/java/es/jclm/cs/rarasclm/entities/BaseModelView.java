@@ -112,4 +112,10 @@ public class BaseModelView implements IBaseModelView {
 		return menuModel;
 	}
 
+	@Override
+	public DatosAuxiliaresCacheados getCache() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

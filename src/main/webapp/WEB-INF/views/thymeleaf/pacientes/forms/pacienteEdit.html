@@ -6,15 +6,16 @@
 <title>EDITAR Paciente</title>
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
-           
-           
+var routeBase = /*[[${route.baseUrl}]]*/'';
+var routeApp = /*[[${baseModel.baseApp}]]*/'';   
+          
 /*]]>*/
 </script>
 </head>
 <body>
 	<div id="contenido" layout:fragment="content">
 	<form id="form-edit-paciente" class="form-inline" method='POST'>
-	<legend>Edición Paciente <span th:text="${paciente.paciente}"></span></legend>
+	<legend>Edición Paciente <span th:text="${paciente.idPaciente}"></span></legend>
 				<div class="row span10">
 						<div id="grupo-apellido01-paciente" class="form-group">
 							<label class="control-label span3" for="apellido01">1er Apellido:</label>
@@ -80,6 +81,18 @@
 						<div class="form-group">
 							<label class="control-label span3 " for="domOtros">Otros:</label>
 							<input name="domOtros" class="span3" id="domOtros" type="text"  th:value="${paciente.domOtros}" />
+						</div>
+					</div>
+					<div class="row span10">
+						<div class="form-group">
+							<div class="form-group">
+								<label class="control-label span1 " for="domTipoVia">Tipo Vía:</label>
+								<select name="sexo" class="span2" id="sexo"  th:field="${paciente.sexo}" >
+									<option value="1">VARÓN</option>
+									<option value="6">MUJER</option>
+									<option value="9">DESCONOCIDO</option>
+								</select>
+							</div>
 						</div>
 					</div>
 		</form>

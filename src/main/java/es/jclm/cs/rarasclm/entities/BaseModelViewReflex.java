@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
@@ -36,6 +37,9 @@ public class BaseModelViewReflex implements IBaseModelView {
 
 	/** paquete de búsqueda de controladores **/
 	private String baseControllerPackage = "es.jclm.cs.rarasclm.controller";
+	
+	@Autowired
+	DatosAuxiliaresCacheados cacheAuxiliares;
 
 	public BaseModelViewReflex() {
 
@@ -147,14 +151,17 @@ public class BaseModelViewReflex implements IBaseModelView {
 
 
 	public MenuModel getMenuModel() {
-		// TODO Auto-generated method stub
 		return menuModel;
 	}
 
 	@Override
 	public String getBaseApp() {
-		// TODO Auto-generated method stub
 		return this.baseapp;
+	}
+
+	@Override
+	public DatosAuxiliaresCacheados getCache() {
+		return this.cacheAuxiliares;
 	}
 	
 

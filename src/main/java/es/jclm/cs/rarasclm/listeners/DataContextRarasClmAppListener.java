@@ -4,6 +4,9 @@
  */
 package es.jclm.cs.rarasclm.listeners;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +15,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.IBaseModelView;
+import es.jclm.cs.rarasclm.entities.Municipios;
+import es.jclm.cs.rarasclm.entities.Provincias;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie10Service;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie9mcService;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
+import es.jclm.cs.rarasclm.service.LocalizacionesService;
 
 
 // TODO: Auto-generated Javadoc
@@ -49,6 +55,9 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 	@Autowired
 	EnfermedadRaraService raraService;
 	
+	@Autowired 
+	LocalizacionesService localizacionesService;
+	
 	/** The base model. */
 	@Autowired
 	IBaseModelView baseModel;
@@ -61,20 +70,29 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 	
 		log.info("Generando la estructura de módulos de la aplicación rarasCLM");
 		try {
-			 //URL urlXml = this.getClass().getResource("resources/spring-web.xml");
-			 //String url = urlXml.toString();
+			log.info("Cargando entidades auxiliares de la aplicación de RarasCLM");
+			datos.setCie9mcs(cie9Service.getAllEnfermedadesRarasCie9mc(false));
+			log.info("Cargada entidades auxiliares CIE9MC");
+			datos.setCie10s(cie10Service.getAllEnfermedadesRarasCie10(false));
+			log.info("Cargada entidades auxiliares CIE10");
+			datos.setEnfRaras(raraService.getAllEnfermedadesRaras(false));
+			log.info("Cargada entidades auxiliares Enfermedades Raras");
+			datos.setProvincias(localizacionesService.getProvincias(false));
+			log.info("Cargada entidades auxiliares Provincias");
+			datos.setMunicipios(localizacionesService.getMunicipios(false));
+			HashMap<String, List<Municipios>> hMunicipios;
+			hMunicipios = new HashMap<String, List<Municipios>>(52);
+			for(Provincias p : datos.getProvincias()) {
+				hMunicipios.put(p.getProvincia(), p.getMunicipioses());
+			}
+			datos.setMunicipiosMapProvincia(hMunicipios);
+			log.info("Cargada entidades auxiliares Municipios");
 		}
 		catch(Exception ex) {
-			
+			log.error(ex.getMessage(),ex);
 		}
 		
-		log.info("Cargando entidades auxiliares de la aplicación de RarasCLM");
-		datos.setCie9mcs(cie9Service.getAllEnfermedadesRarasCie9mc(false));
-		log.info("Cargada entidades auxiliares CIE9MC");
-		datos.setCie10s(cie10Service.getAllEnfermedadesRarasCie10(false));
-		log.info("Cargada entidades auxiliares CIE10");
-		datos.setEnfRaras(raraService.getAllEnfermedadesRaras(false));
-		log.info("Cargada entidades auxiliares Enfermedades Raras");
+
 		
 	}
 

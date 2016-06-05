@@ -4,7 +4,9 @@
  */
 package es.jclm.cs.rarasclm.entities;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,8 +33,11 @@ public class DatosAuxiliaresCacheados {
 	/** Municipios. */
 	private List<Municipios> municipios;
 	
+	/**Map de Municipios */
+	private Map<String,List<Municipios>> municipiosMapProvincia;
+	
 	/** Provincias. */
-	private List<Municipios> provincias;
+	private List<Provincias> provincias;
 	
 	/** CCAA */
 	private List<Ccaa> ccaas;
@@ -160,11 +165,11 @@ public class DatosAuxiliaresCacheados {
 		this.municipios = municipios;
 	}
 
-	public List<Municipios> getProvincias() {
+	public List<Provincias> getProvincias() {
 		return provincias;
 	}
 
-	public void setProvincias(List<Municipios> provincias) {
+	public void setProvincias(List<Provincias> provincias) {
 		this.provincias = provincias;
 	}
 
@@ -175,6 +180,16 @@ public class DatosAuxiliaresCacheados {
 	public void setCcaas(List<Ccaa> ccaas) {
 		this.ccaas = ccaas;
 	}
+
+	public Map<String, List<Municipios>> getMunicipiosMapProvincia() {
+		return municipiosMapProvincia;
+	}
+
+	public void setMunicipiosMapProvincia(Map<String, List<Municipios>> municipiosMapProvincia) {
+		this.municipiosMapProvincia = municipiosMapProvincia;
+	}
+	
+	
 	
 	
 

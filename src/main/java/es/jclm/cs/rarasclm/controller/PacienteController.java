@@ -96,7 +96,6 @@ public class PacienteController extends BaseController {
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
 		return "pacientes/forms/pacienteEdit";
-		
 	}
 	
 	

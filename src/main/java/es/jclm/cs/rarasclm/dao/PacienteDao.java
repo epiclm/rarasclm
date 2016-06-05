@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.jclm.cs.rarasclm.entities.Paciente;
 @Repository
-@Transactional
 @SuppressWarnings("unchecked") /*JAVA ugly*/
 public class PacienteDao extends BaseEntityDao<Paciente,Integer> {
 

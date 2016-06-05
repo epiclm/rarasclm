@@ -1,5 +1,5 @@
 package es.jclm.cs.rarasclm.entities;
-// Generated 28-may-2016 19:43:36 by Hibernate Tools 4.3.1.Final
+// Generated 05-jun-2016 17:26:24 by Hibernate Tools 4.3.1.Final
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

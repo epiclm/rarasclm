@@ -57,9 +57,8 @@ public class BaseController {
 		AccionRespuesta ret = new AccionRespuesta();
 		return ret;
 	}
-
-	//ruta url {modulo}/{entidad}/{accion}/{ID|json}/{ID2?}
 	
+	//ruta url {modulo}/{entidad}/{accion}/{ID|json}/{ID2?}	
 	//ID es el id entidad principal
 	//ID2 es el id de la entidad secundaria a actualizar o asociaar a la primaria
 	
