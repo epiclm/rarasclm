@@ -7,8 +7,33 @@
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
 var routeBase = /*[[${route.baseUrl}]]*/'';
-var routeApp = /*[[${baseModel.baseApp}]]*/'';   
-          
+var contextApp = /*[[${baseModel.baseApp}]]*/'';  
+var imgEspera = '<img id="img-espera-num-paciente" style="width:18px;margin-left:10px" alt="Esperando..." src="/'+ contextApp  +'/img/espera.gif"></img>';
+
+$(document).ready( function() {
+	
+	$("#provinciaResidencia").change(function() {
+		var provincia = $(this).val();
+		var strHtml='<option value="99" select>DESCONOCIDO</option>\n'
+		$('#municipioResidencia').html("<p>CARGANDO...</p>");
+		$.ajax({
+			url:'/'+ contextApp + '/localizaciones/municipios/deprovincia/'+provincia,
+			dataType:'json',
+		}).fail(function(jqXHR, textStatus, errorThrown)   {
+	
+		}).done(function(data, textStatus, jqXHR)   {
+			for(i=0;i<data.length;i++) {
+				strHtml += '<option value="' + data[i].idMunicipio +'">'+ data[i].deno + '</option>\n'
+			}
+		}).always(function() {
+			$('#municipioResidencia').html(strHtml);
+		})
+	});
+	
+	
+
+})
+
 /*]]>*/
 </script>
 </head>
@@ -79,20 +104,26 @@ var routeApp = /*[[${baseModel.baseApp}]]*/'';
 							<input name="domPisopuerta" class="span1" id="domPisopuerta" type="text" maxlength="4"  th:value="${paciente.domPisopuerta}" />
 						</div>
 						<div class="form-group">
-							<label class="control-label span3 " for="domOtros">Otros:</label>
-							<input name="domOtros" class="span3" id="domOtros" type="text"  th:value="${paciente.domOtros}" />
+							<label class="control-label span2 " for="domOtros">Otros:</label>
+							<input name="domOtros" class="span2" id="domOtros" type="text"  th:value="${paciente.domOtros}" />
 						</div>
 					</div>
 					<div class="row span10">
 						<div class="form-group">
-							<div class="form-group">
-								<label class="control-label span1 " for="domTipoVia">Tipo Vía:</label>
-								<select name="sexo" class="span2" id="sexo"  th:field="${paciente.sexo}" >
-									<option value="1">VARÓN</option>
-									<option value="6">MUJER</option>
-									<option value="9">DESCONOCIDO</option>
-								</select>
+							<label class="control-label span2 " for="domTipoVia">Provincia Res.:</label>
+							<select name="provinciaResidencia" class="span2" id="provinciaResidencia"  th:field="${paciente.provinciaResidencia}" >
+								<option th:each="provincia : ${baseModel.cache.provinciasCLM}" th:value="${provincia.provincia}" th:text="${provincia.deno}"></option>
+							</select>
 							</div>
+						<div class="form-group">
+							<label class="control-label span3 " for="domTipoVia">Muncipio Res.:</label>
+							<select name="municipioResidencia" class="span3" id="municipioResidencia"  th:field="${paciente.municipioResidencia}" >
+								<option th:if="${municipiosProvinciaResidencia} !=null " th:each="municipio : ${municipiosProvinciaResidencia}" th:value="${municipio.municipio}" th:text="${municipio.deno}"></option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="control-label span1 " for="domCp">CP:</label>
+							<input name="domCp" class="span1" id="domCp" type="text"  th:value="${paciente.domCp}" maxlength="5" />
 						</div>
 					</div>
 		</form>

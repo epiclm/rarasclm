@@ -42,6 +42,7 @@ public class Paciente implements java.io.Serializable {
 	private String domNumero;
 	private String domPisopuerta;
 	private String domOtros;
+	private String domCp;
 	private String provinciaResidencia;
 	private String municipioResidencia;
 	private Byte fallecido;
@@ -64,7 +65,7 @@ public class Paciente implements java.io.Serializable {
 			String municipioNacimiento, String paisNacimiento, String domTipoVia, String domNombreVia, String domNumero,
 			String domPisopuerta, String domOtros, String provinciaResidencia, String municipioResidencia,
 			Byte fallecido, Date fallecidoFechaComprobacion, String fallecidoEtiquetaComprobacion,
-			String fallecidoNumbol, String email, String telefono, Set<Caso> casos) {
+			String fallecidoNumbol, String email, String telefono, Set<Caso> casos, String domCp) {
 		this.idPaciente = idPaciente;
 		this.idpacnac = idpacnac;
 		this.cip = cip;
@@ -257,6 +258,15 @@ public class Paciente implements java.io.Serializable {
 
 	public void setDomOtros(String domOtros) {
 		this.domOtros = domOtros;
+	}
+
+	@Column(name = "dom_cp", length = 5)
+	public String getDomCp() {
+		return domCp;
+	}
+
+	public void setDomCp(String domCp) {
+		this.domCp = domCp;
 	}
 
 	@Column(name = "provincia_residencia", length = 2)

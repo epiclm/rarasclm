@@ -78,6 +78,7 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 			datos.setEnfRaras(raraService.getAllEnfermedadesRaras(false));
 			log.info("Cargada entidades auxiliares Enfermedades Raras");
 			datos.setProvincias(localizacionesService.getProvincias(false));
+			datos.setProvinciasCLM(localizacionesService.getProvinciasCLM(false));
 			log.info("Cargada entidades auxiliares Provincias");
 			datos.setMunicipios(localizacionesService.getMunicipios(false));
 			HashMap<String, List<Municipios>> hMunicipios;

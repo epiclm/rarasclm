@@ -1,5 +1,6 @@
 package es.jclm.cs.rarasclm.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -47,6 +48,20 @@ public class LocalizacionesService {
 			return datosCache.getProvincias(); 
 		else
 			return provinciasDao.getProvincias();
+	}
+	
+	public List<Provincias> getProvinciasCLM(boolean cache) {
+		List<Provincias> provincias = getProvincias(cache);
+		List<Provincias> ret = new ArrayList<Provincias>();
+		Provincias desconocida = new Provincias();
+		desconocida.setDeno("DESCONOCIDA");
+		desconocida.setProvincia("99");
+		ret.add(desconocida);
+		for(Provincias p : provincias) {
+			if(p.getCcaa().getCcaa().equals("08"))
+				ret.add(p);
+		}
+		return ret;
 	}
 	
 	public List<Municipios> getMunicipioDeProvincia(String idProvincia) {

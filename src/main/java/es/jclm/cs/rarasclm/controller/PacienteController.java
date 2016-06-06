@@ -1,7 +1,9 @@
 package es.jclm.cs.rarasclm.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -20,9 +22,14 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
+import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie9mc;
+import es.jclm.cs.rarasclm.entities.Municipios;
 import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.entities.PacientesModelView;
+import es.jclm.cs.rarasclm.entities.Provincias;
+import es.jclm.cs.rarasclm.entities.UserRarasCLM;
+import es.jclm.cs.rarasclm.service.LocalizacionesService;
 import es.jclm.cs.rarasclm.service.PacienteService;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 
@@ -35,6 +42,9 @@ public class PacienteController extends BaseController {
 	
 	@Autowired
 	PacienteService servicio;
+	
+	@Autowired
+	LocalizacionesService servicioLocalizaciones;
 	
 	
 	@InitBinder
@@ -66,8 +76,9 @@ public class PacienteController extends BaseController {
 			SessionStatus status) {
 
 		status.setComplete();
-		
 		model.addAttribute("pacientes", pacientesMV);
+		pacientesMV.setPacientes(servicio.buscaPacientesNombre(pacientesMV.getBusquedaNombre()));
+		
 		getRoute().setId("");
 		return "pacientes/index-pacientes";
 	}
@@ -91,6 +102,13 @@ public class PacienteController extends BaseController {
 		try {
 			Paciente paciente = servicio.Buscar(clave);
 			model.addAttribute("paciente", paciente);
+			List<Municipios> municipiosResidencia = new ArrayList<Municipios>();
+			Municipios municipioDesconocido = new Municipios();
+			municipioDesconocido.setMunicipio("99");
+			municipioDesconocido.setDeno("DESCONOCIDO");
+			municipiosResidencia.add(municipioDesconocido);
+			municipiosResidencia.addAll(servicioLocalizaciones.getMunicipioDeProvincia(paciente.getMunicipioResidencia().substring(0, 2)));
+			model.addAttribute("municipiosProvinciaResidencia",municipiosResidencia);
 		} catch (ServiceRarasCLMException ex) {
 			ex.printStackTrace();
 			return null; //TO DO Mandar mensaje de error a la vista

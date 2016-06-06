@@ -39,6 +39,9 @@ public class DatosAuxiliaresCacheados {
 	/** Provincias. */
 	private List<Provincias> provincias;
 	
+	/** Provincias. */
+	private List<Provincias> provinciasCLM;
+	
 	/** CCAA */
 	private List<Ccaa> ccaas;
 	
@@ -188,8 +191,14 @@ public class DatosAuxiliaresCacheados {
 	public void setMunicipiosMapProvincia(Map<String, List<Municipios>> municipiosMapProvincia) {
 		this.municipiosMapProvincia = municipiosMapProvincia;
 	}
-	
-	
+
+	public List<Provincias> getProvinciasCLM() {
+		return provinciasCLM;
+	}
+
+	public void setProvinciasCLM(List<Provincias> provinciasCLM) {
+		this.provinciasCLM = provinciasCLM;
+	}
 	
 	
 

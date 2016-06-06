@@ -6,7 +6,7 @@
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 var routeBase = /*[[${route.baseUrl}]]*/'';
-var routeApp = /*[[${baseModel.baseApp}]]*/'';
+var contextApp =  /*[[${baseModel.baseApp}]]*/'';
 var enfermedades;
 var enfermedadesLiterales;
 
@@ -24,6 +24,24 @@ $(document)
 		$("#form-search-paciente").on('submit',function(e){
 		    //e.preventDefault();
 		  });
+		
+		$("#busquedaProvincia").change(function() {
+			var provincia = $(this).val();
+			var strHtml='<option value="99" select>DESCONOCIDO</option>\n'
+			$('#busquedaMunicipio').html("<p>CARGANDO...</p>");
+			$.ajax({
+				url:'/'+ contextApp + '/localizaciones/municipios/deprovincia/'+provincia,
+				dataType:'json',
+			}).fail(function(jqXHR, textStatus, errorThrown)   {
+		
+			}).done(function(data, textStatus, jqXHR)   {
+				for(i=0;i<data.length;i++) {
+					strHtml += '<option value="' + data[i].idMunicipio +'">'+ data[i].deno + '</option>\n'
+				}
+			}).always(function() {
+				$('#busquedaMunicipio').html(strHtml);
+			})
+		});
 	
 		$("#busquedaCIP,#busquedaApellido1,#busquedaApellido2,#busquedaNombre")
 			.focusout( 
@@ -105,32 +123,24 @@ $(document)
 								<input name="busquedaNombre" id="busquedaNombre" type="text" maxlength="55" placeholder="Nombre" th:value="${pacientes.busquedaNombre}" />
 						</div>
 						<div class="form-group row-fluid control-group">
-							<label class="control-label span2" for="busquedaProvincia">Provincia:</label>
-								<select name="busquedaProvincia" class="span3" th:field="${pacientes.busquedaProvincia}" >
-									<option value="02">Albacete</option>
-									<option value="13">Ciudad Real</option>
-									<option value="16">Cuenca</option>
-									<option value="19">Guadalajara</option>
-									<option value="45">Toledo</option>
-								</select>
-						 </div>
-						<div class="form-group row-fluid control-group">
-							<label class="control-label span2" for="busquedaMunicipio">Municipio:</label>
-								<select name="busquedaMunicipio" class="span4" th:field="${pacientes.busquedaMunicipio}" >
-									<option value="02">Albacete</option>
-									<option value="13">Ciudad Real</option>
-									<option value="16">Cuenca</option>
-									<option value="19">Guadalajara</option>
-									<option value="45">Toledo</option>
-								</select>
+							<label class="control-label span2" for="busquedaProvincia">Provincia Res.:</label>
+							<select name="busquedaProvincia" class="span3" id="busquedaProvincia"  th:field="${pacientes.busquedaProvincia}" >
+								<option th:each="provincia : ${baseModel.cache.provinciasCLM}" th:value="${provincia.provincia}" th:text="${provincia.deno}"></option>
+							</select>
 						</div>
 						<div class="form-group row-fluid control-group">
-							<label class="control-label span2 " for="busquedaFechaNacimiento">Fec. Nac.:</label>
-							<input name="busquedaFechaNacimiento" id="busquedaFechaNacimiento" type="date"  th:value="${pacientes.busquedaFechaNacimiento!=null ? #dates.format(pacientes.busquedaFechaNacimiento, 'yyyy-MM-dd') : ''}" />
+							<label class="control-label span2" for="busquedaMunicipio">Muncipio Res.:</label>
+							<select name="busquedaMunicipio" class="span4" id="busquedaMunicipio"  th:field="${pacientes.busquedaMunicipio}" >
+								<option th:if="${municipiosProvinciaResidencia} !=null " th:each="municipio : ${municipiosProvinciaResidencia}" th:value="${municipio.municipio}" th:text="${municipio.deno}"></option>
+							</select>
 						</div>
 						<div class="form-group row-fluid control-group">
-							<label class="control-label span2" for="busquedaNombre"></label>
-								<input class="btn" type="submit" value="Buscar" />
+							<label class="control-label span2" for="busquedaFechaNacimiento">Fec. Nac.:</label>
+							<input name="busquedaFechaNacimiento" class="span3" id="busquedaFechaNacimiento" type="date"  th:value="${pacientes.busquedaFechaNacimiento!=null ? #dates.format(pacientes.busquedaFechaNacimiento, 'yyyy-MM-dd') : ''}" />
+						</div>
+						<div class="form-group row-fluid control-group">
+							<label class="control-label span2"></label>
+								<input class="btn btn-primary" type="submit" value="Buscar" />
 						</div>
 					</form>
 				  </div>
