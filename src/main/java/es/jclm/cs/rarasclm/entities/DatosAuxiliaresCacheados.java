@@ -200,6 +200,29 @@ public class DatosAuxiliaresCacheados {
 		this.provinciasCLM = provinciasCLM;
 	}
 	
+	public String getProvinciaDeno(String provincia) {
+		for(Provincias p : this.provincias) {
+			if(p.getProvincia().equalsIgnoreCase(p.getProvincia()))
+				return p.getDeno();
+		}
+		return "";
+	}
+	
+	public String getMunipioDeno(String municipio) {
+		if(municipio.trim().length()==5)
+		{
+			String provincia = municipio.trim().substring(0, 2);
+			for(Provincias p : this.provincias) {
+				if(p.getProvincia().equalsIgnoreCase(p.getProvincia()))
+					for(Municipios m : this.getMunicipios()) {
+						if(m.getMunicipio().equalsIgnoreCase(municipio.trim()))
+							return m.getDeno();
+					}
+			}
+		}
+		return "";
+	}
+	
 	
 
 }

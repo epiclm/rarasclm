@@ -20,8 +20,9 @@ $(document)
 .ready(function() {	
 	
 		var isOKForm = false;
-	
-		$('#busquedaMunicipio').html('<option value="99" select>DESCONOCIDO</option>\n');
+		var strHtml='<option value="99999" select>DESCONOCIDO</option>\n'
+		
+		$('#busquedaMunicipio').html(strHtml);
 	
 		$("#img-espera-num-paciente").css('display','none');
 	
@@ -49,7 +50,7 @@ $(document)
 		
 		$("#busquedaProvincia").change(function() {
 			var provincia = $(this).val();
-			var strHtml='<option value="99" select>DESCONOCIDO</option>\n'
+			
 			$('#busquedaMunicipio').html("<p>CARGANDO...</p>");
 			$.ajax({
 				url:'/'+ contextApp + '/localizaciones/municipios/deprovincia/'+provincia,
@@ -58,7 +59,7 @@ $(document)
 		
 			}).done(function(data, textStatus, jqXHR)   {
 				for(i=0;i<data.length;i++) {
-					strHtml += '<option value="' + data[i].idMunicipio +'">'+ data[i].deno + '</option>\n'
+					strHtml += '<option value="' + data[i].municipio +'">'+ data[i].deno + '</option>\n'
 				}
 			}).always(function() {
 				$('#busquedaMunicipio').html(strHtml);
@@ -159,7 +160,7 @@ $(document)
 						<div class="form-group row-fluid control-group">
 							<label class="control-label span2" for="busquedaMunicipio">Muncipio Res.:</label>
 							<select name="busquedaMunicipio" class="span4" id="busquedaMunicipio"  th:field="${pacientes.busquedaMunicipio}" >
-								<option th:if="${municipiosProvinciaResidencia} !=null " th:each="municipio : ${municipiosProvinciaResidencia}" th:value="${municipio.municipio}" th:text="${municipio.deno}"></option>
+								<option th:if="${municipiosProvinciaResidencia}!=null" th:each="m : ${municipiosProvinciaResidencia}" th:value="${m.municipio}" th:text="${m.deno}"></option>
 							</select>
 						</div>
 						<div class="form-group row-fluid control-group">
@@ -178,9 +179,8 @@ $(document)
 
 				<!-- PACIENTES -->
 				<div id="tab-paciente-resultados" th:attr="class=${pacientes.pacientes!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
-					<h4>Resultados!</h4>
 					<ul th:each="paciente: ${pacientes.pacientes}">
-						<li th:text="|${paciente.apellido01} ${paciente.apellido02}, ${paciente.nombre}|"></li>
+						<li><a th:href="|${route.baseUrl}edit/${paciente.idPaciente}|" th:text="|${paciente.idPaciente} ${paciente.apellido01} ${paciente.apellido02}, ${paciente.nombre} ${baseModel.cache.getMunipioDeno(paciente.municipioResidencia)}|"></a></li>
 					</ul>
 				</div>
 				

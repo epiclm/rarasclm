@@ -77,7 +77,9 @@ public class PacienteController extends BaseController {
 
 		status.setComplete();
 		model.addAttribute("pacientes", pacientesMV);
-		pacientesMV.setPacientes(servicio.buscaPacientesNombre(pacientesMV.getBusquedaNombre()));
+		if(pacientesMV.getBusquedaMunicipio().length()==5 && pacientesMV.getBusquedaMunicipio()!="99999")
+			model.addAttribute("municipiosProvinciaResidencia",servicioLocalizaciones.getMunicipioDeProvincia(pacientesMV.getBusquedaMunicipio().substring(0, 2)));
+		pacientesMV.setPacientes(servicio.buscaPacientes(pacientesMV));
 		getRoute().setId("");
 		return "pacientes/index-pacientes";
 	}
@@ -103,7 +105,7 @@ public class PacienteController extends BaseController {
 			model.addAttribute("paciente", paciente);
 			List<Municipios> municipiosResidencia = new ArrayList<Municipios>();
 			Municipios municipioDesconocido = new Municipios();
-			municipioDesconocido.setMunicipio("99");
+			municipioDesconocido.setMunicipio("99999");
 			municipioDesconocido.setDeno("DESCONOCIDO");
 			municipiosResidencia.add(municipioDesconocido);
 			municipiosResidencia.addAll(servicioLocalizaciones.getMunicipioDeProvincia(paciente.getMunicipioResidencia().substring(0, 2)));

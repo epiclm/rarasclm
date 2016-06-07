@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import es.jclm.cs.rarasclm.dao.PacienteDao;
 import es.jclm.cs.rarasclm.entities.Paciente;
+import es.jclm.cs.rarasclm.entities.PacientesModelView;
 
 
 @Service
@@ -23,8 +24,16 @@ public class PacienteService extends BaseCRUDService<Paciente, Integer> {
 		this.dao = dao;
 	}
 	
-	public List<Paciente> buscaPacientesNombre(String nombre) {
-		return dao.busqueda(nombre, "", "");
+
+	
+	public List<Paciente> buscaPacientes(PacientesModelView pmv) {
+		return dao.busqueda(pmv.getBusquedaCIP(),
+				pmv.getBusquedaNombre(),
+				pmv.getBusquedaApellido1(),
+				pmv.getBusquedaApellido2(),
+				pmv.getBusquedaProvincia(),
+				pmv.getBusquedaMunicipio(),
+				pmv.getBusquedaFechaNacimiento());
 	}
 	
 	
