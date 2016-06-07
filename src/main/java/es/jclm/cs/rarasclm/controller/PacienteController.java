@@ -78,7 +78,6 @@ public class PacienteController extends BaseController {
 		status.setComplete();
 		model.addAttribute("pacientes", pacientesMV);
 		pacientesMV.setPacientes(servicio.buscaPacientesNombre(pacientesMV.getBusquedaNombre()));
-		
 		getRoute().setId("");
 		return "pacientes/index-pacientes";
 	}

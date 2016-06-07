@@ -19,11 +19,33 @@ function renderBotonesPaciente(num,deno) {
 $(document)
 .ready(function() {	
 	
+		var isOKForm = false;
+	
+		$('#busquedaMunicipio').html('<option value="99" select>DESCONOCIDO</option>\n');
+	
 		$("#img-espera-num-paciente").css('display','none');
 	
-		$("#form-search-paciente").on('submit',function(e){
-		    //e.preventDefault();
+		$("#form-search-paciente").on('submit',function(e) {
+			if(!isOkForm)
+		    	e.preventDefault();
 		  });
+		
+		
+		$('.btn').on('click', function(){
+			isOkForm=false;
+		});
+		
+		$('#submitBuscarPacientes').on('click', function(){
+			isOkForm=true;
+		});
+		
+		
+		$("#borrarFormulario").on('click', function() {
+			$("#busquedaCIP,#busquedaApellido1,#busquedaApellido2,#busquedaNombre").val('');
+			$("#busquedaFechaNacimiento").val('');
+			$('#busquedaProvincia').val('99').change();
+			$('#busquedaMuncipio').val('99999').change();
+		});
 		
 		$("#busquedaProvincia").change(function() {
 			var provincia = $(this).val();
@@ -74,9 +96,7 @@ $(document)
 			   $("#resultado-busqueda-num-paciente").html("<p class='text-error'>No se encuentra</p>");
 		   }).always(function(dataJq,errorOrJqXHR) {
 			   $("#img-espera-num-paciente").css('display','none'); 
-		   });
-		   
-		   
+		   });	   
 	   });
 });
 /*]]>*/
@@ -88,13 +108,17 @@ $(document)
 		<div id="tabEnfermedadesAsociadas" class="tab-content row  span10">
 		
 			<ul class="nav nav-tabs">
-				<li th:attr="class=${pacientes.pacientes==null ? 'active' : ''}"><a href="#tab-paciente-busqueda" data-toggle="tab">Búsqueda Pacientes:</a></li>
-				<li th:attr="class=${pacientes.pacientes!=null ? 'active' : ''}"><a href="#tab-paciente-resultados" data-toggle="tab">Resultados</a></li>
+				<li th:attr="class=${pacientes.pacientes==null ? 'active' : ''}">
+					<a href="#tab-paciente-busqueda" data-toggle="tab">Búsqueda Pacientes:</a>
+				</li>
+				<li th:attr="class=${pacientes.pacientes!=null ? 'active' : ''}">
+					<a href="#tab-paciente-resultados" data-toggle="tab">Resultados</a>
+				</li>
 			</ul>
 			
 			<!-- BUSQUEDAS -->
 			<div class="tab-content">
-				<div id="tab-paciente-busqueda" class="tab-pane fade in active">
+				<div id="tab-paciente-busqueda" th:attr="class=${pacientes.pacientes==null ? 'tab-pane fade in active' : 'tab-pane fade'}">
 				<div class="offset1">
 					<form id="form-search-paciente" class="form-horizontal" method='POST'>
 						<div id="grupo-busqueda-numero-paciente" class="form-group row-fluid control-group">
@@ -106,11 +130,15 @@ $(document)
 							<img id="img-espera-num-paciente" style="width:24px;margin-left:10px" alt="Esperando..." th:src="@{/img/espera.gif}"></img>	
 							<div id="resultado-busqueda-num-paciente" style="display:inline-block"></div>
 						</div>
+						<div class="row offset5">
+							<div  class="form-group row-fluid control-group">
+								<button id="borrarFormulario" class="btn"><i class="icon-trash"></i>&nbsp; Borrar Formulario</button>
+							</div>
+						</div>
 						<div  class="form-group row-fluid control-group">
 							<label class="control-label span2" for="busquedaCIP">CIP:</label>
 							<div class="input-append">
 								<input  class="span12" id="busquedaCIP" name="busquedaCIP" type="text" maxlength="16" th:value="${pacientes.busquedaCIP}"/>
-								<!-- <a id="btnBusquedaCIPPaciente" class="btn add-on" href="" type="button"><i class="icon-search"></i></a> -->
 							</div>
 						</div>
 						<div class="form-group row-fluid control-group">
@@ -140,15 +168,20 @@ $(document)
 						</div>
 						<div class="form-group row-fluid control-group">
 							<label class="control-label span2"></label>
-								<input class="btn btn-primary" type="submit" value="Buscar" />
+								<button id="submitBuscarPacientes" type="submit" class="btn btn-primary">
+  									<i class="icon-user icon-white"></i>&nbsp; Buscar Pacientes
+								</button>
 						</div>
 					</form>
 				  </div>
 				</div><!-- Fin Tab Formuliario de Búsqueda -->
 
 				<!-- PACIENTES -->
-				<div id="tab-paciente-resultados" class="tab-pane fade">
-					<h2>Resultados!</h2>
+				<div id="tab-paciente-resultados" th:attr="class=${pacientes.pacientes!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
+					<h4>Resultados!</h4>
+					<ul th:each="paciente: ${pacientes.pacientes}">
+						<li th:text="|${paciente.apellido01} ${paciente.apellido02}, ${paciente.nombre}|"></li>
+					</ul>
 				</div>
 				
 			</div><!-- Fin de Tabs Content-->
