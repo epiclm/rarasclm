@@ -43,7 +43,7 @@ public class BaseModelViewReflex implements IBaseModelView {
 
 	public BaseModelViewReflex() {
 
-		log.info("Creando la estructura de la aplicación (IModelView) mediante reflexión");
+		log.info("Creando la estructura de la aplicación (IModelView) mediante reflexión " + baseControllerPackage);
 
 		menus = new ArrayList<MenuItem>();
 		modulos = new ArrayList<MenuModulo>();
@@ -52,6 +52,7 @@ public class BaseModelViewReflex implements IBaseModelView {
 		List<Class<?>> classes = ClassFinder.find(baseControllerPackage);
 
 		for (Class<?> clase : classes) {
+			log.info("Examinando: "+clase.getName());
 			if (clase.getSuperclass().getName() == BaseController.class.getName()) {
 				Annotation anotation = clase.getAnnotation(RequestMapping.class);
 				String[] value = ((RequestMapping)anotation).value();

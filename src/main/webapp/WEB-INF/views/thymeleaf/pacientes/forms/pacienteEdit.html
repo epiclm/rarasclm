@@ -55,7 +55,7 @@ $(document).ready( function() {
 							<input id="nombre" class="span3" name="nombre" type="text" maxlength="65" th:value="${paciente.nombre}" placeholder="nombre"/>
 						</div>
 					</div>
-					<div class="row span10">
+					<div class="row span12">
 						<div  class="form-group">
 							<label class="control-label span2" for="cip">CIP:</label>
 							<input  class="span2" id="cip" name="cip" type="text" maxlength="16" th:value="${paciente.cip}"/>
@@ -69,7 +69,7 @@ $(document).ready( function() {
 							<input  class="span2" id="numeroSegSocial" name="numeroSegSocial" type="text" maxlength="12" th:value="${paciente.numeroSegSocial}"/>
 						</div>
 					</div>
-					<div class="row span10">
+					<div class="row span12">
 						<div class="form-group">
 							<label class="control-label span2 " for="fechaNacimiento">Fecha Nacimiento:</label>
 							<input name="fechaNacimiento" class="span2" id="fechaNacimiento" type="date"  th:value="${paciente.fechaNacimiento!=null ? #dates.format(paciente.fechaNacimiento, 'yyyy-MM-dd') : ''}" />
@@ -83,10 +83,10 @@ $(document).ready( function() {
 							</select>
 						</div>
 					</div>
-					<div class="row span10">
+					<div class="row span12">
 						<p style="margin-top:10px">DOMICILIO:</p>
 					</div>
-					<div class="row span10">
+					<div class="row span12">
 						<div class="form-group">
 							<label class="control-label span1 " for="domTipoVia">Tipo Vía:</label>
 							<input name="domTipoVia" class="span1" id="domTipoVia" type="text"  th:value="${paciente.domTipoVia}" />
@@ -108,7 +108,7 @@ $(document).ready( function() {
 							<input name="domOtros" class="span2" id="domOtros" type="text"  th:value="${paciente.domOtros}" />
 						</div>
 					</div>
-					<div class="row span10">
+					<div class="row span12">
 						<div class="form-group">
 							<label class="control-label span2 " for="domTipoVia">Provincia Res.:</label>
 							<select name="provinciaResidencia" class="span2" id="provinciaResidencia"  th:field="${paciente.provinciaResidencia}" >
