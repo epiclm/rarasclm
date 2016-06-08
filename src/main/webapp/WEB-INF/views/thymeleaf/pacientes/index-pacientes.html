@@ -180,7 +180,7 @@ $(document)
 				<!-- PACIENTES -->
 				<div id="tab-paciente-resultados" th:attr="class=${pacientes.pacientes!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
 					<ul th:each="paciente: ${pacientes.pacientes}">
-						<li><a th:href="|${route.baseUrl}edit/${paciente.idPaciente}|" th:text="|${paciente.idPaciente} ${paciente.apellido01} ${paciente.apellido02}, ${paciente.nombre} ${baseModel.cache.getMunipioDeno(paciente.municipioResidencia)}|"></a></li>
+						<li><a th:href="|${route.baseUrl}edit/${paciente.idPaciente}|" th:text="|${paciente.idPaciente} ${paciente.apellido01} ${paciente.apellido02}, ${paciente.nombre} ${baseModel.cache.getMunipioDeno(paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(paciente.municipioResidencia.substring(0,2))})|"></a></li>
 					</ul>
 				</div>
 				

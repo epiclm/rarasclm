@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.jclm.cs.rarasclm.entities.Paciente;
 @Repository
-@SuppressWarnings("unchecked") /*JAVA ugly*/
+@SuppressWarnings("unchecked")
 public class PacienteDao extends BaseEntityDao<Paciente,Integer> {
 
 	public List<Paciente> busqueda(

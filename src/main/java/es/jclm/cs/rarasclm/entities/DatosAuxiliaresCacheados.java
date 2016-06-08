@@ -201,24 +201,29 @@ public class DatosAuxiliaresCacheados {
 	}
 	
 	public String getProvinciaDeno(String provincia) {
-		for(Provincias p : this.provincias) {
-			if(p.getProvincia().equalsIgnoreCase(p.getProvincia()))
-				return p.getDeno();
+		String idProvincia="99";
+		if(provincia!=null && provincia.length()==2) {
+			idProvincia=provincia;
 		}
+			for(Provincias p : this.provincias) {
+				if(p.getProvincia().equalsIgnoreCase(idProvincia))
+					return p.getDeno();
+			}
 		return "";
 	}
 	
 	public String getMunipioDeno(String municipio) {
-		if(municipio.trim().length()==5)
-		{
-			String provincia = municipio.trim().substring(0, 2);
-			for(Provincias p : this.provincias) {
-				if(p.getProvincia().equalsIgnoreCase(p.getProvincia()))
-					for(Municipios m : this.getMunicipios()) {
-						if(m.getMunicipio().equalsIgnoreCase(municipio.trim()))
-							return m.getDeno();
-					}
-			}
+		String idMunicipio="99999";
+		if(municipio!=null && municipio.trim().length()==5) {
+			idMunicipio=municipio;
+		}
+		String provincia = idMunicipio.substring(0, 2);
+		for(Provincias p : this.provincias) {
+			if(p.getProvincia().equalsIgnoreCase(provincia))
+				for(Municipios m : this.getMunicipios()) {
+					if(m.getMunicipio().equalsIgnoreCase(idMunicipio))
+						return m.getDeno();
+				}
 		}
 		return "";
 	}

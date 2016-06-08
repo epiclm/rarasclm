@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -32,6 +35,7 @@ import es.jclm.cs.rarasclm.entities.UserRarasCLM;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
 import es.jclm.cs.rarasclm.service.PacienteService;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
+import net.rossillo.spring.web.mvc.CacheControl;
 
 @Controller
 @RequestMapping("/pacientes")
@@ -46,6 +50,9 @@ public class PacienteController extends BaseController {
 	@Autowired
 	LocalizacionesService servicioLocalizaciones;
 	
+	@Autowired
+	HttpServletRequest request;
+	
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -56,15 +63,22 @@ public class PacienteController extends BaseController {
 	// Página inicial del módulo
 	@RequestMapping(method = RequestMethod.GET)
 	public String inicioEnvio(Model model) {
-		PacientesModelView pacientesMV = new PacientesModelView();
-		pacientesMV.setNumPaginas(-1);
-		pacientesMV.setNumRegistrosPorPagina(-1);
-		pacientesMV.setNumTotalRegistros(-1);
-		pacientesMV.setBusquedaApellido1("");
-		pacientesMV.setBusquedaApellido2("");
-		pacientesMV.setBusquedaNombre("");
-		pacientesMV.setBusquedaCIP("");
-	
+		PacientesModelView pacientesMV=null;
+		if(request.getSession().getAttribute("pacientesMV")==null) {	
+			pacientesMV = new PacientesModelView();
+			pacientesMV.setNumPaginas(-1);
+			pacientesMV.setNumRegistrosPorPagina(-1);
+			pacientesMV.setNumTotalRegistros(-1);
+			pacientesMV.setBusquedaApellido1("");
+			pacientesMV.setBusquedaApellido2("");
+			pacientesMV.setBusquedaNombre("");
+			pacientesMV.setBusquedaCIP("");
+			pacientesMV.setBusquedaMunicipio("99999");
+		} else {
+			pacientesMV=(PacientesModelView)request.getSession().getAttribute("pacientesMV");
+		}
+		if(pacientesMV.getBusquedaMunicipio().length()==5 && pacientesMV.getBusquedaMunicipio().equals("99999"))
+			model.addAttribute("municipiosProvinciaResidencia",servicioLocalizaciones.getMunicipioDeProvincia(pacientesMV.getBusquedaMunicipio().substring(0, 2)));
 		model.addAttribute("pacientes", pacientesMV);
 		getRoute().setId("");
 		return "pacientes/index-pacientes";
@@ -77,11 +91,11 @@ public class PacienteController extends BaseController {
 
 		status.setComplete();
 		model.addAttribute("pacientes", pacientesMV);
-		if(pacientesMV.getBusquedaMunicipio().length()==5 && pacientesMV.getBusquedaMunicipio()!="99999")
-			model.addAttribute("municipiosProvinciaResidencia",servicioLocalizaciones.getMunicipioDeProvincia(pacientesMV.getBusquedaMunicipio().substring(0, 2)));
 		pacientesMV.setPacientes(servicio.buscaPacientes(pacientesMV));
+		request.getSession().setAttribute("pacientesMV", pacientesMV);
 		getRoute().setId("");
-		return "pacientes/index-pacientes";
+		return "redirect:/pacientes/"; //Evita nueva consulta a BD al volver atrás con el navegador
+									   //o actualizar.
 	}
 	
 	

@@ -71,5 +71,6 @@
 	</bean>
 
 	<bean class="es.jclm.cs.rarasclm.config.DotNotTruncateMyUrls" />
-	     
+	
+
 </beans>
