@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<title>EDITAR Paciente</title>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var routeBase = /*[[${route.baseUrl}]]*/'';
+var contextApp = /*[[${baseModel.baseApp}]]*/'';  
+var imgEspera = '<img id="img-espera-num-paciente" style="width:18px;margin-left:10px" alt="Esperando..." src="/'+ contextApp  +'/img/espera.gif"></img>';
+
+$(document).ready( function() {
+	
+	
+})
+
+/*]]>*/
+</script>
+</head>
+
+<body>
+	<div id="contenido" layout:fragment="content">
+		<form id="form-edit-caso" class="form-inline" method='POST'>
+			<legend>Edición Caso <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span></legend>
+			<div class="row span12">
+				<div id="grupo-literal-caso" class="form-group">
+					<label class="control-label span9" for="literal">Literal de la Enfermedad:</label>
+					<input id="literal" class="span9" name="literal" type="text" maxlength="250" th:value="${caso.literal}" placeholder="Literal de la Enfermedad"/>
+				</div>
+			</div>
+			<div class="row span12">
+				<div id="grupo-enfRara-caso" class="form-group">
+					<label class="control-label span3" for="enfrara">Enfermedad Rara CLM:</label>
+					<input id="enfrara" class="span3" name="literal" type="text" maxlength="250" th:value="${caso.enfrara}" placeholder="Literal de la Enfermedad"/>
+				</div>
+			</div>
+			<div class="row span12">
+				<div id="grupo-codigos-caso" class="form-group">
+					<label class="control-label span2" for="codCie9mc">CIE9MC:</label>
+					<input id="codCie9mc" class="span2" name="codCie9mc" type="text" maxlength="6" th:value="${caso.codCie9mc}" placeholder="cie9"/>
+				</div>
+				<div id="grupo-codigos-caso" class="form-group">
+					<label class="control-label span2" for="codCie10">CIE10:</label>
+					<input id="codCie10" class="span2" name="codCie10" type="text" maxlength="5" th:value="${caso.codCie10}" placeholder="cie10"/>
+				</div>
+				<div id="grupo-codigos-caso" class="form-group">
+					<label class="control-label span2" for="codEdta">EDTA:</label>
+					<input id="codEdta" class="span2" name="codEdta" type="text" maxlength="2" th:value="${caso.codEdta}" placeholder="edta"/>
+				</div>
+				<div id="grupo-codigos-caso" class="form-group">
+					<label class="control-label span2" for="codOmin">OMIN:</label>
+					<input id="codOmin" class="span2" name="codOmin" type="text" maxlength="2" th:value="${caso.codOmin}" placeholder="omin"/>
+				</div>
+			</div>
+		</form>
+	</div> <!-- Fin contenido -->
+</body>
+</html>

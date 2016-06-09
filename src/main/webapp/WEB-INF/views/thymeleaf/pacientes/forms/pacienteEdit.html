@@ -29,9 +29,6 @@ $(document).ready( function() {
 			$('#municipioResidencia').html(strHtml);
 		})
 	});
-	
-	
-
 })
 
 /*]]>*/
@@ -40,8 +37,8 @@ $(document).ready( function() {
 <body>
 	<div id="contenido" layout:fragment="content">
 	<form id="form-edit-paciente" class="form-inline" method='POST'>
-	<legend>Edición Paciente <span th:text="${paciente.idPaciente}"></span></legend>
-				<div class="row span10">
+		<legend>Edición Paciente <span th:text="${paciente.idPaciente}"></span></legend>
+					<div class="row span10">
 						<div id="grupo-apellido01-paciente" class="form-group">
 							<label class="control-label span3" for="apellido01">1er Apellido:</label>
 							<input id="apellido01" class="span3" name="apellido01" type="text" maxlength="65" th:value="${paciente.apellido01}" placeholder="1er apellido"/>
@@ -125,6 +122,12 @@ $(document).ready( function() {
 							<label class="control-label span1 " for="domCp">CP:</label>
 							<input name="domCp" class="span1" id="domCp" type="text"  th:value="${paciente.domCp}" maxlength="5" />
 						</div>
+					</div>
+					<div class="row span12">
+						<p>Casos:</p>
+						<ul th:each="caso : ${paciente.casos}">
+							<li> <a  th:href="|/${baseModel.baseApp}/casos/edit/${caso.idCaso}|" th:text="|CASO ${caso.numCaso} - ${caso.codCie9mc} ${caso.codCie10} ${caso.literal}|"></a></li>
+						</ul>
 					</div>
 		</form>
 	</div> <!-- Fin contenido -->

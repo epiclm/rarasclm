@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+var routeBase = /*[[${route.baseUrl}]]*/'';
+var contextApp =  /*[[${baseModel.baseApp}]]*/'';
+var enfermedades;
+var enfermedadesLiterales;
+
+function renderBotonesPaciente(num,deno) {
+	var strShow = "<a class='btn btn-primary' style='margin-right:5px' href='"+routeBase+"show/"+num+"'>Ver</a>";
+	var strEdit = "<a class='btn btn-success' style='margin-right:5px' href='"+routeBase+"edit/"+num+"'>Editar</a>";
+	return "<p style='display:inline-block;margin-right:10px;font-weight:bold'>"+deno+"</p>"+strShow+strEdit;
+}
+
+$(document)
+.ready(function() {	
+	
+	
+	
+});
+/*]]>*/
+</script>
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+	
+		<div id="tabCasosIndex" class="tab-content row  span10">
+		
+			<ul class="nav nav-tabs">
+				<li th:attr="class=${true ? 'active' : ''}">
+					<a href="#tab-caso-busqueda" data-toggle="tab">Búsqueda Casos:</a>
+				</li>
+				<li th:attr="class=${false ? 'active' : ''}">
+					<a href="#tab-caso-resultados" data-toggle="tab">Resultados</a>
+				</li>
+			</ul>
+			
+			<!-- BUSQUEDAS -->
+			<div class="tab-content">
+				<div id="tab-caso-busqueda" th:attr="class=${true ? 'tab-pane fade in active' : 'tab-pane fade'}">
+				<div class="offset1">
+					<form id="form-search-caso" class="form-horizontal" method='POST'>
+
+					</form>
+				  </div>
+				</div><!-- Fin Tab Formuliario de Búsqueda -->
+
+				<!-- CASOS -->
+				<div id="tab-casos-resultados" th:attr="class=${false ? 'tab-pane fade in active' : 'tab-pane fade'}">
+					
+				</div>
+				
+			</div><!-- Fin de Tabs Content-->
+		</div><!--  Fin div de Tabs -->
+	</div><!-- Fin Contenido -->
+</body>
+</html>

@@ -25,7 +25,6 @@ import es.jclm.cs.rarasclm.entities.UserRarasCLM;
 
 
 @Service
-@Transactional(readOnly=true)
 public class RarasCLMUserService implements UserDetailsService {
 	
 	@Autowired

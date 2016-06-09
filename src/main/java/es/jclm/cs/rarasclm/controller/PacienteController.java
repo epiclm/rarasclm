@@ -41,7 +41,7 @@ import net.rossillo.spring.web.mvc.CacheControl;
 @RequestMapping("/pacientes")
 @RarasClmItemModulo(caption="Pacientes",deno="Pacientes",modulo="pacientes",orden=1)
 @RarasClmItemMenu(caption="Pacientes",deno="Pacientes",modulo="pacientes",orden=1)
-@SessionAttributes("enfermedades")
+@SessionAttributes("pacientes")
 public class PacienteController extends BaseController {
 	
 	@Autowired

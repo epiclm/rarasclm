@@ -1,0 +1,110 @@
+package es.jclm.cs.rarasclm.controller;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+
+import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
+import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
+import es.jclm.cs.rarasclm.entities.Caso;
+import es.jclm.cs.rarasclm.entities.Municipios;
+import es.jclm.cs.rarasclm.entities.Paciente;
+import es.jclm.cs.rarasclm.entities.PacientesModelView;
+import es.jclm.cs.rarasclm.service.CasoService;
+import es.jclm.cs.rarasclm.service.LocalizacionesService;
+import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
+
+@Controller
+@RequestMapping("/casos")
+@RarasClmItemModulo(caption="Casos",deno="Casos",modulo="casos",orden=2)
+@RarasClmItemMenu(caption="Casos",deno="Casos",modulo="casos",orden=1)
+@SessionAttributes("casos")
+public class CasoController extends BaseController {
+
+	@Autowired
+	private CasoService servicio;
+	
+	@Autowired 
+	private LocalizacionesService localizacionesService;
+	
+	@Autowired
+	HttpServletRequest request;
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+	    binder.registerCustomEditor(Date.class, editor);
+	}
+	
+	// Página inicial del módulo
+	@RequestMapping(method = RequestMethod.GET)
+	public String inicioEnvio(Model model) {
+		
+		getRoute().setId("");
+		return "casos/index-casos";
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public String inicioVuelta(Model model, 
+			@ModelAttribute("pacientes") PacientesModelView pacientesMV,
+			SessionStatus status) {
+
+		getRoute().setId("");
+		return "redirect:/casos"; //Evita nueva consulta a BD al volver atrás con el navegador
+								  //o actualizar.
+	}
+	
+	
+	
+	@RequestMapping(value = "/show/json/{id}", method = RequestMethod.GET)
+	public  @ResponseBody Caso showJsonPaciente(@PathVariable String id) {
+		Integer clave = Integer.valueOf(id);
+		try {
+			Caso ret = servicio.Buscar(id);
+			return ret;
+		} catch (ServiceRarasCLMException ex) {
+			ex.printStackTrace();
+			return null; //TO DO Mandar mensaje de error a la vista
+		}
+	}
+	
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+	public String  showPaciente(@PathVariable String id, Model model) {
+		try {
+			Caso caso = servicio.Buscar(id);
+			model.addAttribute("caso", caso);
+			
+			//List<Municipios> municipiosResidencia = new ArrayList<Municipios>();
+/*			Municipios municipioDesconocido = new Municipios();
+			municipioDesconocido.setMunicipio("99999");
+			municipioDesconocido.setDeno("DESCONOCIDO");
+			municipiosResidencia.add(municipioDesconocido);
+			municipiosResidencia.addAll(caso.getMunicipioDeProvincia(paciente.getMunicipioResidencia().substring(0, 2)));*/
+			//model.addAttribute("municipiosProvinciaResidencia",municipiosResidencia);
+			
+		} catch (ServiceRarasCLMException ex) {
+			ex.printStackTrace();
+			return null; //TO DO Mandar mensaje de error a la vista
+		}
+		return "casos/forms/casoEdit";
+	}
+	
+	
+}
