@@ -1,4 +1,4 @@
-package es.jclm.cs.rarasclm.dao;
+package es.jclm.cs.rarasclm.test;
 
 import java.util.List;
 
@@ -11,6 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import es.jclm.cs.rarasclm.dao.EnfermedadRaraDao;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 
 @ComponentScan(basePackages={"es.jclm.cs.rarasclm.dao"})

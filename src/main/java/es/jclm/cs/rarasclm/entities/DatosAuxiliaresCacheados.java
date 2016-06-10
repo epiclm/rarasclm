@@ -4,6 +4,9 @@
  */
 package es.jclm.cs.rarasclm.entities;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +18,10 @@ import org.apache.commons.logging.LogFactory;
 // TODO: Auto-generated Javadoc
 /**
  * The Class DatosAuxiliaresCacheados.
+ */
+/**
+ * @author rrog14
+ *
  */
 public class DatosAuxiliaresCacheados {
 	
@@ -226,6 +233,74 @@ public class DatosAuxiliaresCacheados {
 				}
 		}
 		return "";
+	}
+	
+	public String getMunipioProvinciaDeno(String municipio) {
+		String idMunicipio="99999";
+		if(municipio!=null && municipio.trim().length()==5) {
+			idMunicipio=municipio;
+		}
+		String provincia = idMunicipio.substring(0, 2);
+		for(Provincias p : this.provincias) {
+			if(p.getProvincia().equalsIgnoreCase(provincia))
+				for(Municipios m : this.getMunicipios()) {
+					if(m.getMunicipio().equalsIgnoreCase(idMunicipio))
+						return m.getDeno() + " (" + p.getDeno() + ")"; 
+				}
+		}
+		return "";
+	}
+	
+	
+	public String getSexoLiteral(String codSexo) {
+		switch(codSexo) {
+			case "1":
+				return "VARÓN";
+			case "6":
+				return "MUJER";
+			case "8":
+				return "INDETERMINADO";
+			case "9":
+				return "DESCONOCIDO";
+			default:
+				return "";
+		}
+	}
+	
+//	public String getSexoLiteral(int codSexo) {
+//		switch(codSexo) {
+//			case 1:
+//				return "VARÓN";
+//			case 6:
+//				return "MUJER";
+//			case 8:
+//				return "INDETERMINADO";
+//			case 9:
+//				return "DESCONOCIDO";
+//			default:
+//				return "";
+//		}
+//	}
+	
+	public int getEdad(Date fecNac) {
+		Calendar fechaActual = Calendar.getInstance();
+		Calendar fechaNac = new GregorianCalendar();
+		fechaNac.setTime(fecNac);
+		int fechaActualDia  = fechaActual.get(Calendar.DATE);
+		int fechaActualMes  = fechaActual.get(Calendar.MONTH);
+		int fechaActualAnio = fechaActual.get(Calendar.YEAR);
+		int fechaNacimientoDia  = fechaNac.get(Calendar.DATE);
+		int fechaNacimientoMes  = fechaNac.get(Calendar.MONTH);
+		int fechaNacimientoAnio = fechaNac.get(Calendar.YEAR);
+		int edad= fechaActualAnio - fechaNacimientoAnio - 1;
+		if(fechaActualMes > fechaNacimientoMes) {
+			edad++; 
+			} else if(fechaActualMes==fechaNacimientoMes) {
+				if(fechaActualDia>=fechaNacimientoDia) {
+					edad++;
+				}
+			}	
+		return edad;
 	}
 	
 	

@@ -1,4 +1,4 @@
-package es.jclm.cs.rarasclm.dao;
+package es.jclm.cs.rarasclm.test;
 
 import java.util.ArrayList;
 import java.util.List;

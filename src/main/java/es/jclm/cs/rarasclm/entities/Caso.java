@@ -28,7 +28,8 @@ public class Caso implements java.io.Serializable {
 	private String idCaso;
 	private Paciente paciente;
 	private Short numCaso;
-	private String enfrara;
+	private String codEnfRara;
+	private EnfermedadRara enfRara;
 	private Short declarada;
 	private String usuarioDeclara;
 	private Date fechaDeclara;
@@ -81,7 +82,7 @@ public class Caso implements java.io.Serializable {
 		this.idCaso = idCaso;
 	}
 
-	public Caso(String idCaso, Paciente paciente, Short numCaso, String enfrara, Short declarada, String usuarioDeclara,
+	public Caso(String idCaso, Paciente paciente, Short numCaso, String codEnfRara, Short declarada, String usuarioDeclara,
 			Date fechaDeclara, String literal, String jucioClinico, String observaciones, String hospital, String nhc,
 			Byte baseDiagnostico, String fuenteInformacion, Boolean fuentePacientesA, Boolean fuenteCmbdC,
 			Boolean fuenteDefcongD, Boolean fuenteEdoE, Boolean fuenteIsocialesG, Boolean fuenteMhuerfH,
@@ -95,7 +96,7 @@ public class Caso implements java.io.Serializable {
 		this.idCaso = idCaso;
 		this.paciente = paciente;
 		this.numCaso = numCaso;
-		this.enfrara = enfrara;
+		this.codEnfRara = codEnfRara;
 		this.declarada = declarada;
 		this.usuarioDeclara = usuarioDeclara;
 		this.fechaDeclara = fechaDeclara;
@@ -163,7 +164,18 @@ public class Caso implements java.io.Serializable {
 	public void setPaciente(Paciente paciente) {
 		this.paciente = paciente;
 	}
+	
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "enfrara", insertable=false, updatable=false)
+	public EnfermedadRara getEnfRara() {
+		return this.enfRara;
+	}
 
+	public void setEnfRara(EnfermedadRara enfRara) {
+		this.enfRara = enfRara;
+	}
+	
 	@Column(name = "num_caso")
 	public Short getNumCaso() {
 		return this.numCaso;
@@ -174,12 +186,12 @@ public class Caso implements java.io.Serializable {
 	}
 
 	@Column(name = "enfrara", length = 10)
-	public String getEnfrara() {
-		return this.enfrara;
+	public String getCodEnfrara() {
+		return this.codEnfRara;
 	}
 
-	public void setEnfrara(String enfrara) {
-		this.enfrara = enfrara;
+	public void setCodEnfrara(String enfrara) {
+		this.codEnfRara = enfrara;
 	}
 
 	@Column(name = "declarada")
