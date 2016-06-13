@@ -8,7 +8,26 @@
 /*<![CDATA[*/
 var routeBase = /*[[${route.baseUrl}]]*/'';
 var contextApp = /*[[${baseModel.baseApp}]]*/'';  
+
 var imgEspera = '<img id="img-espera-num-paciente" style="width:18px;margin-left:10px" alt="Esperando..." src="/'+ contextApp  +'/img/espera.gif"></img>';
+
+function doAsociaEnfermedadRara(cod) {
+	$.ajax({
+		dataType : "json",
+		url : "/" + contextApp + "/enfermedades/enfrara/json/"+cod,
+	}).done(function( data, textStatus, jqXHR) {
+		$("#codEnfrara").val(data.enfermedadRaraId);
+		$("#enfraraObjeto").addClass("modificado");
+		$("#enfraraObjeto").val(data.enfermedadRaraId+" "+data.literal);
+		$("#linkEnfrara").text("/"+contextApp+"/enfermedades/enfrara/show/"+data.enfermedadRaraId);
+		$("#linkEnfrara").attr("href","/"+contextApp+"/enfermedades/enfrara/show/"+data.enfermedadRaraId);
+	}).fail(function( jqXHR, textStatus, errorThrown) {
+		alert("¡Error! al asociar enfermededad rara a paciente");
+	}).always(function() {
+		$('#modalEnf').modal('hide');
+	})
+}
+
 
 $(document).ready( function() {
 	
@@ -20,19 +39,25 @@ $(document).ready( function() {
 				enfermedades = data;
 				enfermedadesLiterales = $.map(enfermedades,
 						function(v) {
-							return v.enfermedadRaraId + ' ' + v.literal;
+							return {label:v.enfermedadRaraId + ' ' + v.literal,
+									value:v.enfermedadRaraId};
 						});
-				$("#enfrara").autocomplete({
+				$("#enfraraObjeto").autocomplete({
 					source : enfermedadesLiterales,
 					search : function(event, ui) {
 		
 					},
 					select : function(event, ui) {
-						alert(ui.item.value);
+						 doAsociaEnfermedadRara(ui.item.value);
 					},
 					minLength : 3
 				});
-			});
+	});
+	
+	$("input").change(function(objEvent) {
+		$(this).addClass("modificado");
+	});
+	
 })
 
 /*]]>*/
@@ -42,7 +67,13 @@ $(document).ready( function() {
 <body>
 	<div id="contenido" layout:fragment="content">
 		<form id="form-edit-caso" class="form-inline" method='POST'>
-			<legend>Edición Caso <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span></legend>
+			<legend>Edición Caso <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span>
+			</legend>
+			
+			<div class="form-actions">
+			  <button type="submit" class="btn btn-primary">Actualiza</button>
+			  <button type="button" class="btn">Cancel</button>
+			</div>
 			
 			<!-- CUADRO RESUMEN PACIENTE -->
 			<div id="cuadro-resumen-paciente" class="row span8">
@@ -67,22 +98,24 @@ $(document).ready( function() {
 			<div class="row span12">
 				<div id="grupo-literal-caso" class="form-group">
 					<label class="control-label span8" for="literal">Literal de la Enfermedad:</label>
-					<input id="literal" class="span8" name="literal" type="text" maxlength="250" th:value="${caso.literal}" placeholder="Literal de la Enfermedad"/>
+					<input id="literal" class="span8" name="literal" type="text" maxlength="255" th:value="${caso.literal}" placeholder="Literal de la Enfermedad"/>
 				</div>
 			</div>
 			<div class="row span12">
+			
+				<input type="hidden" id="codEnfrara" name="codEnfrara" th:value="${caso.codEnfrara}"/>
+			
 				<div id="grupo-enfRara-caso" class="form-group">
 					<label class="control-label span7" for="enfrara">Enfermedad Rara CLM:</label>
 					<div class="input-append" style="width: 100%">
-						<input id="enfrara" class="span7" name="literal" type="text" maxlength="250" th:value="|${caso.enfRara.enfermedadRaraId} ${caso.enfRara.literal}|" placeholder="Escriba Literal o código de la Enfermedad"/>
+						<input id="enfraraObjeto" class="span7" name="literal" type="text" maxlength="250" th:value="|${caso.enfRara.enfermedadRaraId} ${caso.enfRara.literal}|" placeholder="Escriba Literal o código de la Enfermedad"/>
 						<a class="btn add-on" data-toggle="modal" data-target="#modalEnf" href="" type="button"><i class="icon-search"></i></a>
 					</div>
 				</div>
 			</div>
+			
 			<div id="cuadro-resumen-enfrara" class="row span8">
-				<a target="_blank" th:href="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfRara.enfermedadRaraId}|" th:text="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfRara.enfermedadRaraId}|"></a>
-				<ul th:if="${caso.enfRara.enfermedadRaraHasEnfermedadRaraCie9mcs!=null}"></ul>
-				<ul th:if="${caso.enfRara.enfermedadRaraHasEnfermedadRaraCie10s!=null}"></ul>
+				<a id="linkEnfrara" target="_blank" th:href="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfRara.enfermedadRaraId}|" th:text="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfRara.enfermedadRaraId}|"></a>
 			</div>
 			<div id="codificaciones-fuentes" class="row span12">
 				<div id="grupo-codigos-cie9mc-caso" class="form-group">
@@ -155,7 +188,7 @@ $(document).ready( function() {
 			<div id="grupo-juicio" class="row span12">
 				<div id="juicio-clinico-caso" class="form-group">
 					<label class="control-label span7" for="jucioClinico">Juicio Clínico:</label>
-					<input id="jucioClinico" class="span7" name="jucioClinico" type="text" maxlength="2" th:value="${caso.jucioClinico}" placeholder="Jucio Clinico"/>
+					<input id="jucioClinico" class="span7" name="jucioClinico" type="text" maxlength="512" th:value="${caso.jucioClinico}" placeholder="Jucio Clinico"/>
 				</div>
 			</div>
 			<div id="grupo-tratamiento" class="row span12">
@@ -171,6 +204,29 @@ $(document).ready( function() {
 				</div>
 			</div>
 		</form>
+		
+		<!-- Modal de enfermedades -->
+		<div id="modalEnf" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3>Selección de Enfermedad Rara</h3>
+			</div>
+			<div class="modal-body">
+				<div id="cuadro" style="height: 300px; overflow: scroll">
+					<ul th:each="rara : ${allRaras}">
+						<li class="rclmEnfermedadModal">
+							<a th:onclick="|doAsociaEnfermedadRara('${rara.enfermedadRaraId}')|" th:text="|${rara.enfermedadRaraId} ${rara.literal}|"></a>
+							<a  style="margin-left:5px" class="btn btn-success btn-mini" type="button" th:onclick="|doAsociaEnfermedadRara('${rara.enfermedadRaraId}')|">Asociar a Caso</a> 
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="modal-footer">
+			
+			</div>
+		</div>
+		
 	</div> <!-- Fin contenido -->
 </body>
 </html>

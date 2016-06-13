@@ -6,6 +6,8 @@ package es.jclm.cs.rarasclm.listeners;
 
 import java.sql.Connection;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,6 +33,13 @@ public class ConexionDBListener implements ConnectionCustomizer {
 	public ConexionDBListener() {
 		log.info("Instanciando DB Listener");
 	}
+	
+	@PostConstruct
+	public void postContruccion()
+	{
+		log.info("Post-construccion!\n");
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see com.mchange.v2.c3p0.ConnectionCustomizer#onAcquire(java.sql.Connection, java.lang.String)

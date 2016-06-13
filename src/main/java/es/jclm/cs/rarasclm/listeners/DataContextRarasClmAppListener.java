@@ -7,6 +7,8 @@ package es.jclm.cs.rarasclm.listeners;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,7 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 	@Autowired
 	IBaseModelView baseModel;
 	
+
 
 	/* (non-Javadoc)
 	 * @see org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)

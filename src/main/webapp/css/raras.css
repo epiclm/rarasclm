@@ -188,11 +188,9 @@ li.rclmEnfermedadModal p{
 }
 
 #cuadro-resumen-enfrara {
-	padding: 7px;
-	margin-top: 7px;
+	margin-top: 3px;
 	margin-bottom: 7px;
 	background-color:#FAFAFA;
-	border: 1px #CCF solid;
 }
 
 #cuadro-resumen-paciente {
@@ -216,6 +214,10 @@ li.rclmEnfermedadModal p{
 
 #grupo-fuentes div {
 	width: 75px !important;
+}
+
+.modificado {
+	background-color: #FFD !important;
 }
 
 

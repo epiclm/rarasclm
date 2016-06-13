@@ -144,7 +144,6 @@ public class Caso implements java.io.Serializable {
 	}
 
 	@Id
-
 	@Column(name = "id_caso", unique = true, nullable = false, length = 10)
 	public String getIdCaso() {
 		return this.idCaso;

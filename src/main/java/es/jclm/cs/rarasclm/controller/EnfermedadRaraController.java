@@ -250,8 +250,13 @@ public class EnfermedadRaraController extends BaseController {
 	}
 
 	@RequestMapping(value = "/json", produces = "application/json; charset=UTF-8")
-	public @ResponseBody List<EnfermedadRara> json() {
+	public @ResponseBody List<EnfermedadRara> jsonAll() {
 		return enfermedadService.getAllEnfermedadesRaras(true);
+	}
+	
+	@RequestMapping(value = "/json/{id}", produces = "application/json; charset=UTF-8")
+	public @ResponseBody EnfermedadRara jsonId(@PathVariable String id) {
+		return enfermedadService.getEnfermedadRaraById(id);
 	}
 
 }

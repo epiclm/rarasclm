@@ -24,10 +24,14 @@ import org.springframework.web.bind.support.SessionStatus;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.entities.Caso;
+import es.jclm.cs.rarasclm.entities.EnfermedadRara;
+import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10;
 import es.jclm.cs.rarasclm.entities.Municipios;
 import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.entities.PacientesModelView;
+import es.jclm.cs.rarasclm.entities.UserRarasCLM;
 import es.jclm.cs.rarasclm.service.CasoService;
+import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 
@@ -47,10 +51,21 @@ public class CasoController extends BaseController {
 	@Autowired
 	HttpServletRequest request;
 	
+	
+	@Autowired
+	private EnfermedadRaraService enfermedadService;
+
+	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
+	}
+	
+	@ModelAttribute("allRaras")
+	public List<EnfermedadRara> populateAllRaras() {
+		List<EnfermedadRara> enfermedadesRaras = enfermedadService.getAllEnfermedadesRaras(true);
+		return enfermedadesRaras;
 	}
 	
 	// Página inicial del módulo
@@ -72,7 +87,6 @@ public class CasoController extends BaseController {
 	}
 	
 	
-	
 	@RequestMapping(value = "/show/json/{id}", method = RequestMethod.GET)
 	public  @ResponseBody Caso showJsonPaciente(@PathVariable String id) {
 		Integer clave = Integer.valueOf(id);
@@ -86,19 +100,25 @@ public class CasoController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public String  showPaciente(@PathVariable String id, Model model) {
+	public String  editPacienteEnviaFormulario(@PathVariable String id, Model model) {
 		try {
 			Caso caso = servicio.Buscar(id);
 			model.addAttribute("caso", caso);
-			
-			//List<Municipios> municipiosResidencia = new ArrayList<Municipios>();
-/*			Municipios municipioDesconocido = new Municipios();
-			municipioDesconocido.setMunicipio("99999");
-			municipioDesconocido.setDeno("DESCONOCIDO");
-			municipiosResidencia.add(municipioDesconocido);
-			municipiosResidencia.addAll(caso.getMunicipioDeProvincia(paciente.getMunicipioResidencia().substring(0, 2)));*/
-			//model.addAttribute("municipiosProvinciaResidencia",municipiosResidencia);
-			
+
+		} catch (ServiceRarasCLMException ex) {
+			ex.printStackTrace();
+			return null; //TO DO Mandar mensaje de error a la vista
+		}
+		return "casos/forms/casoEdit";
+	}
+	
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
+	public String  editPacienteRecibeFormulario(@PathVariable String id, @ModelAttribute("caso") Caso caso, Model model) {
+		try {
+			Caso casoSinEditar = servicio.Buscar(id);
+			model.addAttribute("caso", casoSinEditar);
+			UserRarasCLM user = (UserRarasCLM)model.asMap().get("userCLM");
+			caso.setUsuarioModificacion(user.getUsername());
 		} catch (ServiceRarasCLMException ex) {
 			ex.printStackTrace();
 			return null; //TO DO Mandar mensaje de error a la vista

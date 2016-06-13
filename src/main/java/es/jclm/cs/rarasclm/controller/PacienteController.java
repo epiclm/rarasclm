@@ -32,6 +32,7 @@ import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.entities.PacientesModelView;
 import es.jclm.cs.rarasclm.entities.Provincias;
 import es.jclm.cs.rarasclm.entities.UserRarasCLM;
+import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
 import es.jclm.cs.rarasclm.service.PacienteService;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
@@ -59,6 +60,7 @@ public class PacienteController extends BaseController {
 	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
+	
 	
 	// Página inicial del módulo
 	@RequestMapping(method = RequestMethod.GET)
