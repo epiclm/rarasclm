@@ -117,6 +117,9 @@ $(document).ready( function() {
 			<div id="cuadro-resumen-enfrara" class="row span8">
 				<a id="linkEnfrara" target="_blank" th:href="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfRara.enfermedadRaraId}|" th:text="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfRara.enfermedadRaraId}|"></a>
 			</div>
+			<div id="grupo-fuentes" class="row span12">
+				<h5>Codificaciones:</h5>
+			</div>
 			<div id="codificaciones-fuentes" class="row span12">
 				<div id="grupo-codigos-cie9mc-caso" class="form-group">
 					<label class="control-label span1" for="codCie9mc">CIE9MC:</label>
@@ -188,11 +191,25 @@ $(document).ready( function() {
 					<input type="checkbox" id="fuenteHcEspecializadaU" name="fuenteHcEspecializadaU" th:value="${caso.fuenteHcEspecializadaU}" th:checked="${caso.fuenteHcEspecializadaU}"></input>
 				</div>
 			</div>
+			<div id="grupo-hospital" class="row span12">
+				<div id="hospital-caso" class="form-group">
+					<label class="control-label span6" for="hospital">Hospital:</label>
+					<select name="hospital" class="span6" id="hospital"  th:field="${caso.hospital}" >
+						<option th:each="hospital : ${baseModel.cache.hospitales}" th:value="${hospital.idHospital}" th:text="|${hospital.idHospital} ${hospital.literal}|"></option>
+					</select>
+				</div>
+				<div id="grupo-nhc-caso" class="form-group">
+					<label class="control-label span2" for="literal">Número Historia Clínica:</label>
+					<input id="nhc" class="span2" name="nhc" type="text" maxlength="12" th:value="${caso.nhc}" placeholder="nhc"/>
+				</div>
+			</div>
 			<div id="grupo-base-diagnostico" class="row span12">
-				<label class="control-label span5 " for="domTipoVia">Base del Diagnóstico:</label>
-				<select name="baseDiagnostico" class="span5" id="baseDiagnostico"  th:field="${caso.baseDiagnostico}" >
-					<option th:each="baseDto : ${baseModel.cache.basesDiagnosticas}" th:value="${baseDto.key}" th:text="${baseDto.value}"></option>
-				</select>
+				<div id="basedtco-caso" class="form-group">
+					<label class="control-label span5 " for="domTipoVia">Base del Diagnóstico:</label>
+					<select name="baseDiagnostico" class="span5" id="baseDiagnostico"  th:field="${caso.baseDiagnostico}" >
+						<option th:each="baseDto : ${baseModel.cache.basesDiagnosticas}" th:value="${baseDto.key}" th:text="${baseDto.value}"></option>
+					</select>
+				</div>	
 			</div>
 			<div id="grupo-juicio" class="row span12">
 				<div id="juicio-clinico-caso" class="form-group">
@@ -240,7 +257,7 @@ $(document).ready( function() {
 					</select>
 				</div>
 				<div id="otrasEnfermedadesCronicas-grupo" class="form-group">
-					<label class="control-label span3" for="fechaDiagnostico">Familiares con Enfermedades Raras:</label>
+					<label class="control-label span3" for="fechaDiagnostico">Otras enfermedades Crónicas:</label>
 					<select name="otrasEnfermedadesCronicas" class="span2" id="otrasEnfermedadesCronicas"  th:field="${caso.otrasEnfermedadesCronicas}">
 						<option value="0">NO</option>
 						<option value="1">SI</option>
@@ -272,7 +289,7 @@ $(document).ready( function() {
 						</div>
 					</div>
 					<div id="fecha-declaracion-caso" class="form-group">
-						<label class="control-label span3" for="fechaDeclara">Fecha de Detección:</label>
+						<label class="control-label span3" for="fechaDeclara">Fecha de Declaració:</label>
 						<input id="fechaDeclara" class="span3" name="fechaDeclara" type="date"
 							 th:value="${caso.fechaDeclara}" />
 					</div>

@@ -22,6 +22,7 @@ import es.jclm.cs.rarasclm.entities.Provincias;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie10Service;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie9mcService;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
+import es.jclm.cs.rarasclm.service.HospitalService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
 
 
@@ -60,6 +61,9 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 	@Autowired 
 	LocalizacionesService localizacionesService;
 	
+	@Autowired
+	HospitalService hospitalService;
+	
 	/** The base model. */
 	@Autowired
 	IBaseModelView baseModel;
@@ -91,6 +95,8 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 			}
 			datos.setMunicipiosMapProvincia(hMunicipios);
 			log.info("Cargada entidades auxiliares Municipios");
+			datos.setHospitales(hospitalService.getHospitales(false));
+			log.info("Cargada entidades auxiliares Hospitales");
 		}
 		catch(Exception ex) {
 			log.error(ex.getMessage(),ex);

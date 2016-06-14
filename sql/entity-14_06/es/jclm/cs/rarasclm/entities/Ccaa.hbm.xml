@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-jun-2016 13:22:23 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="es.jclm.cs.rarasclm.entities.Ccaa" table="ccaa" catalog="RARASCLM" optimistic-lock="version">
+        <id name="ccaa" type="string">
+            <column name="ccaa" length="2" />
+            <generator class="assigned" />
+        </id>
+        <property name="deno" type="string">
+            <column name="deno" length="70" />
+        </property>
+        <set name="provinciases" table="provincias" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ccaa" length="2" />
+            </key>
+            <one-to-many class="es.jclm.cs.rarasclm.entities.Provincias" />
+        </set>
+    </class>
+</hibernate-mapping>

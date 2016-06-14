@@ -55,6 +55,8 @@ public class DatosAuxiliaresCacheados {
 	
 	private Map<Integer,String> basesDiagnosticas;
 	
+	private List<Hospital> hospitales;
+	
 	
 	public DatosAuxiliaresCacheados() {
 		log.info("Se instancia cache de datos y tablas auxiliares");
@@ -342,6 +344,14 @@ public class DatosAuxiliaresCacheados {
 
 	public void setBasesDiagnosticas(Map<Integer, String> basesDiagnosticas) {
 		this.basesDiagnosticas = basesDiagnosticas;
+	}
+
+	public List<Hospital> getHospitales() {
+		return hospitales;
+	}
+
+	public void setHospitales(List<Hospital> hospitales) {
+		this.hospitales = hospitales;
 	}
 	
 	
