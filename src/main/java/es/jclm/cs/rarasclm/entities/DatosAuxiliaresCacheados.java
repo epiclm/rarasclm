@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,9 +53,50 @@ public class DatosAuxiliaresCacheados {
 	/** CCAA */
 	private List<Ccaa> ccaas;
 	
+	private Map<Integer,String> basesDiagnosticas;
+	
 	
 	public DatosAuxiliaresCacheados() {
 		log.info("Se instancia cache de datos y tablas auxiliares");
+		
+		///////////////////////
+		//Base del Diagnóstico
+		///////////////////////
+		
+		
+		//1= Existencia de “evidencia” objetiva de enfermedad (pruebas genéticas, bioquímicas, de imagen, etc.) o forma parte de un registro estandarizado.
+		
+		//2= Verificación (validación) del diagnóstico en HC. No se incluirán en esta categoría aquellos casos obtenidos directamente de HC de atención primaria 
+		//u hospital en una carga masiva de datos si no han sido revisados (en este caso se codificarían como 6).
+		
+		//3= Primera vez que consta en CMBD como C1. 
+		
+		//4= Primera vez que consta en CMBD como C2 o sucesivos.
+		
+		//5= Otras fuentes de información que no incluyan en sí mismas la validación del diagnóstico (renales, mortalidad).
+		
+		//6 = Diagnóstico en la HC de atención primaria u hospital obtenido por carga masiva de datos, no revisado (pendiente de validación).
+		
+		//7 = Se ha validado pero no se ha alcanzado una determinación final (caso dudoso, no se puede confirmar ni refutar).
+		
+		//8 = Tras la validación se está seguro de que no es una enfermedad rara.
+		
+		
+		basesDiagnosticas = new TreeMap<Integer,String>();
+		
+		basesDiagnosticas.put(1, "1 Existencia de \"Evidencia\" Objetiva");
+		basesDiagnosticas.put(2, "2 Validación del diagnóstico en HC");
+		basesDiagnosticas.put(3, "3 Primera vez que consta en CMBD como C1");
+		basesDiagnosticas.put(4, "4 Primera vez que consta en CMBD como C2 o sucesivos");
+		basesDiagnosticas.put(5, "5 Otras fuentes de información sin validación del diagnóstico");
+		basesDiagnosticas.put(6, "6 Diagnóstico en la HC por carga masiva de datos");
+		basesDiagnosticas.put(7, "7 Se ha validado pero no se ha alcanzado una determinación final");
+		basesDiagnosticas.put(8, "8 Tras la validación se está seguro de que no es una enfermedad rara");
+		basesDiagnosticas.put(9, "9 DESCONOCIDO");
+		
+		log.info("Se crean datos auxiliares menores (Sin tabla en base de datos) : Bases del diagnóstico.");
+		
+		
 	}
 
 	/**
@@ -267,20 +309,6 @@ public class DatosAuxiliaresCacheados {
 		}
 	}
 	
-//	public String getSexoLiteral(int codSexo) {
-//		switch(codSexo) {
-//			case 1:
-//				return "VARÓN";
-//			case 6:
-//				return "MUJER";
-//			case 8:
-//				return "INDETERMINADO";
-//			case 9:
-//				return "DESCONOCIDO";
-//			default:
-//				return "";
-//		}
-//	}
 	
 	public int getEdad(Date fecNac) {
 		Calendar fechaActual = Calendar.getInstance();
@@ -302,6 +330,20 @@ public class DatosAuxiliaresCacheados {
 			}	
 		return edad;
 	}
+	
+	public String getBaseDiagnosticoLiteral(int codBaseDiagnostico) {
+		String ret = this.getBasesDiagnosticas().get(codBaseDiagnostico);
+		return ret;
+	}
+
+	public Map<Integer, String> getBasesDiagnosticas() {
+		return basesDiagnosticas;
+	}
+
+	public void setBasesDiagnosticas(Map<Integer, String> basesDiagnosticas) {
+		this.basesDiagnosticas = basesDiagnosticas;
+	}
+	
 	
 	
 

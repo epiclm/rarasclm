@@ -1,5 +1,6 @@
 @CHARSET "UTF-8";
 
+
 label {
 	padding-right: 5px !important;
 }
@@ -116,7 +117,15 @@ li.rclmEnfermedadModal p{
 }
 
 
-/*PACIENTES*/
+#contenido {
+	max-width: 1800px;
+}
+
+
+
+
+/**************/
+/* PACIENTES  */
 
 #form-search-paciente .control-label {
 	font-family: sans-serif;
@@ -160,7 +169,9 @@ li.rclmEnfermedadModal p{
 }
 
 
-/*CASOS*/
+
+/**************/
+/* CASOS      */
 
 #tabCasosIndex {
 	padding-top: 10px;
@@ -184,7 +195,7 @@ li.rclmEnfermedadModal p{
 #codificaciones-fuentes input {
 	font-weight:bold; 
 	font-family: monospace;
-	font-size: 16px;
+	font-size: 15px;
 }
 
 #cuadro-resumen-enfrara {
@@ -220,4 +231,11 @@ li.rclmEnfermedadModal p{
 	background-color: #FFD !important;
 }
 
+#baseDiagnostico {
+	font-weight: bold;
+}
+
+input[type=date]  {
+	font-weight: bold;
+}
 

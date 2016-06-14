@@ -40,7 +40,7 @@ import net.rossillo.spring.web.mvc.CacheControl;
 
 @Controller
 @RequestMapping("/pacientes")
-@RarasClmItemModulo(caption="Pacientes",deno="Pacientes",modulo="pacientes",orden=1)
+@RarasClmItemModulo(caption="Pacientes",deno="Pacientes",modulo="pacientes",orden=2)
 @RarasClmItemMenu(caption="Pacientes",deno="Pacientes",modulo="pacientes",orden=1)
 @SessionAttributes("pacientes")
 public class PacienteController extends BaseController {
@@ -55,11 +55,6 @@ public class PacienteController extends BaseController {
 	HttpServletRequest request;
 	
 	
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
-	    binder.registerCustomEditor(Date.class, editor);
-	}
 	
 	
 	// Página inicial del módulo

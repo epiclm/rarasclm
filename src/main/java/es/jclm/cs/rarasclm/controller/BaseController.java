@@ -5,10 +5,15 @@
 package es.jclm.cs.rarasclm.controller;
 
 import java.lang.annotation.Annotation;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -31,6 +36,13 @@ public class BaseController {
 	
 	@Autowired
 	private HttpServletRequest request;
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+	    binder.registerCustomEditor(Date.class, editor);
+	}
+	
 	
 	/**
 	 * Gets the base model.

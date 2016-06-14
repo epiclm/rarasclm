@@ -54,7 +54,7 @@ $(document).ready( function() {
 				});
 	});
 	
-	$("input").change(function(objEvent) {
+	$("input,select,textarea").change(function(objEvent) {
 		$(this).addClass("modificado");
 	});
 	
@@ -136,6 +136,9 @@ $(document).ready( function() {
 				</div>
 			</div>
 			<div id="grupo-fuentes" class="row span12">
+				<h5>Fuente de Información:</h5>
+			</div>
+			<div id="grupo-fuentes" class="row span12">
 				<div id="fuente-cmdb-caso" class="form-group">
 					<label class="control-label" for="fuenteCmbdC">CMBD:</label>
 					<input type="checkbox" id="fuenteCmbdC"  name="fuenteCmbdC" th:value="${caso.fuenteCmbdC}" th:checked="${caso.fuenteCmbdC}"></input>
@@ -181,18 +184,24 @@ $(document).ready( function() {
 					<input type="checkbox" id="fuenteHcPrimariaV" name="fuenteHcPrimariaV" th:value="${caso.fuenteHcPrimariaV}" th:checked="${caso.fuenteHcPrimariaV}"></input>
 				</div>
 				<div id="fuente-rtutores-caso" class="form-group">
-					<label class="control-label" for="ffuenteHcEspecializadaU">HC Secun.:</label>
+					<label class="control-label" for="fuenteHcEspecializadaU">HC Secun.:</label>
 					<input type="checkbox" id="fuenteHcEspecializadaU" name="fuenteHcEspecializadaU" th:value="${caso.fuenteHcEspecializadaU}" th:checked="${caso.fuenteHcEspecializadaU}"></input>
 				</div>
+			</div>
+			<div id="grupo-base-diagnostico" class="row span12">
+				<label class="control-label span5 " for="domTipoVia">Base del Diagnóstico:</label>
+				<select name="baseDiagnostico" class="span5" id="baseDiagnostico"  th:field="${caso.baseDiagnostico}" >
+					<option th:each="baseDto : ${baseModel.cache.basesDiagnosticas}" th:value="${baseDto.key}" th:text="${baseDto.value}"></option>
+				</select>
 			</div>
 			<div id="grupo-juicio" class="row span12">
 				<div id="juicio-clinico-caso" class="form-group">
 					<label class="control-label span7" for="jucioClinico">Juicio Clínico:</label>
-					<input id="jucioClinico" class="span7" name="jucioClinico" type="text" maxlength="512" th:value="${caso.jucioClinico}" placeholder="Jucio Clinico"/>
+					<textarea id="jucioClinico" class="span7" name="jucioClinico" maxlength="512" th:text="${caso.jucioClinico}" cols="30" rows="5"> </textarea>
 				</div>
 			</div>
 			<div id="grupo-tratamiento" class="row span12">
-				<div id="juicio-clinico-caso" class="form-group">
+				<div id="tratamiento-caso" class="form-group">
 					<label class="control-label span7" for="tratamiento">Tratamiento:</label>
 					<textarea id="tratamiento" class="span7" name="tratamiento" th:text="${caso.tratamiento}" cols="30" rows="5"></textarea>
 				</div>
@@ -201,6 +210,79 @@ $(document).ready( function() {
 				<div id="juicio-clinico-caso" class="form-group">
 					<label class="control-label span7" for="observaciones">Observaciones:</label>
 					<textarea id="observaciones" class="span7" name="observaciones" th:text="${caso.observaciones}" cols="30" rows="5"></textarea>
+				</div>
+			</div>
+			<div id="grupo-fecha-inicio-sintomas" class="row span12">
+				<div id="fecha-deteccion-caso" class="form-group">
+					<label class="control-label span3" for="fechaDeteccion">Fecha de Detección:</label>
+					<input id="fechaDeteccion" class="span3" name="fechaDeteccion" type="date"
+						 th:value="${caso.fechaDeteccion}" />
+				</div>
+				<div id="inicio-sintomas-clinico-caso" class="form-group">
+					<label class="control-label span3" for="fechaInicioSintomas">Fecha Inicio sintomas:</label>
+					<input id="fechaInicioSintomas" class="span3" name="fechaInicioSintomas" type="date"
+						 th:value="${caso.fechaInicioSintomas}" />
+				</div>
+				<div id="fecha-diagnostico-clinico-caso" class="form-group">
+					<label class="control-label span3" for="fechaDiagnostico">Fecha Diagnostico:</label>
+					<input id="fechaDiagnostico" class="span3" name="fechaDiagnostico" type="date"
+						 th:value="${caso.fechaDiagnostico}" />
+				</div>
+			</div>
+			
+			<div id="grupo-cronicas-caso" class="row span12">
+				<div id="familiaresEnfermedadesRaras-grupo" class="form-group">
+					<label class="control-label span3" for="fechaDiagnostico">Familiares con Enfermedades Raras:</label>
+					<select name="familiaresEnfermedadesRaras" class="span2" id="familiaresEnfermedadesRaras"  th:field="${caso.familiaresEnfermedadesRaras}">
+						<option value="0">NO</option>
+						<option value="1">SI</option>
+						<option value="9">NC</option>
+					</select>
+				</div>
+				<div id="otrasEnfermedadesCronicas-grupo" class="form-group">
+					<label class="control-label span3" for="fechaDiagnostico">Familiares con Enfermedades Raras:</label>
+					<select name="otrasEnfermedadesCronicas" class="span2" id="otrasEnfermedadesCronicas"  th:field="${caso.otrasEnfermedadesCronicas}">
+						<option value="0">NO</option>
+						<option value="1">SI</option>
+						<option value="9">NC</option>
+					</select>
+				</div>
+			</div>
+			<div id="grupo-cronicas-texto-caso" class="row span12">
+				<div id="enfermedadesCronicas-caso" class="form-group">
+					<label class="control-label span7" for="enfermedadesCronicas">Enfermedades Crónicas:</label>
+					<textarea id="enfermedadesCronicas" class="span7" name="enfermedadesCronicas" th:text="${caso.enfermedadesCronicas}" cols="30" rows="5"></textarea>
+				</div>
+			</div>
+			
+				<div id="declaracion-caso" class="row span12">
+				<h5>Declaración:</h5>
+					<div id="declarada-grupo" class="form-group">
+						<label class="control-label span2" for="declarada">DECLARADA:</label>
+						<select name="declarada" class="span2" id="declarada"  th:field="${caso.declarada}">
+							<option value="0">NO</option>
+							<option value="1">SI</option>
+						</select>
+					</div>
+					<div id="cuadro-declaración" class="form-group">
+						<div id="fecha-diagnostico-clinico-caso" class="form-group">
+							<label class="control-label span3" for="usuarioDeclara">Usuario Declara:</label>
+							<input id="usuarioDeclara" class="span3" name="usuarioDeclara" type="text"
+								 th:value="${caso.usuarioDeclara}" />
+						</div>
+					</div>
+					<div id="fecha-declaracion-caso" class="form-group">
+						<label class="control-label span3" for="fechaDeclara">Fecha de Detección:</label>
+						<input id="fechaDeclara" class="span3" name="fechaDeclara" type="date"
+							 th:value="${caso.fechaDeclara}" />
+					</div>
+				</div>
+
+			
+			<div id="grupo-acciones-bajo" class="row span12">
+				<div class="form-actions">
+				  <button type="submit" class="btn btn-primary">Actualiza</button>
+				  <button type="button" class="btn">Cancel</button>
 				</div>
 			</div>
 		</form>

@@ -38,7 +38,7 @@ $(document).ready( function() {
 	<div id="contenido" layout:fragment="content">
 	<form id="form-edit-paciente" class="form-inline" method='POST'>
 		<legend>Edición Paciente <span th:text="${paciente.idPaciente}"></span></legend>
-					<div class="row span10">
+					<div class="row span12">
 						<div id="grupo-apellido01-paciente" class="form-group">
 							<label class="control-label span3" for="apellido01">1er Apellido:</label>
 							<input id="apellido01" class="span3" name="apellido01" type="text" maxlength="65" th:value="${paciente.apellido01}" placeholder="1er apellido"/>
@@ -54,16 +54,16 @@ $(document).ready( function() {
 					</div>
 					<div class="row span12">
 						<div  class="form-group">
-							<label class="control-label span2" for="cip">CIP:</label>
-							<input  class="span2" id="cip" name="cip" type="text" maxlength="16" th:value="${paciente.cip}"/>
+							<label class="control-label span3" for="cip">CIP:</label>
+							<input  class="span3" id="cip" name="cip" type="text" maxlength="16" th:value="${paciente.cip}"/>
 						</div>
 						<div  class="form-group">
-							<label class="control-label span2" for="dni">DNI-NIE:</label>
-							<input  class="span2" id="dni" name="dni" type="text" maxlength="12" th:value="${paciente.dni}"/>
+							<label class="control-label span3" for="dni">DNI-NIE:</label>
+							<input  class="span3" id="dni" name="dni" type="text" maxlength="12" th:value="${paciente.dni}"/>
 						</div>
 						<div  class="form-group">
-							<label class="control-label span2" for="numeroSegSocial">NSS:</label>
-							<input  class="span2" id="numeroSegSocial" name="numeroSegSocial" type="text" maxlength="12" th:value="${paciente.numeroSegSocial}"/>
+							<label class="control-label span3" for="numeroSegSocial">NSS:</label>
+							<input  class="span3" id="numeroSegSocial" name="numeroSegSocial" type="text" maxlength="12" th:value="${paciente.numeroSegSocial}"/>
 						</div>
 					</div>
 					<div class="row span12">
@@ -111,7 +111,7 @@ $(document).ready( function() {
 							<select name="provinciaResidencia" class="span2" id="provinciaResidencia"  th:field="${paciente.provinciaResidencia}" >
 								<option th:each="provincia : ${baseModel.cache.provinciasCLM}" th:value="${provincia.provincia}" th:text="${provincia.deno}"></option>
 							</select>
-							</div>
+						</div>
 						<div class="form-group">
 							<label class="control-label span3 " for="domTipoVia">Muncipio Res.:</label>
 							<select name="municipioResidencia" class="span3" id="municipioResidencia"  th:field="${paciente.municipioResidencia}" >

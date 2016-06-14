@@ -37,7 +37,7 @@ import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 
 @Controller
 @RequestMapping("/casos")
-@RarasClmItemModulo(caption="Casos",deno="Casos",modulo="casos",orden=2)
+@RarasClmItemModulo(caption="Casos",deno="Casos",modulo="casos",orden=3)
 @RarasClmItemMenu(caption="Casos",deno="Casos",modulo="casos",orden=1)
 @SessionAttributes("casos")
 public class CasoController extends BaseController {
