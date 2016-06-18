@@ -103,12 +103,14 @@ $(document).ready( function() {
 			</div>
 			<div class="row span12">
 			
-				<input type="hidden" id="codEnfrara" name="codEnfrara" th:value="${caso.codEnfrara}"/>
+				<input type="hidden" id="codEnfrara" name="codEnfrara" th:field="${caso.codEnfrara}"/>
+				<input type="hidden" id="fechahoraModificacion" th:field="${caso.fechahoraModificacion}"/>
+				<input type="hidden" id="fechahoraCreacion" th:field="${caso.fechahoraCreacion}"/>
 			
 				<div id="grupo-enfRara-caso" class="form-group">
 					<label class="control-label span7" for="enfrara">Enfermedad Rara CLM:</label>
 					<div class="input-append" style="width: 100%">
-						<input id="enfraraObjeto" class="span7" name="literal" type="text" maxlength="250" th:value="|${caso.enfRara.enfermedadRaraId} ${caso.enfRara.literal}|" placeholder="Escriba Literal o código de la Enfermedad"/>
+						<input id="enfraraObjeto" class="span7"  name="enfRaraCLMliteral" type="text" maxlength="250" th:value="|${caso.enfRara.enfermedadRaraId} ${caso.enfRara.literal}|" placeholder="Escriba Literal o código de la Enfermedad"/>
 						<a class="btn add-on" data-toggle="modal" data-target="#modalEnf" href="" type="button"><i class="icon-search"></i></a>
 					</div>
 				</div>
@@ -135,65 +137,69 @@ $(document).ready( function() {
 				</div>
 				<div id="grupo-codigos-omin-caso" class="form-group">
 					<label class="control-label span2" for="codOmin">OMIN:</label>
-					<input id="codOmin" class="span2" name="codOmin" type="text" maxlength="2" th:value="${caso.codOmin}" placeholder="omin"/>
+					<input id="codOmin" class="span2" name="codOmin" type="text" maxlength="10" th:value="${caso.codOmin}" placeholder="omin"/>
 				</div>
 			</div>
 			<div id="grupo-fuentes" class="row span12">
 				<h5>Fuente de Información:</h5>
 			</div>
-			<div id="grupo-fuentes" class="row span12">
-				<div id="fuente-cmdb-caso" class="form-group">
-					<label class="control-label" for="fuenteCmbdC">CMBD:</label>
-					<input type="checkbox" id="fuenteCmbdC"  name="fuenteCmbdC" th:value="${caso.fuenteCmbdC}" th:checked="${caso.fuenteCmbdC}"></input>
+			<div id="caja-fuente-informacion" class="row span6">
+				<div id="grupo-fuentes1" class="row span12">
+					<div id="fuente-cmdb-caso" class="form-group">
+						<label class="control-label" for="fuenteCmbdC">CMBD:</label>
+						<input type="checkbox" id="fuenteCmbdC"  name="fuenteCmbdC" th:field="${caso.fuenteCmbdC}"></input>
+					</div>
+					<div id="fuente-mortalidad-caso" class="form-group">
+						<label class="control-label" for="fuenteRmortM">Mort.:</label>
+						<input type="checkbox" id="fuenteRmortM" name="fuenteRmortM" th:field="${caso.fuenteRmortM}" ></input>
+					</div>
+					<div id="fuente-renales-caso" class="form-group">
+						<label class="control-label" for="fuenteRenalR">Renales:</label>
+						<input type="checkbox" id="fuenteRenalR" name="fuenteRenalR"  th:field="${caso.fuenteRenalR}"></input>
+					</div>
+					<div id="fuente-investigacion-caso" class="form-group">
+						<label class="control-label" for="fuenteRinvI">R. Invest.:</label>
+						<input type="checkbox" id="fuenteRinvI" name="fuenteRinvI" th:field="${caso.fuenteRinvI}"></input>
+					</div>
+					<div id="fuente-defcongenitos-caso" class="form-group">
+						<label class="control-label" for="fuenteDefcongD">Def. Congé.:</label>
+						<input type="checkbox" id="fuenteDefcongD" name="fuenteDefcongD" th:field="${caso.fuenteDefcongD}"></input>
+					</div>
+					<div id="fuente-defcongenitos-caso" class="form-group">
+						<label class="control-label" for="fuenteEdoE">E.D.O.:</label>
+						<input type="checkbox" id="fuenteEdoE" name="fuenteEdoE" th:field="${caso.fuenteEdoE}"></input>
+					</div>
 				</div>
-				<div id="fuente-mortalidad-caso" class="form-group">
-					<label class="control-label" for="fuenteRmortM">Mort.:</label>
-					<input type="checkbox" id="fuenteRmortM" name="fuenteRmortM" th:value="${caso.fuenteRmortM}" th:checked="${caso.fuenteRmortM}"></input>
-				</div>
-				<div id="fuente-renales-caso" class="form-group">
-					<label class="control-label" for="fuenteRenalR">Renales:</label>
-					<input type="checkbox" id="fuenteRenalR" name="fuenteRenalR" th:value="${caso.fuenteRenalR}" th:checked="${caso.fuenteRenalR}"></input>
-				</div>
-				<div id="fuente-investigacion-caso" class="form-group">
-					<label class="control-label" for="fuenteRinvI">R. Invest.:</label>
-					<input type="checkbox" id="fuenteRinvI" name="fuenteRinvI" th:value="${caso.fuenteRinvI}" th:checked="${caso.fuenteRinvI}"></input>
-				</div>
-				<div id="fuente-defcongenitos-caso" class="form-group">
-					<label class="control-label" for="fuenteDefcongD">Def. Congé.:</label>
-					<input type="checkbox" id="fuenteDefcongD" name="fuenteDefcongD" th:value="${caso.fuenteDefcongD}" th:checked="${caso.fuenteDefcongD}"></input>
-				</div>
-				<div id="fuente-defcongenitos-caso" class="form-group">
-					<label class="control-label" for="fuenteEdoE">E.D.O.:</label>
-					<input type="checkbox" id="fuenteEdoE" name="fuenteEdoE" th:value="${caso.fuenteEdoE}" th:checked="${caso.fuenteEdoE}"></input>
-				</div>
-				<div id="fuente-sociales-caso" class="form-group">
-					<label class="control-label" for="fuenteIsocialesG">R. Soc.:</label>
-					<input type="checkbox" id="fuenteIsocialesG" name="fuenteIsocialesG" th:value="${caso.fuenteIsocialesG}" th:checked="${caso.fuenteIsocialesG}"></input>
-				</div>
-				<div id="fuente-mhuerfanos-caso" class="form-group">
-					<label class="control-label" for="fuenteMhuerfH">M. Huerf.:</label>
-					<input type="checkbox" id="fuenteMhuerfH" name="fuenteMhuerfH" th:value="${caso.fuenteMhuerfH}" th:checked="${caso.fuenteMhuerfH}"></input>
-				</div>
-				<div id="fuente-rtutores-caso" class="form-group">
-					<label class="control-label" for="fuenteRcancerT">R. Cáncer:</label>
-					<input type="checkbox" id="fuenteRcancerT" name="fuenteRcancerT" th:value="${caso.fuenteRcancerT}" th:checked="${caso.fuenteRcancerT}"></input>
-				</div>
-				<div id="fuente-rtutores-caso" class="form-group">
-					<label class="control-label" for="fuenteMetabolN">Metabolo.:</label>
-					<input type="checkbox" id="fuenteMetabolN" name="fuenteMetabolN" th:value="${caso.fuenteMetabolN}" th:checked="${caso.fuenteMetabolN}"></input>
-				</div>
-				<div id="fuente-rtutores-caso" class="form-group">
-					<label class="control-label" for="fuenteHcPrimariaV">HC Primar.:</label>
-					<input type="checkbox" id="fuenteHcPrimariaV" name="fuenteHcPrimariaV" th:value="${caso.fuenteHcPrimariaV}" th:checked="${caso.fuenteHcPrimariaV}"></input>
-				</div>
-				<div id="fuente-rtutores-caso" class="form-group">
-					<label class="control-label" for="fuenteHcEspecializadaU">HC Secun.:</label>
-					<input type="checkbox" id="fuenteHcEspecializadaU" name="fuenteHcEspecializadaU" th:value="${caso.fuenteHcEspecializadaU}" th:checked="${caso.fuenteHcEspecializadaU}"></input>
+				<div id="grupo-fuentes2" class="row span12">
+					<div id="fuente-sociales-caso" class="form-group">
+						<label class="control-label" for="fuenteIsocialesG">R. Soc.:</label>
+						<input type="checkbox" id="fuenteIsocialesG" name="fuenteIsocialesG" th:field="${caso.fuenteIsocialesG}"></input>
+					</div>
+					<div id="fuente-mhuerfanos-caso" class="form-group">
+						<label class="control-label" for="fuenteMhuerfH">M. Huerf.:</label>
+						<input type="checkbox" id="fuenteMhuerfH" name="fuenteMhuerfH" th:field="${caso.fuenteMhuerfH}"></input>
+					</div>
+					<div id="fuente-rtutores-caso" class="form-group">
+						<label class="control-label" for="fuenteRcancerT">R. Cáncer:</label>
+						<input type="checkbox" id="fuenteRcancerT" name="fuenteRcancerT" th:field="${caso.fuenteRcancerT}"></input>
+					</div>
+					<div id="fuente-rtutores-caso" class="form-group">
+						<label class="control-label" for="fuenteMetabolN">Metabolo.:</label>
+						<input type="checkbox" id="fuenteMetabolN" name="fuenteMetabolN" th:field="${caso.fuenteMetabolN}"></input>
+					</div>
+					<div id="fuente-rtutores-caso" class="form-group">
+						<label class="control-label" for="fuenteHcPrimariaV">HC Primar.:</label>
+						<input type="checkbox" id="fuenteHcPrimariaV" name="fuenteHcPrimariaV" th:field="${caso.fuenteHcPrimariaV}"></input>
+					</div>
+					<div id="fuente-rtutores-caso" class="form-group">
+						<label class="control-label" for="fuenteHcEspecializadaU">HC Secun.:</label>
+						<input type="checkbox" id="fuenteHcEspecializadaU" name="fuenteHcEspecializadaU" th:field="${caso.fuenteHcEspecializadaU}"></input>
+					</div>
 				</div>
 			</div>
 			<div id="grupo-hospital" class="row span12">
 				<div id="hospital-caso" class="form-group">
-					<label class="control-label span6" for="hospital">Hospital:</label>
+					<label class="control-label span6" for="hospital">Hospital ( historia clínica más relevante del caso ):</label>
 					<select name="hospital" class="span6" id="hospital"  th:field="${caso.hospital}" >
 						<option th:each="hospital : ${baseModel.cache.hospitales}" th:value="${hospital.idHospital}" th:text="|${hospital.idHospital} ${hospital.literal}|"></option>
 					</select>
@@ -289,7 +295,7 @@ $(document).ready( function() {
 						</div>
 					</div>
 					<div id="fecha-declaracion-caso" class="form-group">
-						<label class="control-label span3" for="fechaDeclara">Fecha de Declaració:</label>
+						<label class="control-label span3" for="fechaDeclara">Fecha de Declaración:</label>
 						<input id="fechaDeclara" class="span3" name="fechaDeclara" type="date"
 							 th:value="${caso.fechaDeclara}" />
 					</div>

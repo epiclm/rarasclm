@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,7 @@ import es.jclm.cs.rarasclm.service.CasoService;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
+import es.jclm.cs.rarasclm.util.MergeEntity;
 
 @Controller
 @RequestMapping("/casos")
@@ -41,6 +44,8 @@ import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 @RarasClmItemMenu(caption="Casos",deno="Casos",modulo="casos",orden=1)
 @SessionAttributes("casos")
 public class CasoController extends BaseController {
+	
+	private static final Logger log = LoggerFactory.getLogger(CasoController.class);
 
 	@Autowired
 	private CasoService servicio;
@@ -71,7 +76,6 @@ public class CasoController extends BaseController {
 	// Página inicial del módulo
 	@RequestMapping(method = RequestMethod.GET)
 	public String inicioEnvio(Model model) {
-		
 		getRoute().setId("");
 		return "casos/index-casos";
 	}
@@ -99,6 +103,10 @@ public class CasoController extends BaseController {
 		}
 	}
 	
+	
+	///////////////////////////////////
+	//EDICIÓN DE UN CASO SEND GET
+	///////////////////////////////////
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public String  editPacienteEnviaFormulario(@PathVariable String id, Model model) {
 		try {
@@ -112,18 +120,26 @@ public class CasoController extends BaseController {
 		return "casos/forms/casoEdit";
 	}
 	
+	
+	///////////////////////////////////
+	//EDICIÓN DE UN CASO SUBMIT POST
+	///////////////////////////////////
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String  editPacienteRecibeFormulario(@PathVariable String id, @ModelAttribute("caso") Caso caso, Model model) {
 		try {
 			Caso casoSinEditar = servicio.Buscar(id);
-			model.addAttribute("caso", casoSinEditar);
+			servicio.saveHistoria(casoSinEditar);
 			UserRarasCLM user = (UserRarasCLM)model.asMap().get("userCLM");
 			caso.setUsuarioModificacion(user.getUsername());
-		} catch (ServiceRarasCLMException ex) {
+			caso.setFechahoraModificacion(new Date());
+			Caso casoMerge = new MergeEntity<Caso>().merge(casoSinEditar, caso);
+			servicio.Actualizar(casoMerge);
+			//model.addAttribute("caso", casoMerge);
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
-		return "casos/forms/casoEdit";
+		return "redirect:/casos/edit/"+id;
 	}
 	
 	

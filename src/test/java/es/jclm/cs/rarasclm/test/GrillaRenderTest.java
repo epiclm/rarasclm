@@ -18,7 +18,7 @@ import es.jclm.cs.rarasclm.util.RenderJqGrid;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "file:src/test/config/spring-app.xml")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@Order(1)
+@Order(2)
 public class GrillaRenderTest {
 	private List<UserRarasCLM> listaUsuarios= new ArrayList<UserRarasCLM>(); 
 	

@@ -20,12 +20,9 @@ import org.junit.Assert;
 @ComponentScan(basePackages={"es.jclm.cs.rarasclm.dao"})
 @ContextConfiguration(locations = "file:src/test/config/spring-app.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@Order(3)
+@Order(4)
 public class AuxiliaresTest {
 
-
-	
-	
 	public AuxiliaresTest() {
 		System.out.println("Auxiliares TEST");
 	}

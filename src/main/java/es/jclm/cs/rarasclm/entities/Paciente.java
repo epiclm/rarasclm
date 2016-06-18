@@ -58,6 +58,7 @@ public class Paciente implements java.io.Serializable {
 	private String email;
 	private String telefono;
 	private List<Caso> casos = new ArrayList<Caso>(0);
+	private Set<HistoriasClinicas> historiasClinicas = new HashSet<HistoriasClinicas>(0);
 
 	public Paciente() {
 	}
@@ -71,7 +72,7 @@ public class Paciente implements java.io.Serializable {
 			String municipioNacimiento, String paisNacimiento, String domTipoVia, String domNombreVia, String domNumero,
 			String domPisopuerta, String domOtros, String provinciaResidencia, String municipioResidencia,
 			Byte fallecido, Date fallecidoFechaComprobacion, String fallecidoEtiquetaComprobacion,
-			String fallecidoNumbol, String email, String telefono, List<Caso> casos, String domCp) {
+			String fallecidoNumbol, String email, String telefono, List<Caso> casos,  Set<HistoriasClinicas> historiasClinicases, String domCp) {
 		this.idPaciente = idPaciente;
 		this.idpacnac = idpacnac;
 		this.cip = cip;
@@ -99,6 +100,7 @@ public class Paciente implements java.io.Serializable {
 		this.email = email;
 		this.telefono = telefono;
 		this.casos = casos;
+		this.historiasClinicas = historiasClinicases;
 	}
 
 	/* (non-Javadoc)
@@ -579,5 +581,17 @@ public class Paciente implements java.io.Serializable {
 	public void setCasos(List<Caso> casos) {
 		this.casos = casos;
 	}
+
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "paciente")
+	public Set<HistoriasClinicas> getHistoriasClinicas() {
+		return historiasClinicas;
+	}
+
+	public void setHistoriasClinicas(Set<HistoriasClinicas> historiasClinicas) {
+		this.historiasClinicas = historiasClinicas;
+	}
+	
+	
 
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 18-jun-2016 4:04:46 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="es.jclm.cs.rarasclm.entities.Roles" table="roles" catalog="RARASCLM" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="deno" type="string">
+            <column name="deno" length="45" not-null="true" />
+        </property>
+        <set name="userses" table="user_role" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_rol" not-null="true" />
+            </key>
+            <many-to-many entity-name="es.jclm.cs.rarasclm.entities.Users">
+                <column name="username" length="45" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15-jun-2016 6:48:59 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="es.jclm.cs.rarasclm.entities.Hospital" table="hospital" catalog="RARASCLM" optimistic-lock="version">
+        <id name="idHospital" type="string">
+            <column name="id_hospital" length="6" />
+            <generator class="assigned" />
+        </id>
+        <property name="literal" type="string">
+            <column name="literal" length="250" />
+        </property>
+        <set name="historiasClinicases" table="historias_clinicas" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="hospital" length="6" not-null="true" />
+            </key>
+            <one-to-many class="es.jclm.cs.rarasclm.entities.HistoriasClinicas" />
+        </set>
+    </class>
+</hibernate-mapping>

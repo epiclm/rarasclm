@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 18-jun-2016 4:04:46 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="es.jclm.cs.rarasclm.entities.HistoriasClinicas" table="historias_clinicas" catalog="RARASCLM" optimistic-lock="version">
+        <composite-id name="id" class="es.jclm.cs.rarasclm.entities.HistoriasClinicasId">
+            <key-property name="paciente" type="int">
+                <column name="paciente" />
+            </key-property>
+            <key-property name="hospital" type="string">
+                <column name="hospital" length="6" />
+            </key-property>
+            <key-property name="nhc" type="string">
+                <column name="nhc" length="12" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="hospital" class="es.jclm.cs.rarasclm.entities.Hospital" update="false" insert="false" fetch="select">
+            <column name="hospital" length="6" not-null="true" />
+        </many-to-one>
+        <many-to-one name="paciente" class="es.jclm.cs.rarasclm.entities.Paciente" update="false" insert="false" fetch="select">
+            <column name="paciente" not-null="true" />
+        </many-to-one>
+        <property name="idUnicoHc" type="string">
+            <column name="id_unico_hc" length="18" />
+        </property>
+    </class>
+</hibernate-mapping>

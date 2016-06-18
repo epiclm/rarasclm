@@ -204,7 +204,7 @@ li.rclmEnfermedadModal p{
 	background-color:#FAFAFA;
 }
 
-#cuadro-resumen-paciente {
+#cuadro-resumen-paciente,#caja-fuente-informacion {
 	padding: 7px;
 	margin-top: 7px;
 	margin-bottom: 7px;
@@ -223,7 +223,7 @@ li.rclmEnfermedadModal p{
 	display: inline-block;
 }
 
-#grupo-fuentes div {
+#grupo-fuentes1 div,#grupo-fuentes2 div {
 	width: 75px !important;
 }
 

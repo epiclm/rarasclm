@@ -17,7 +17,7 @@ import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 @ComponentScan(basePackages={"es.jclm.cs.rarasclm.dao"})
 @ContextConfiguration(locations = "file:src/test/config/spring-app.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@Order(2)
+@Order(3)
 public class EnfermedadRaraDaoTest {
 	
 	@Autowired
