@@ -28,6 +28,8 @@ import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.entities.Caso;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10;
+import es.jclm.cs.rarasclm.entities.MensajeResultado;
+import es.jclm.cs.rarasclm.entities.MensajeTipo;
 import es.jclm.cs.rarasclm.entities.Municipios;
 import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.entities.PacientesModelView;
@@ -127,6 +129,11 @@ public class CasoController extends BaseController {
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String  editPacienteRecibeFormulario(@PathVariable String id, @ModelAttribute("caso") Caso caso, Model model) {
 		try {
+			//Esta acción genera un mensaje
+			MensajeResultado mensaje = new MensajeResultado();
+			mensaje.setTipo(1);
+			mensaje.setMensaje("prueba");
+			request.getSession().setAttribute("mensaje", mensaje);
 			Caso casoSinEditar = servicio.Buscar(id);
 			servicio.saveHistoria(casoSinEditar);
 			UserRarasCLM user = (UserRarasCLM)model.asMap().get("userCLM");
@@ -135,6 +142,7 @@ public class CasoController extends BaseController {
 			Caso casoMerge = new MergeEntity<Caso>().merge(casoSinEditar, caso);
 			servicio.Actualizar(casoMerge);
 			//model.addAttribute("caso", casoMerge);
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null; //TO DO Mandar mensaje de error a la vista

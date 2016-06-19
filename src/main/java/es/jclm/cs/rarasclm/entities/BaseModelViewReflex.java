@@ -38,6 +38,8 @@ public class BaseModelViewReflex implements IBaseModelView {
 	/** paquete de búsqueda de controladores **/
 	private String baseControllerPackage = "es.jclm.cs.rarasclm.controller";
 	
+	private MensajeResultado mensaje;
+	
 	@Autowired
 	DatosAuxiliaresCacheados cacheAuxiliares;
 
@@ -163,6 +165,16 @@ public class BaseModelViewReflex implements IBaseModelView {
 	@Override
 	public DatosAuxiliaresCacheados getCache() {
 		return this.cacheAuxiliares;
+	}
+
+	@Override
+	public MensajeResultado getMensaje() {
+		return this.mensaje;
+	}
+
+	@Override
+	public void setMensaje(MensajeResultado mensaje) {
+		this.mensaje = mensaje;
 	}
 	
 

@@ -114,8 +114,17 @@ public class BaseModelView implements IBaseModelView {
 
 	@Override
 	public DatosAuxiliaresCacheados getCache() {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public MensajeResultado getMensaje() {
+		return null;
+	}
+
+	@Override
+	public void setMensaje(MensajeResultado mensaje) {
+		
 	}
 
 }
