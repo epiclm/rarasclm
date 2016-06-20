@@ -28,8 +28,10 @@ import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.entities.Caso;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10;
+import es.jclm.cs.rarasclm.entities.FieldChange;
 import es.jclm.cs.rarasclm.entities.MensajeResultado;
 import es.jclm.cs.rarasclm.entities.MensajeTipo;
+import es.jclm.cs.rarasclm.entities.MergeResult;
 import es.jclm.cs.rarasclm.entities.Municipios;
 import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.entities.PacientesModelView;
@@ -129,19 +131,28 @@ public class CasoController extends BaseController {
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String  editPacienteRecibeFormulario(@PathVariable String id, @ModelAttribute("caso") Caso caso, Model model) {
 		try {
-			//Esta acción genera un mensaje
-			MensajeResultado mensaje = new MensajeResultado();
-			mensaje.setTipo(1);
-			mensaje.setMensaje("prueba");
-			request.getSession().setAttribute("mensaje", mensaje);
 			Caso casoSinEditar = servicio.Buscar(id);
 			servicio.saveHistoria(casoSinEditar);
 			UserRarasCLM user = (UserRarasCLM)model.asMap().get("userCLM");
 			caso.setUsuarioModificacion(user.getUsername());
 			caso.setFechahoraModificacion(new Date());
-			Caso casoMerge = new MergeEntity<Caso>().merge(casoSinEditar, caso);
-			servicio.Actualizar(casoMerge);
-			//model.addAttribute("caso", casoMerge);
+			MergeResult<Caso> casoMerge = new MergeEntity<Caso>().merge(casoSinEditar, caso);
+			servicio.Actualizar(casoMerge.getMergeObject());
+			
+	
+			StringBuilder sb = new StringBuilder();
+			sb.append(String.format("<p><b>ACTUALIZACIÓN CORRECTA</b></p>caso %07d%n (%s)</p>\n",casoSinEditar.getPaciente().getIdPaciente(),casoSinEditar.getNumCaso()));
+
+//			for(FieldChange f : casoMerge.getFieldsChange())
+//				sb.append(String.format("\t<p>Se ha cambiado campo %s valor: %s por %s</p>\n",f.getFieldName(),
+//						f.getSerializeOldValue(),
+//						f.getSerializeNewValue()));
+			
+			//Esta acción genera un mensaje al usuario
+			MensajeResultado mensaje = new MensajeResultado();
+			mensaje.setTipo(MensajeTipo.OK);
+			mensaje.setMensaje(sb.toString());
+			request.getSession().setAttribute("mensaje",mensaje);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();

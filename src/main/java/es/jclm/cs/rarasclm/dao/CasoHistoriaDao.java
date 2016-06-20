@@ -2,6 +2,8 @@ package es.jclm.cs.rarasclm.dao;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import es.jclm.cs.rarasclm.entities.CasoHistoria;
@@ -9,6 +11,8 @@ import es.jclm.cs.rarasclm.entities.CasoHistoriaId;
 
 @Repository
 public class CasoHistoriaDao extends BaseEntityDao<CasoHistoria,CasoHistoriaId>{
+	
+	private static final Logger log = LoggerFactory.getLogger(CasoHistoriaDao.class);
 	
 	@SuppressWarnings("unchecked")
 	public int getVersion(String caso) {
@@ -21,7 +25,8 @@ public class CasoHistoriaDao extends BaseEntityDao<CasoHistoria,CasoHistoriaId>{
 			else
 				return ret+1;
 		} catch (Exception ex) {
-			return -1;
+			log.error(ex.getMessage(),ex);
+			return 1;
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();

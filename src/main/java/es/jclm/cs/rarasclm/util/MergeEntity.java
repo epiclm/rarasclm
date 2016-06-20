@@ -7,14 +7,24 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
+
+import es.jclm.cs.rarasclm.entities.FieldChange;
+import es.jclm.cs.rarasclm.entities.MergeResult;
+
 public class MergeEntity<T> {
 	
-	public T merge(T oldPersist,T update) throws MergeEntityException{
+	public MergeResult<T> merge(T oldPersist,T update) throws MergeEntityException {
 			
 		List<Method> setterMethodsOld = getSetterMethods(oldPersist);
 		List<Method> getterMethodsUpd = getGetterMethods(update);
 		Object valueUpd = null;
 		Object valueOld = null;
+		
+		MergeResult<T> result = new MergeResult<T>();
+		ArrayList<FieldChange> listaCambios = new ArrayList<FieldChange>();
+		result.setFieldsChange(listaCambios);
 		
 		for(Method mg : getterMethodsUpd) {
 			for(Method ms : setterMethodsOld) {
@@ -23,15 +33,30 @@ public class MergeEntity<T> {
 					valueUpd = mg.invoke(update, (Object[])null);
 					valueOld = mg.invoke(oldPersist, (Object[])null);
 					if((mg.getReturnType() == Date.class || mg.getReturnType() == GregorianCalendar.class || valueUpd!=null) 
-							&& (valueUpd==null || !valueUpd.equals(valueOld)))
+							&& (valueUpd==null || !valueUpd.equals(valueOld))
+							&& (valueUpd!=null || valueOld!=null)) {
 						ms.invoke(oldPersist, valueUpd);
+						FieldChange cambio = new FieldChange();
+						cambio.setCannonicalClassName(mg.getReturnType().getCanonicalName());
+						cambio.setFieldName(mg.getName().substring(3));
+						if(mg.getAnnotation(Column.class)!=null) {
+							cambio.setTableName(mg.getAnnotation(Column.class).name());
+						}
+						if(oldPersist.getClass().getAnnotation(Table.class)!=null) {
+							cambio.setFieldDBname(oldPersist.getClass().getAnnotation(Table.class).name());
+						}
+						cambio.setSerializeOldValue(valueOld.toString());
+						cambio.setSerializeNewValue(valueUpd.toString());
+						result.getFieldsChange().add(cambio);
+					}					
+					result.setMergeObject(oldPersist);
 				} catch(Exception ex) {
 					new MergeEntityException(String.format("error de \"merge\" casuado por %s", ex.getMessage()));
 				}			
 			}
 		}
 	}
-	return oldPersist;
+	return result;
 }
 	
 	//java ugly fields method confusion

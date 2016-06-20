@@ -7,6 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import es.jclm.cs.rarasclm.entities.MergeResult;
 import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.util.MergeEntity;
 import es.jclm.cs.rarasclm.util.MergeEntityException;
@@ -32,8 +33,8 @@ public class MergeEntityTest {
 		p2.setApellido02("GALIANA");
 		
 		try {
-			Paciente o = new MergeEntity<Paciente>().merge(p1, p2);
-			String sResultado = o.getApellido02();
+			MergeResult<Paciente> o = new MergeEntity<Paciente>().merge(p1, p2);
+			String sResultado = o.getMergeObject().getApellido02();
 		} catch (MergeEntityException e) {
 			e.printStackTrace();
 		}
