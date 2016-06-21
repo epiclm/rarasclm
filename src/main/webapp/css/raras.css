@@ -125,7 +125,7 @@ li.rclmEnfermedadModal p{
 
 
 /**************/
-/* PACIENTES  */
+/* BUSQUEDAS  */
 
 #form-search-paciente .control-label {
 	font-family: sans-serif;
@@ -137,16 +137,33 @@ li.rclmEnfermedadModal p{
 	text-align: right;
 }
 
-#busquedaNumeroPaciente {
-	font-weight: bolder;
-}
 
-#form-search-paciente {
+#form-busquedas {
 	padding-top: 12px;
 }
 
-#tabPacientesIndex {
+#form-edit-busqueda .control-label {
+    display: block;
+    float: none;
+    margin: 0;
+    font-size: 12px;
+    font-style: italic;
+}
+
+#tab-paciente-busqueda {
 	padding-top: 10px;
+}
+
+#tabBusquedaIndex {
+	padding-top: 10px;
+}
+
+/**************/
+/* PACIENTE  */
+
+
+#busquedaNumeroPaciente {
+	font-weight: bolder;
 }
 
 #form-edit-paciente .control-label {

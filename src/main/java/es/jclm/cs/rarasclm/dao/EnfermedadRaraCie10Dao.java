@@ -55,7 +55,7 @@ public class EnfermedadRaraCie10Dao extends BaseEntityDao<EnfermedadRaraCie10,St
 	public List<EnfermedadRaraCie10> getAllEnfermedadesRaraCie10() {
 		Session session = getSessionFactory().openSession();
 		try {
-			Query query = session.createQuery("SELECT e FROM EnfermedadRaraCie10 e");
+			Query query = session.createQuery("SELECT e FROM EnfermedadRaraCie10 e ORDER BY e.literal");
 			return (List<EnfermedadRaraCie10>) query.list();
 		} catch (Exception ex) {
 			return null;

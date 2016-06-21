@@ -110,7 +110,7 @@ $(document)
 		
 			<ul class="nav nav-tabs">
 				<li th:attr="class=${pacientes.pacientes==null ? 'active' : ''}">
-					<a href="#tab-paciente-busqueda" data-toggle="tab">Búsqueda Pacientes:</a>
+					<a href="#tab-paciente-busqueda" data-toggle="tab">BÃºsqueda Pacientes:</a>
 				</li>
 				<li th:attr="class=${pacientes.pacientes!=null ? 'active' : ''}">
 					<a href="#tab-paciente-resultados" data-toggle="tab">Resultados</a>
@@ -182,10 +182,11 @@ $(document)
 					<ul th:each="paciente: ${pacientes.pacientes}">
 						<li><a th:href="|${route.baseUrl}edit/${paciente.idPaciente}|" th:text="|${paciente.idPaciente} ${paciente.apellido01} ${paciente.apellido02}, ${paciente.nombre} ${baseModel.cache.getMunipioDeno(paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(paciente.municipioResidencia.substring(0,2))})|"></a></li>
 					</ul>
-				</div>
+				</div><!-- Fin Tab Formuliario de Búsqueda -->
 				
 			</div><!-- Fin de Tabs Content-->
 		</div><!--  Fin div de Tabs -->
 	</div><!-- Fin Contenido -->
+	
 </body>
 </html>

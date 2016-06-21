@@ -79,6 +79,7 @@ $(document).ready( function() {
 	}
 	
 
+	//Autocompletado de la enfermedad rara CLM
 	$.ajax({
 		dataType : "json",
 		url : "/" + contextApp + "/enfermedades/enfrara/json",
@@ -175,6 +176,7 @@ $(document).ready( function() {
 				<input type="hidden" id="fechahoraModificacion" th:field="${caso.fechahoraModificacion}"/>
 				<input type="hidden" id="fechahoraCreacion" th:field="${caso.fechahoraCreacion}"/>
 			
+				<!--  ENF. RARA CLM -->
 				<div id="grupo-enfRara-caso" class="form-group">
 					<label class="control-label span7" for="enfrara">Enfermedad Rara CLM:</label>
 					<div class="input-append" style="width: 100%">

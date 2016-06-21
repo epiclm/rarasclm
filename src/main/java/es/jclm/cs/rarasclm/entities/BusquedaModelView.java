@@ -6,22 +6,20 @@ import java.util.List;
 public class BusquedaModelView {
 
 	private List<Paciente> pacientes;
-	private List<Caso> casos;
 
-	private String busquedaNombre;
-	private String busquedaApellido1;
-	private String busquedaApellido2;
-	private String busquedaCIP;
-	private String busquedaProvincia;
-	private String busquedaMunicipio;
-	private Date busquedaFechaNacimiento;
-	private String busquedaEnfermedadRaraCLM;
-	private String busquedaCie9MC;
-	private String busquedaCie10;
-	private String busquedaOmin;
-	private String busquedaOrphanet;
-	private String busquedaBaseDiagnostica;
-	private String busquedaFuenteInformacion;
+	private String  nombre;
+	private String  apellido01;
+	private String  apellido02;
+	private String  cip;
+	private String  sexo="9";
+	private String  provincia="99";
+	private String  municipio="99999";
+	private Date  	fechaNacimiento;
+	private String  enfermedadRaraCLM;
+	private String  cie9MC;
+	private String  cie10;
+	private String  baseDiagnostica;
+	private String  fuenteInformacion;
 
 	public List<Paciente> getPacientes() {
 		return pacientes;
@@ -31,126 +29,108 @@ public class BusquedaModelView {
 		this.pacientes = pacientes;
 	}
 
-	public List<Caso> getCasos() {
-		return casos;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setCasos(List<Caso> casos) {
-		this.casos = casos;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
-	public String getBusquedaNombre() {
-		return busquedaNombre;
+	public String getApellido01() {
+		return apellido01;
 	}
 
-	public void setBusquedaNombre(String busquedaNombre) {
-		this.busquedaNombre = busquedaNombre;
+	public void setApellido01(String apellido01) {
+		this.apellido01 = apellido01;
 	}
 
-	public String getBusquedaApellido1() {
-		return busquedaApellido1;
+	public String getApellido02() {
+		return apellido02;
 	}
 
-	public void setBusquedaApellido1(String busquedaApellido1) {
-		this.busquedaApellido1 = busquedaApellido1;
+	public void setApellido02(String apellido02) {
+		this.apellido02 = apellido02;
 	}
 
-	public String getBusquedaApellido2() {
-		return busquedaApellido2;
+	public String getCip() {
+		return cip;
 	}
 
-	public void setBusquedaApellido2(String busquedaApellido2) {
-		this.busquedaApellido2 = busquedaApellido2;
+	public void setCip(String cip) {
+		this.cip = cip;
 	}
 
-	public String getBusquedaCIP() {
-		return busquedaCIP;
+	public String getProvincia() {
+		return provincia;
 	}
 
-	public void setBusquedaCIP(String busquedaCip) {
-		this.busquedaCIP = busquedaCip;
+	public String getSexo() {
+		return sexo;
 	}
 
-	public String getBusquedaProvincia() {
-		return busquedaProvincia;
+	public void setSexo(String sexo) {
+		this.sexo = sexo;
 	}
 
-	public void setBusquedaProvincia(String provincia) {
-		this.busquedaProvincia = provincia;
+	public void setProvincia(String provincia) {
+		this.provincia = provincia;
 	}
 
-	public String getBusquedaMunicipio() {
-		return busquedaMunicipio;
+	public String getMunicipio() {
+		return municipio;
 	}
 
-	public void setBusquedaMunicipio(String municipio) {
-		this.busquedaMunicipio = municipio;
+	public void setMunicipio(String municipio) {
+		this.municipio = municipio;
 	}
 
-	public Date getBusquedaFechaNacimiento() {
-		return busquedaFechaNacimiento;
+	public Date getFechaNacimiento() {
+		return fechaNacimiento;
 	}
 
-	public void setBusquedaFechaNacimiento(Date busquedaFechaNacimiento) {
-		this.busquedaFechaNacimiento = busquedaFechaNacimiento;
+	public void setFechaNacimiento(Date fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
 	}
 
-	public String getBusquedaEnfermedadRaraCLM() {
-		return busquedaEnfermedadRaraCLM;
+	public String getEnfermedadRaraCLM() {
+		return enfermedadRaraCLM;
 	}
 
-	public void setBusquedaEnfermedadRaraCLM(String busquedaEnfermedadRaraCLM) {
-		this.busquedaEnfermedadRaraCLM = busquedaEnfermedadRaraCLM;
+	public void setEnfermedadRaraCLM(String enfermedadRaraCLM) {
+		this.enfermedadRaraCLM = enfermedadRaraCLM;
 	}
 
-	public String getBusquedaCie9MC() {
-		return busquedaCie9MC;
+	public String getCie9MC() {
+		return cie9MC;
 	}
 
-	public void setBusquedaCie9MC(String busquedaCie9MC) {
-		this.busquedaCie9MC = busquedaCie9MC;
+	public void setCie9MC(String cie9mc) {
+		cie9MC = cie9mc;
 	}
 
-	public String getBusquedaCie10() {
-		return busquedaCie10;
+	public String getCie10() {
+		return cie10;
 	}
 
-	public void setBusquedaCie10(String busquedaCie10) {
-		this.busquedaCie10 = busquedaCie10;
+	public void setCie10(String cie10) {
+		this.cie10 = cie10;
 	}
 
-	public String getBusquedaOmin() {
-		return busquedaOmin;
+	public String getBaseDiagnostica() {
+		return baseDiagnostica;
 	}
 
-	public void setBusquedaOmin(String busquedaOmin) {
-		this.busquedaOmin = busquedaOmin;
+	public void setBaseDiagnostica(String baseDiagnostica) {
+		this.baseDiagnostica = baseDiagnostica;
 	}
 
-	public String getBusquedaOrphanet() {
-		return busquedaOrphanet;
+	public String getFuenteInformacion() {
+		return fuenteInformacion;
 	}
 
-	public void setBusquedaOrphanet(String busquedaOrphanet) {
-		this.busquedaOrphanet = busquedaOrphanet;
+	public void setFuenteInformacion(String fuenteInformacion) {
+		this.fuenteInformacion = fuenteInformacion;
 	}
-
-	public String getBusquedaBaseDiagnostica() {
-		return busquedaBaseDiagnostica;
-	}
-
-	public void setBusquedaBaseDiagnostica(String busquedaBaseDiagnostica) {
-		this.busquedaBaseDiagnostica = busquedaBaseDiagnostica;
-	}
-
-	public String getBusquedaFuenteInformacion() {
-		return busquedaFuenteInformacion;
-	}
-
-	public void setBusquedaFuenteInformacion(String busquedaFuenteInformacion) {
-		this.busquedaFuenteInformacion = busquedaFuenteInformacion;
-	}
-	
-	
 
 }
