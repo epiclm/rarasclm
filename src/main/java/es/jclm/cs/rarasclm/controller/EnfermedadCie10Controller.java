@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
+import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10;
+import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie9mc;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie10Service;
 
 // TODO: Auto-generated Javadoc
@@ -193,5 +195,10 @@ public class EnfermedadCie10Controller extends BaseController {
 		// re-submit the form
 		status.setComplete();
 		return "redirect:/enfermedades/cie10/edit/"+enf.getCie10Id();
+	}
+	
+	@RequestMapping(value = "/json/{id}", produces = "application/json; charset=UTF-8")
+	public @ResponseBody EnfermedadRaraCie10 jsonId(@PathVariable String id) {
+		return enfermedadService.getEnfermedadRaraCie10ById(id);
 	}
 }

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
+import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie9mc;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie9mcService;
 
@@ -43,7 +44,7 @@ public class EnfermedadCie9MCController extends BaseController {
 	}
 
 	@ModelAttribute("allCie9mc")
-	public List<EnfermedadRaraCie9mc> populateEmployees() {
+	public List<EnfermedadRaraCie9mc> populateAllCie9Mcs() {
 		List<EnfermedadRaraCie9mc> enfermedadesCie9mc = enfermedadService.getAllEnfermedadesRarasCie9mc(true);
 		return enfermedadesCie9mc;
 	}
@@ -142,6 +143,10 @@ public class EnfermedadCie9MCController extends BaseController {
 		return "redirect:/enfermedades/cie9mc/edit/"+enf.getCie9Id();
 	}
 	
+	@RequestMapping(value = "/json/{id}", produces = "application/json; charset=UTF-8")
+	public @ResponseBody EnfermedadRaraCie9mc jsonId(@PathVariable String id) {
+		return enfermedadService.getEnfermedadRaraCie9ById(id);
+	}
 	
 
 }

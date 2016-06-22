@@ -78,13 +78,7 @@ public class PacienteService extends BaseCRUDService<Paciente, Integer> {
 
 	
 	public List<Paciente> buscaPacientes(PacientesModelView pmv) {
-		return dao.busqueda(pmv.getBusquedaCIP(),
-				pmv.getBusquedaNombre(),
-				pmv.getBusquedaApellido1(),
-				pmv.getBusquedaApellido2(),
-				pmv.getBusquedaProvincia(),
-				pmv.getBusquedaMunicipio(),
-				pmv.getBusquedaFechaNacimiento());
+		return null;
 	}
 	
 	

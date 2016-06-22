@@ -44,7 +44,7 @@ public class EnfermedadRaraDao extends BaseEntityDao<EnfermedadRara,String> {
 	public List<EnfermedadRara> getAllEnfermedadesRaras() {
 		Session session = getSessionFactory().openSession();
 		try {
-			Query query = session.createQuery("SELECT e FROM EnfermedadRara e");
+			Query query = session.createQuery("SELECT e FROM EnfermedadRara e ORDER BY e.literal");
 			return (List<EnfermedadRara>) query.list();
 		} catch (Exception ex) {
 			return null;

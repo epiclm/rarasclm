@@ -19,67 +19,11 @@ function renderBotonesPaciente(num,deno) {
 $(document)
 .ready(function() {	
 	
-		var isOKForm = false;
-		var strHtml='<option value="99999" select>DESCONOCIDO</option>\n'
-		
-		$('#busquedaMunicipio').html(strHtml);
-	
-		$("#img-espera-num-paciente").css('display','none');
-	
 		$("#form-search-paciente").on('submit',function(e) {
-			if(!isOkForm)
 		    	e.preventDefault();
 		  });
 		
-		
-		$('.btn').on('click', function(){
-			isOkForm=false;
-		});
-		
-		$('#submitBuscarPacientes').on('click', function(){
-			isOkForm=true;
-		});
-		
-		
-		$("#borrarFormulario").on('click', function() {
-			$("#busquedaCIP,#busquedaApellido1,#busquedaApellido2,#busquedaNombre").val('');
-			$("#busquedaFechaNacimiento").val('');
-			$('#busquedaProvincia').val('99').change();
-			$('#busquedaMuncipio').val('99999').change();
-		});
-		
-		$("#busquedaProvincia").change(function() {
-			var provincia = $(this).val();
-			
-			$('#busquedaMunicipio').html("<p>CARGANDO...</p>");
-			$.ajax({
-				url:'/'+ contextApp + '/localizaciones/municipios/deprovincia/'+provincia,
-				dataType:'json',
-			}).fail(function(jqXHR, textStatus, errorThrown)   {
-		
-			}).done(function(data, textStatus, jqXHR)   {
-				for(i=0;i<data.length;i++) {
-					strHtml += '<option value="' + data[i].municipio +'">'+ data[i].deno + '</option>\n'
-				}
-			}).always(function() {
-				$('#busquedaMunicipio').html(strHtml);
-			})
-		});
-	
-		$("#busquedaCIP,#busquedaApellido1,#busquedaApellido2,#busquedaNombre")
-			.focusout( 
-				function() {
-					$('#busquedaNumeroPaciente').val('');
-					$("#resultado-busqueda-num-paciente").html("");
-					$(this).val($(this).val().toUpperCase());
-					if($(this).attr("id")==="busquedaCIP")
-					{
-						if($(this).val().length>0)
-						{
-							//alert("CIP: "+$(this).val())
-						}
-					}
-			  	});
+		$("#img-espera-num-paciente").css('display','none');
 		
 	   $("#btnBusquedaNumeroPaciente").on('click',function() {
 		   var val = $("#busquedaNumeroPaciente").val();
@@ -105,88 +49,22 @@ $(document)
 </head>
 <body>
 	<div id="contenido" layout:fragment="content">
-	
-		<div id="tabPacientesIndex" class="tab-content row  span10">
-		
-			<ul class="nav nav-tabs">
-				<li th:attr="class=${pacientes.pacientes==null ? 'active' : ''}">
-					<a href="#tab-paciente-busqueda" data-toggle="tab">BÃºsqueda Pacientes:</a>
-				</li>
-				<li th:attr="class=${pacientes.pacientes!=null ? 'active' : ''}">
-					<a href="#tab-paciente-resultados" data-toggle="tab">Resultados</a>
-				</li>
-			</ul>
-			
-			<!-- BUSQUEDAS -->
-			<div class="tab-content">
-				<div id="tab-paciente-busqueda" th:attr="class=${pacientes.pacientes==null ? 'tab-pane fade in active' : 'tab-pane fade'}">
-				<div class="offset1">
-					<form id="form-search-paciente" class="form-horizontal" method='POST'>
-						<div id="grupo-busqueda-numero-paciente" class="form-group row-fluid control-group">
-							<label class="control-label span2" for="busquedaNumeroPaciente">Num. Paciente:</label>
-							<div class="input-append" >
-								<input id="busquedaNumeroPaciente" class="span5" name="busquedaNumeroPaciente" type="text" maxlength="7"/>
-								<a id="btnBusquedaNumeroPaciente" class="btn add-on" href="#"><i class="icon-search"></i></a>
-							</div>		
-							<img id="img-espera-num-paciente" style="width:24px;margin-left:10px" alt="Esperando..." th:src="@{/img/espera.gif}"></img>	
-							<div id="resultado-busqueda-num-paciente" style="display:inline-block"></div>
-						</div>
-						<div class="row offset5">
-							<div  class="form-group row-fluid control-group">
-								<button id="borrarFormulario" class="btn"><i class="icon-trash"></i>&nbsp; Borrar Formulario</button>
-							</div>
-						</div>
-						<div  class="form-group row-fluid control-group">
-							<label class="control-label span2" for="busquedaCIP">CIP:</label>
-							<div class="input-append">
-								<input  class="span12" id="busquedaCIP" name="busquedaCIP" type="text" maxlength="16" th:value="${pacientes.busquedaCIP}"/>
-							</div>
-						</div>
-						<div class="form-group row-fluid control-group">
-							<label class="control-label span2" for="busquedaApellido1">Apellidos:</label>
-								<input name="busquedaApellido1" id="busquedaApellido1" type="text" maxlength="55" placeholder="Primero" th:value="${pacientes.busquedaApellido1}" />
-								<input name="busquedaApellido2" id="busquedaApellido2" type="text" maxlength="55" placeholder="Segundo" th:value="${pacientes.busquedaApellido2}" />
-						</div>
-						<div class="form-group row-fluid control-group">
-							<label class="control-label span2 " for="busquedaNombre">Nombre:</label>
-								<input name="busquedaNombre" id="busquedaNombre" type="text" maxlength="55" placeholder="Nombre" th:value="${pacientes.busquedaNombre}" />
-						</div>
-						<div class="form-group row-fluid control-group">
-							<label class="control-label span2" for="busquedaProvincia">Provincia Res.:</label>
-							<select name="busquedaProvincia" class="span3" id="busquedaProvincia"  th:field="${pacientes.busquedaProvincia}" >
-								<option th:each="provincia : ${baseModel.cache.provinciasCLM}" th:value="${provincia.provincia}" th:text="${provincia.deno}"></option>
-							</select>
-						</div>
-						<div class="form-group row-fluid control-group">
-							<label class="control-label span2" for="busquedaMunicipio">Muncipio Res.:</label>
-							<select name="busquedaMunicipio" class="span4" id="busquedaMunicipio"  th:field="${pacientes.busquedaMunicipio}" >
-								<option th:if="${municipiosProvinciaResidencia}!=null" th:each="m : ${municipiosProvinciaResidencia}" th:value="${m.municipio}" th:text="${m.deno}"></option>
-							</select>
-						</div>
-						<div class="form-group row-fluid control-group">
-							<label class="control-label span2" for="busquedaFechaNacimiento">Fecha Nacimiento:</label>
-							<input name="busquedaFechaNacimiento" class="span3" id="busquedaFechaNacimiento" type="date"  th:value="${pacientes.busquedaFechaNacimiento!=null ? #dates.format(pacientes.busquedaFechaNacimiento, 'yyyy-MM-dd') : ''}" />
-						</div>
-						<div class="form-group row-fluid control-group">
-							<label class="control-label span2"></label>
-								<button id="submitBuscarPacientes" type="submit" class="btn btn-primary">
-  									<i class="icon-user icon-white"></i>&nbsp; Buscar Pacientes
-								</button>
-						</div>
-					</form>
-				  </div>
-				</div><!-- Fin Tab Formuliario de Búsqueda -->
-
-				<!-- PACIENTES -->
-				<div id="tab-paciente-resultados" th:attr="class=${pacientes.pacientes!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
-					<ul th:each="paciente: ${pacientes.pacientes}">
-						<li><a th:href="|${route.baseUrl}edit/${paciente.idPaciente}|" th:text="|${paciente.idPaciente} ${paciente.apellido01} ${paciente.apellido02}, ${paciente.nombre} ${baseModel.cache.getMunipioDeno(paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(paciente.municipioResidencia.substring(0,2))})|"></a></li>
-					</ul>
-				</div><!-- Fin Tab Formuliario de Búsqueda -->
-				
-			</div><!-- Fin de Tabs Content-->
-		</div><!--  Fin div de Tabs -->
+		<!-- BUSQUEDAS -->
+		<div id="tab-paciente-busqueda" th:attr="class=${pacientes.pacientes==null ? 'tab-pane fade in active' : 'tab-pane fade'}">
+		<div class="row span11 offset1">
+			<form id="form-search-paciente" class="form-horizontal" method='POST'>
+				<div id="grupo-busqueda-numero-paciente" class="form-group row-fluid control-group">
+					<label class="control-label span3" for="busquedaNumeroPaciente">Num. Paciente:</label>
+					<div class="input-append" >
+						<input id="busquedaNumeroPaciente" class="span6" name="busquedaNumeroPaciente" type="text" maxlength="7"/>
+						<a id="btnBusquedaNumeroPaciente" class="btn add-on" href="#"><i class="icon-search"></i></a>
+					</div>		
+					<img id="img-espera-num-paciente" style="width:24px;margin-left:10px" alt="Esperando..." th:src="@{/img/espera.gif}"></img>	
+					<div id="resultado-busqueda-num-paciente" style="display:inline-block"></div>
+				</div>
+			</form>
+		  </div>
+		</div><!-- Fin Tab Formuliario de Búsqueda -->
 	</div><!-- Fin Contenido -->
-	
 </body>
 </html>

@@ -14,11 +14,11 @@ public class BusquedaModelView {
 	private String  sexo="9";
 	private String  provincia="99";
 	private String  municipio="99999";
-	private Date  	fechaNacimiento;
+	private String 	anioNacimiento;
 	private String  enfermedadRaraCLM;
 	private String  cie9MC;
 	private String  cie10;
-	private String  baseDiagnostica;
+	private String  baseDiagnostico;
 	private String  fuenteInformacion;
 
 	public List<Paciente> getPacientes() {
@@ -85,14 +85,6 @@ public class BusquedaModelView {
 		this.municipio = municipio;
 	}
 
-	public Date getFechaNacimiento() {
-		return fechaNacimiento;
-	}
-
-	public void setFechaNacimiento(Date fechaNacimiento) {
-		this.fechaNacimiento = fechaNacimiento;
-	}
-
 	public String getEnfermedadRaraCLM() {
 		return enfermedadRaraCLM;
 	}
@@ -117,12 +109,12 @@ public class BusquedaModelView {
 		this.cie10 = cie10;
 	}
 
-	public String getBaseDiagnostica() {
-		return baseDiagnostica;
+	public String getBaseDiagnostico() {
+		return baseDiagnostico;
 	}
 
-	public void setBaseDiagnostica(String baseDiagnostica) {
-		this.baseDiagnostica = baseDiagnostica;
+	public void setBaseDiagnostico(String baseDiagnostica) {
+		this.baseDiagnostico = baseDiagnostica;
 	}
 
 	public String getFuenteInformacion() {
@@ -132,5 +124,15 @@ public class BusquedaModelView {
 	public void setFuenteInformacion(String fuenteInformacion) {
 		this.fuenteInformacion = fuenteInformacion;
 	}
+
+	public String getAnioNacimiento() {
+		return anioNacimiento;
+	}
+
+	public void setAnioNacimiento(String anioNacimiento) {
+		this.anioNacimiento = anioNacimiento;
+	}
+	
+	
 
 }

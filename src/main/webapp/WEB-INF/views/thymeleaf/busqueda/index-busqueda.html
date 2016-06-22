@@ -10,17 +10,81 @@ var contextApp = /*[[${baseModel.baseApp}]]*/'';
 var enfermedades;
 var enfermedadesLiterales;
 
-function renderBotonesPaciente(num,deno) {
-	var strShow = "<a class='btn btn-primary' style='margin-right:5px' href='"+routeBase+"show/"+num+"'>Ver</a>";
-	var strEdit = "<a class='btn btn-success' style='margin-right:5px' href='"+routeBase+"edit/"+num+"'>Editar</a>";
-	return "<p style='display:inline-block;margin-right:10px;font-weight:bold'>"+deno+"</p>"+strShow+strEdit;
-}
-
 $(document)
 .ready(function() {	
 	
+		var isOkForm = false;
+		
+		//Evitar submit al pulsar enter
+		$("form").bind("keypress", function (e) {
+		    if (e.keyCode == 13) {
+		        return false;
+		    }
+		});
+		
+	
+		$("#form-edit-paciente").on('submit',function(e) {
+			if(!isOkForm)
+		    	e.preventDefault();
+		  });
+	
 		var isOKForm = false;
-		var strHtml='<option value="99999" select>DESCONOCIDO</option>\n'
+		var strHtml='<option value="99999" select>DESCONOCIDO</option>\n';
+		
+		if($("#anioNacimiento").val()==0) {
+			$("#anioNacimiento").val("");
+		}
+		
+		if(($("#enfermedadRaraCLM").val()!=="") && ($("#enfermedadRaraCLM").val()!=="9999999999")) {
+		   codEnf = $("#enfermedadRaraCLM").val();
+		   $.ajax({
+			  url:  "/" + contextApp + "/enfermedades/enfrara/json/"+codEnf,
+			  dataType: 'json',
+			  type: 'GET'
+		   }).done(function(data,textStatus,jqXHR) {
+			   $("#autocompleteEnfermedadRaraCLM").val(data.enfermedadRaraId + " " + data.literal);
+		   }).fail(function(jqXHR, textStatus, errorThrown) {
+			 
+		   }).always(function(dataJq,errorOrJqXHR) {
+
+		   });	   
+		}
+		
+		if(($("#cie9MC").val()!=="")) {
+			  codEnf = $("#cie9MC").val();
+			   $.ajax({
+				  url:  "/" + contextApp + "/enfermedades/cie9mc/json/"+codEnf,
+				  dataType: 'json',
+				  type: 'GET'
+			   }).done(function(data,textStatus,jqXHR) {
+				   $("#autocompleteCie9MC").val(data.cie9Id + " " + data.literal);
+			   }).fail(function(jqXHR, textStatus, errorThrown) {
+				 	
+			   }).always(function(dataJq,errorOrJqXHR) {
+					
+			   });	   
+		}
+		
+		if(($("#cie10").val()!=="")) {
+			  codEnf = $("#cie10").val();
+			   $.ajax({
+				  url:  "/" + contextApp + "/enfermedades/cie10/json/"+codEnf,
+				  dataType: 'json',
+				  type: 'GET'
+			   }).done(function(data,textStatus,jqXHR) {
+				   $("#autocompleteCie10").val(data.cie10Id + " " + data.literal);
+			   }).fail(function(jqXHR, textStatus, errorThrown) {
+				 
+			   }).always(function(dataJq,errorOrJqXHR) {
+
+			   });	   
+		}
+		
+		
+		$("input").focusout( 
+			function() {
+				$(this).val($(this).val().toUpperCase());
+		  	});
 		
 		$('#busquedaMunicipio').html(strHtml);
 	
@@ -30,8 +94,7 @@ $(document)
 			if(!isOkForm)
 		    	e.preventDefault();
 		  });
-		
-		
+			
 		$('.btn').on('click', function(){
 			isOkForm=false;
 		});
@@ -39,13 +102,12 @@ $(document)
 		$('#submitBuscarPacientes').on('click', function(){
 			isOkForm=true;
 		});
-		
-		
+			
 		$("#borrarFormulario").on('click', function() {
-			$("#busquedaCIP,#busquedaApellido1,#busquedaApellido2,#busquedaNombre").val('');
-			$("#busquedaFechaNacimiento").val('');
-			$('#busquedaProvincia').val('99').change();
-			$('#busquedaMuncipio').val('99999').change();
+			$("input").val('');
+			$("#busquedaMunicipio").val("99999");
+			$("#busquedaprovincia").val("99");
+			$("#baseDiagnostico").val("");
 		});
 		
 		$("#busquedaProvincia").change(function() {
@@ -63,42 +125,82 @@ $(document)
 				}
 			}).always(function() {
 				$('#busquedaMunicipio').html(strHtml);
-			})
+			});
+			
 		});
 	
-		$("#busquedaCIP,#busquedaApellido1,#busquedaApellido2,#busquedaNombre")
-			.focusout( 
-				function() {
-					$('#busquedaNumeroPaciente').val('');
-					$("#resultado-busqueda-num-paciente").html("");
-					$(this).val($(this).val().toUpperCase());
-					if($(this).attr("id")==="busquedaCIP")
-					{
-						if($(this).val().length>0)
-						{
-							//alert("CIP: "+$(this).val())
-						}
-					}
-			  	});
-		
-	   $("#btnBusquedaNumeroPaciente").on('click',function() {
-		   var val = $("#busquedaNumeroPaciente").val();
-		   $("#resultado-busqueda-num-paciente").html("");
-		   $("#img-espera-num-paciente").css('display','inline-block');
+// 		$("#busquedaCIP,#busquedaApellido1,#busquedaApellido2,#busquedaNombre")
+// 			.focusout( 
+// 				function() {
+// 					$('#busquedaNumeroPaciente').val('');
+// 					$("#resultado-busqueda-num-paciente").html("");
+// 					$(this).val($(this).val().toUpperCase());
+// 					if($(this).attr("id")==="busquedaCIP")
+// 					{
+// 						if($(this).val().length>0)
+// 						{
+// 							//alert("CIP: "+$(this).val())
+// 						}
+// 					}
+// 			  	});
 		   
-		   $.ajax({
-			  url: routeBase + "show/json/" + val,
-			  dataType: 'json',
-			  type: 'GET'
-		   }).done(function(data,textStatus,jqXHR) {
-			   var deno = data.apellido01.toUpperCase()+" "+data.apellido02.toUpperCase()+", "+data.nombre.toUpperCase();
-			   $("#resultado-busqueda-num-paciente").html(renderBotonesPaciente(val,deno));
-		   }).fail(function(jqXHR, textStatus, errorThrown) {
-			   $("#resultado-busqueda-num-paciente").html("<p class='text-error'>No se encuentra</p>");
-		   }).always(function(dataJq,errorOrJqXHR) {
-			   $("#img-espera-num-paciente").css('display','none'); 
-		   });	   
-	   });
+	 	//Autocompletado de enfRaraCLM
+		$.ajax({
+			dataType : "json",
+			url :   "/" + contextApp + "/enfermedades/enfrara/json",
+			contentType : "application/json; charset=utf-8" 
+			 }).done( function(data) {
+				enfermedades = data;
+				enfermedadesLiterales = $.map(enfermedades,
+						function(v) {
+										return {
+													label:v.enfermedadRaraId + ' ' + v.literal,
+													value:v.enfermedadRaraId
+												};
+									});
+				$("#autocompleteEnfermedadRaraCLM").autocomplete({
+					source : enfermedadesLiterales,
+					search : function(event, ui) {
+
+					},
+					select : function(event, ui) {
+						event.preventDefault();
+						$("#autocompleteEnfermedadRaraCLM").val(ui.item.label);
+						$("#enfermedadRaraCLM").val(ui.item.value);
+					},
+					minLength : 3
+				});
+			});
+	   
+	   
+	   //Autocompletado de CIE9MC
+		$.ajax({
+			dataType : "json",
+			url :   "/" + contextApp + "/enfermedades/cie9mc/json",
+			contentType : "application/json; charset=utf-8" 
+			 }).done( function(data) {
+				enfermedades = data;
+				enfermedadesLiterales = $.map(enfermedades,
+						function(v) {
+										return {
+													label:v.cie9Id + ' ' + v.literal,
+													value:v.cie9Id
+												};
+									});
+				$("#autocompleteCie9MC").autocomplete({
+					source : enfermedadesLiterales,
+					search : function(event, ui) {
+
+					},
+					select : function(event, ui) {
+						event.preventDefault();
+						$("#autocompleteCie9MC").val(ui.item.label);
+						$("#cie9MC").val(ui.item.value);
+					},
+					minLength : 3
+				});
+			});
+	   
 	   
 	   //Autocompletado de CIE10
 		$.ajax({
@@ -122,6 +224,7 @@ $(document)
 					select : function(event, ui) {
 						event.preventDefault();
 						$("#autocompleteCie10").val(ui.item.label);
+						$("#cie10").val(ui.item.value);
 					},
 					minLength : 3
 				});
@@ -171,6 +274,13 @@ $(document)
 									<label class="control-label span3" for="cip">CIP:</label>
 									<input  class="span3" id="cip" name="cip" type="text" maxlength="16" th:value="${busqueda.cip}"/>
 								</div>
+								<div id="basedtco-caso" class="form-group">
+									<label class="control-label span5 " for="domTipoVia">Base del Diagnóstico:</label>
+									<select name="baseDiagnostico" class="span5" id="baseDiagnostico"  th:field="${busqueda.baseDiagnostico}" >
+										<option value=""></option>
+										<option th:each="baseDto : ${baseModel.cache.basesDiagnosticas}" th:value="${baseDto.key}" th:text="${baseDto.value}"></option>
+									</select>
+								</div>	
 							</div>
 							<div class="row span10">
 								<div class="form-group control-group">
@@ -188,11 +298,11 @@ $(document)
 							</div>
 							<div class="row span10">
 								<div class="form-group">
-									<label class="control-label span2 " for="fechaNacimiento">Fecha Nacimiento:</label>
-									<input name="fechaNacimiento" class="span2" id="fechaNacimiento" type="date"  th:value="${busqueda.fechaNacimiento!=null ? #dates.format(busqueda.fechaNacimiento, 'yyyy-MM-dd') : ''}" />
+									<label class="control-label span2" for="anioNacimiento">Año Nacimiento:</label>
+									<input name="anioNacimiento" class="span2" id="anioNacimiento" type="text"  th:value="${busqueda.anioNacimiento}" maxlength="4"/>
 								</div>
 								<div class="form-group">
-									<label class="control-label span2 " for="sexo">Sexo:</label>
+									<label class="control-label span2" for="sexo">Sexo:</label>
 									<select name="sexo" class="span2" id="sexo"  th:field="${busqueda.sexo}" >
 										<option value="1">VARÓN</option>
 										<option value="6">MUJER</option>
@@ -205,16 +315,22 @@ $(document)
 								<input id="cie9MC" name="cie9MC" type="hidden" th:value="${busqueda.cie9MC}"></input>
 								<input id="cie10"  name="cie10"  type="hidden" th:value="${busqueda.cie10}"></input>
 								<div class="form-group">
-									<label class="control-label span6" for="autocompleteEnfermedadRaraCLM">Enfermedad RaraCLM:</label>
-									<input class="span6" id="autocompleteEnfermedadRaraCLM" type="text"></input>
+									<label class="control-label span10" for="autocompleteEnfermedadRaraCLM">Enfermedad RaraCLM:</label>
+									<input class="span10" id="autocompleteEnfermedadRaraCLM" type="text"></input>
 								</div>
 								<div class="form-group">
-									<label class="control-label span6" for="autocompleteEnfermedadRaraCLM">CIE9MC:</label>
-									<input class="span6" id="autocompleteCie9MC" type="text"></input>
+									<label class="control-label span10" for="autocompleteEnfermedadRaraCLM">CIE9MC:</label>
+									<input class="span10" id="autocompleteCie9MC" type="text"></input>
 								</div>
 								<div class="form-group">
-									<label class="control-label span6" for="autocompleteEnfermedadRaraCLM">CIE10:</label>
-									<input class="span6" id="autocompleteCie10" type="text"></input>
+									<label class="control-label span10" for="autocompleteEnfermedadRaraCLM">CIE10:</label>
+									<input class="span10" id="autocompleteCie10" type="text"></input>
+								</div>
+							</div>
+							<div id="grupo-acciones-bajo" class="row span10">
+								<div class="form-actions">
+							  		<button id="submitBuscarPacientes" type="submit" class="btn btn-primary"><i class="icon-user icon-white"></i>&nbsp; Buscar Pacientes</button>
+									<button id="borrarFormulario" class="btn"><i class="icon-trash"></i>&nbsp; Borrar Formulario</button>
 								</div>
 							</div>
 						</form>
@@ -223,12 +339,11 @@ $(document)
 
 				<!-- PACIENTES -->
 				<div id="tab-paciente-resultados" th:attr="class=${busqueda.pacientes!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
-					<div class="">
-							
+					<div style="padding-top: 10px;">
+						<ul th:each="paciente: ${busqueda.pacientes}">
+							<li><a th:href="|/${baseModel.baseApp}/pacientes/edit/${paciente.idPaciente}|" th:text="|${paciente.idPaciente} ${paciente.apellido01} ${paciente.apellido02}, ${paciente.nombre} ${baseModel.cache.getMunipioDeno(paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(paciente.municipioResidencia.substring(0,2))})|"></a></li>
+						</ul>
 					 </div>
-					<!--<ul th:each="paciente: ${busqueda.pacientes}">
-						<li><a th:href="|${route.baseUrl}edit/${paciente.idPaciente}|" th:text="|${paciente.idPaciente} ${paciente.apellido01} ${paciente.apellido02}, ${paciente.nombre} ${baseModel.cache.getMunipioDeno(paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(paciente.municipioResidencia.substring(0,2))})|"></a></li>
-					</ul>-->
 				</div>
 				
 			</div><!-- Fin de Tabs Content-->

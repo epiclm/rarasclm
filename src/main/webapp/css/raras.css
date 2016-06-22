@@ -155,12 +155,13 @@ li.rclmEnfermedadModal p{
 }
 
 #tabBusquedaIndex {
-	padding-top: 10px;
+	padding-top: 15px;
 }
+
+
 
 /**************/
 /* PACIENTE  */
-
 
 #busquedaNumeroPaciente {
 	font-weight: bolder;

@@ -116,22 +116,22 @@ $(document).ready( function() {
 <body>
 	<div id="contenido" layout:fragment="content">
 	
-				<!-- Mensajes -->
-				<div id="mensajes" class="modal fade">
-					<div th:if="${resultado.error}" class="alert alert-error">
-						<p th:if="${resultado.mensaje} != null"
-							th:text="${resultado.mensaje}">
-						</p>
-					</div>
-					<div th:if="${resultado.success}" class="alert alert-success">
-						<p th:if="${resultado.mensaje} != null"
-							th:text="${resultado.mensaje}">
-						</p>
-					</div>
-					<div class="modal-footer">
-							<button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-					</div>
-				</div>
+		<!-- Mensajes -->
+		<div id="mensajes" class="modal fade">
+			<div th:if="${resultado.error}" class="alert alert-error">
+				<p th:if="${resultado.mensaje} != null"
+					th:text="${resultado.mensaje}">
+				</p>
+			</div>
+			<div th:if="${resultado.success}" class="alert alert-success">
+				<p th:if="${resultado.mensaje} != null"
+					th:text="${resultado.mensaje}">
+				</p>
+			</div>
+			<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+			</div>
+		</div>
 	
 	
 	
@@ -139,10 +139,10 @@ $(document).ready( function() {
 			<legend>Edición Caso <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span>
 			</legend>
 			
-			<div class="form-actions">
-			  <button type="submit" class="btn btn-primary">Actualiza</button>
-			  <button type="button" class="btn">Cancel</button>
-			</div>
+<!-- 			<div class="form-actions"> -->
+<!-- 			  <button type="submit" class="btn btn-primary">Actualiza</button> -->
+<!-- 			  <button type="button" class="btn">Cancel</button> -->
+<!-- 			</div> -->
 			
 			<!-- CUADRO RESUMEN PACIENTE -->
 			<div id="cuadro-resumen-paciente" class="row span8">
