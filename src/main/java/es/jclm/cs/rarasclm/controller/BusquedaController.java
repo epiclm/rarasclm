@@ -1,5 +1,8 @@
 package es.jclm.cs.rarasclm.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,11 +25,16 @@ import es.jclm.cs.rarasclm.service.LocalizacionesService;
 @SessionAttributes("busqueda")
 public class BusquedaController extends BaseController {
 	
+	public static final String OBJETO_BUSQUEDA_SESION="busqueda";
+	
 	@Autowired
 	LocalizacionesService servicioLocalizaciones;
 	
 	@Autowired
 	BusquedaService busquedaService;
+	
+	@Autowired
+	HttpServletRequest request;
 
 	///////////////////////////////////
 	// BÚSQUEDA DE UN CASO SEND GET
@@ -34,7 +42,14 @@ public class BusquedaController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String busqueda(Model model) {
 		
-		BusquedaModelView busquedaModel = new BusquedaModelView();
+		BusquedaModelView busquedaModel;
+		
+		if(request.getSession().getAttribute(OBJETO_BUSQUEDA_SESION)==null)
+			busquedaModel = new BusquedaModelView();
+		else
+			busquedaModel = (BusquedaModelView)request.getSession().getAttribute(OBJETO_BUSQUEDA_SESION);
+		
+		
 		model.addAttribute("busqueda", busquedaModel);
 		
 		if(busquedaModel.getMunicipio().length()==5 && busquedaModel.getMunicipio().equals("99999"))
@@ -52,13 +67,15 @@ public class BusquedaController extends BaseController {
 				
 		model.addAttribute("busqueda", busquedaModel);
 		
-		busquedaModel.setPacientes(busquedaService.buscaPacientes(busquedaModel));
+		request.getSession().setAttribute(OBJETO_BUSQUEDA_SESION,busquedaModel);
+		
+		busquedaModel.setCasos(busquedaService.buscaCasos(busquedaModel));
 		
 		if(busquedaModel.getMunicipio().length()==5 && busquedaModel.getMunicipio().equals("99999"))
 			model.addAttribute("municipiosProvinciaResidencia",servicioLocalizaciones.getMunicipioDeProvincia(busquedaModel.getMunicipio().substring(0, 2)));
 		
 		
-		return "busqueda/index-busqueda";
+		return "redirect:busqueda";
 	}
 	
 	

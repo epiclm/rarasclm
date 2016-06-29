@@ -172,7 +172,6 @@ $(document)
 				});
 			});
 	   
-	   
 	   //Autocompletado de CIE9MC
 		$.ajax({
 			dataType : "json",
@@ -197,6 +196,10 @@ $(document)
 						$("#autocompleteCie9MC").val(ui.item.label);
 						$("#cie9MC").val(ui.item.value);
 					},
+					focus: function(event, ui) {
+				        event.preventDefault();
+				        $("#autocompleteCie9MC").val(ui.item.label);
+				    },
 					minLength : 3
 				});
 			});
@@ -240,10 +243,10 @@ $(document)
 		<div id="tabBusquedaIndex" class="tab-content row  span12">
 		
 			<ul class="nav nav-tabs">
-				<li th:attr="class=${busqueda.pacientes==null ? 'active' : ''}">
+				<li th:attr="class=${busqueda.casos==null ? 'active' : ''}">
 					<a href="#tab-paciente-busqueda" data-toggle="tab">Búsquedas:</a>
 				</li>
-				<li th:attr="class=${busqueda.pacientes!=null ? 'active' : ''}">
+				<li th:attr="class=${busqueda.casos!=null ? 'active' : ''}">
 					<a href="#tab-paciente-resultados" data-toggle="tab">Resultados</a>
 				</li>
 			</ul>
@@ -252,27 +255,27 @@ $(document)
 			<div class="tab-content">
 			
 				<!-- BUSQUEDAS -->
-				<div id="tab-paciente-busqueda" th:attr="class=${busqueda.pacientes==null ? 'tab-pane fade in active' : 'tab-pane fade'}">
+				<div id="tab-paciente-busqueda" th:attr="class=${busqueda.casos==null ? 'tab-pane fade in active' : 'tab-pane fade'}">
 					<div class="row offset1">
 						<form id="form-edit-paciente" class="form-edit-busqueda" method='POST'>
 							<div class="row span10">
 								<div id="grupo-apellido01-paciente" class="form-group">
 									<label class="control-label span3" for="apellido01">1er Apellido:</label>
-									<input id="apellido01" class="span3" name="apellido01" type="text" maxlength="65" th:value="${busqueda.apellido01}" placeholder="1er apellido"/>
+									<input id="apellido01" class="span3" name="apellido01" type="text" maxlength="65" th:value="${busqueda.apellido01}" placeholder="1er Apellido"/>
 								</div>
 								<div id="grupo-apellido02-paciente" class="form-group ">	
 									<label class="control-label span3" for="apellido02">2o Apellido:</label>
-									<input id="apellido02" class="span3" name="apellido02" type="text" maxlength="65" th:value="${busqueda.apellido02}" placeholder="2o apellido"/>
+									<input id="apellido02" class="span3" name="apellido02" type="text" maxlength="65" th:value="${busqueda.apellido02}" placeholder="2o Apellido"/>
 								</div>
 								<div id="grupo-nombre-paciente" class="form-group ">		
 									<label class="control-label span3" for="nombre">Nombre:</label>
-									<input id="nombre" class="span3" name="nombre" type="text" maxlength="65" th:value="${busqueda.nombre}" placeholder="nombre"/>
+									<input id="nombre" class="span3" name="nombre" type="text" maxlength="65" th:value="${busqueda.nombre}" placeholder="Nombre"/>
 								</div>
 							</div>
 							<div class="row span10">
 								<div  class="form-group">
 									<label class="control-label span3" for="cip">CIP:</label>
-									<input  class="span3" id="cip" name="cip" type="text" maxlength="16" th:value="${busqueda.cip}"/>
+									<input  class="span3" id="cip" name="cip" type="text" maxlength="16" th:value="${busqueda.cip}" placeholder="CIP"/>
 								</div>
 								<div id="basedtco-caso" class="form-group">
 									<label class="control-label span5 " for="domTipoVia">Base del Diagnóstico:</label>
@@ -338,10 +341,10 @@ $(document)
 				</div><!-- Fin Tab Formuliario de Búsqueda -->
 
 				<!-- PACIENTES -->
-				<div id="tab-paciente-resultados" th:attr="class=${busqueda.pacientes!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
+				<div id="tab-paciente-resultados" th:attr="class=${busqueda.casos!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
 					<div style="padding-top: 10px;">
-						<ul th:each="paciente: ${busqueda.pacientes}">
-							<li><a th:href="|/${baseModel.baseApp}/pacientes/edit/${paciente.idPaciente}|" th:text="|${paciente.idPaciente} ${paciente.apellido01} ${paciente.apellido02}, ${paciente.nombre} ${baseModel.cache.getMunipioDeno(paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(paciente.municipioResidencia.substring(0,2))})|"></a></li>
+						<ul th:each="caso: ${busqueda.casos}">
+							<li><a th:href="|/${baseModel.baseApp}/pacientes/edit/${caso.paciente.idPaciente}|" th:text="|${caso.idCaso} ${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre} ${baseModel.cache.getMunipioDeno(caso.paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(caso.paciente.municipioResidencia.substring(0,2))}) ${caso.literal}|"></a></li>
 						</ul>
 					 </div>
 				</div>

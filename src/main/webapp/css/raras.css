@@ -9,6 +9,10 @@ body {
 	position: relative;
 }
 
+select,textarea,input {
+	margin-bottom: 2px !important;
+}
+
 input select {
 	margin-bottom: 4px !important;
 }

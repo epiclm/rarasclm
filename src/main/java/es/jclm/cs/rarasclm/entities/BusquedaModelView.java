@@ -6,6 +6,7 @@ import java.util.List;
 public class BusquedaModelView {
 
 	private List<Paciente> pacientes;
+	private List<Caso> casos;
 
 	private String  nombre;
 	private String  apellido01;
@@ -20,6 +21,7 @@ public class BusquedaModelView {
 	private String  cie10;
 	private String  baseDiagnostico;
 	private String  fuenteInformacion;
+	private String  seccion;
 
 	public List<Paciente> getPacientes() {
 		return pacientes;
@@ -27,6 +29,14 @@ public class BusquedaModelView {
 
 	public void setPacientes(List<Paciente> pacientes) {
 		this.pacientes = pacientes;
+	}
+	
+	public List<Caso> getCasos() {
+		return casos;
+	}
+
+	public void setCasos(List<Caso> casos) {
+		this.casos = casos;
 	}
 
 	public String getNombre() {
@@ -131,6 +141,14 @@ public class BusquedaModelView {
 
 	public void setAnioNacimiento(String anioNacimiento) {
 		this.anioNacimiento = anioNacimiento;
+	}
+
+	public String getSeccion() {
+		return seccion;
+	}
+
+	public void setSeccion(String seccion) {
+		this.seccion = seccion;
 	}
 	
 	

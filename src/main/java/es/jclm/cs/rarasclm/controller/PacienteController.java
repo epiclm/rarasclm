@@ -1,5 +1,6 @@
 package es.jclm.cs.rarasclm.controller;
 
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -119,7 +120,13 @@ public class PacienteController extends BaseController {
 			municipioDesconocido.setMunicipio("99999");
 			municipioDesconocido.setDeno("DESCONOCIDO");
 			municipiosResidencia.add(municipioDesconocido);
-			municipiosResidencia.addAll(servicioLocalizaciones.getMunicipioDeProvincia(paciente.getMunicipioResidencia().substring(0, 2)));
+			if(paciente.getMunicipioResidencia()!=null && paciente.getMunicipioResidencia().trim().length()==5) {
+				municipiosResidencia.addAll(servicioLocalizaciones.getMunicipioDeProvincia(paciente.getMunicipioResidencia().substring(0, 2)));
+			} else {
+				municipiosResidencia.addAll(servicioLocalizaciones.getMunicipioDeProvincia("99"));
+			}
+				
+				
 			model.addAttribute("municipiosProvinciaResidencia",municipiosResidencia);
 		} catch (ServiceRarasCLMException ex) {
 			ex.printStackTrace();

@@ -22,11 +22,16 @@
 	
 
 	<!-- <tx:annotation-driven transaction-manager="txManager" /> -->
+	
+	
+	<bean id="configuracion" scope="singleton" class="es.jclm.cs.rarasclm.config.ConfiguracionRarasCLM">
+		<property name="maxResultadosBusqueda" value="1000"></property>
+	</bean>
 
 	<bean id="dataSourceRarasCLM" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/RARASCLM"></property>
-		<!--<property name="jdbcUrl" value="jdbc:mysql://192.168.1.213:3306/RARASCLM" />-->
+		<!--<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/RARASCLM"></property>-->
+		<property name="jdbcUrl" value="jdbc:mysql://192.168.1.213:3306/RARASCLM" />
 		<property name="user" value="root"></property>
 		<property name="password" value="alberto01"></property>
 		<property name="maxPoolSize" value="50" />
