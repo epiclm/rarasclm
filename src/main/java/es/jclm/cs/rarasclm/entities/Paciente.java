@@ -52,6 +52,7 @@ public class Paciente implements java.io.Serializable {
 	private String provinciaResidencia;
 	private String municipioResidencia;
 	private Byte fallecido;
+	private Date fallecidoFecha;
 	private Date fallecidoFechaComprobacion;
 	private String fallecidoEtiquetaComprobacion;
 	private String fallecidoNumbol;
@@ -71,7 +72,7 @@ public class Paciente implements java.io.Serializable {
 			String apellido01, String apellido02, Date fechaNacimiento, Character sexo, String provinciaNacimiento,
 			String municipioNacimiento, String paisNacimiento, String domTipoVia, String domNombreVia, String domNumero,
 			String domPisopuerta, String domOtros, String provinciaResidencia, String municipioResidencia,
-			Byte fallecido, Date fallecidoFechaComprobacion, String fallecidoEtiquetaComprobacion,
+			Byte fallecido, Date fallecidoFecha, Date fallecidoFechaComprobacion, String fallecidoEtiquetaComprobacion,
 			String fallecidoNumbol, String email, String telefono, List<Caso> casos,  Set<HistoriasClinicas> historiasClinicases, String domCp) {
 		this.idPaciente = idPaciente;
 		this.idpacnac = idpacnac;
@@ -94,6 +95,7 @@ public class Paciente implements java.io.Serializable {
 		this.provinciaResidencia = provinciaResidencia;
 		this.municipioResidencia = municipioResidencia;
 		this.fallecido = fallecido;
+		this.fallecidoFecha = fallecidoFecha;
 		this.fallecidoFechaComprobacion = fallecidoFechaComprobacion;
 		this.fallecidoEtiquetaComprobacion = fallecidoEtiquetaComprobacion;
 		this.fallecidoNumbol = fallecidoNumbol;
@@ -471,17 +473,22 @@ public class Paciente implements java.io.Serializable {
 		return this.fallecido;
 	}
 
-	/* (non-Javadoc)
-	 * @see es.jclm.cs.rarasclm.entities.IPaciente#setFallecido(java.lang.Byte)
-	 */
 	
 	public void setFallecido(Byte fallecido) {
 		this.fallecido = fallecido;
 	}
 
-	/* (non-Javadoc)
-	 * @see es.jclm.cs.rarasclm.entities.IPaciente#getFallecidoFechaComprobacion()
-	 */
+	@Temporal(TemporalType.DATE)
+	@Column(name = "fallecido_fecha",length=10)
+	public Date getFallecidoFecha() {
+		return this.fallecidoFecha;
+	}
+
+
+	public void setFallecidoFecha(Date fallecidoFecha) {
+		this.fallecidoFecha = fallecidoFecha;
+	}
+
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fallecido_fecha_comprobacion", length = 19)

@@ -12,6 +12,12 @@ var imgEspera = '<img id="img-espera-num-paciente" style="width:18px;margin-left
 
 $(document).ready( function() {
 	
+	$("input").focusout( 
+			function() {
+				$(this).val($(this).val().toUpperCase());
+		  	});
+		
+	
 	$("#provinciaResidencia").change(function() {
 		var provincia = $(this).val();
 		var strHtml='<option value="99" select>DESCONOCIDO</option>\n'
@@ -37,6 +43,10 @@ $(document).ready( function() {
 <body>
 	<div id="contenido" layout:fragment="content">
 	<form id="form-edit-paciente" class="form-inline" method='POST'>
+	
+	
+				<input type="hidden" id="idPaciente" name="idPaciente" th:field="${paciente.idPaciente}"/>
+				
 	
 		<legend>Edición Paciente <span th:text="${paciente.idPaciente}"></span></legend>
 		
@@ -124,6 +134,23 @@ $(document).ready( function() {
 							<label class="control-label span1 " for="domCp">CP:</label>
 							<input name="domCp" class="span1" id="domCp" type="text"  th:value="${paciente.domCp}" maxlength="5" />
 						</div>
+					</div>
+					<div class="row span12">
+						<div class="form-group">
+							<label class="control-label span2 " for="domTipoVia">Fallecido:</label>
+							<select name="fallecido" class="span2" id="fallecido"  th:field="${paciente.fallecido}" >
+								<option value="0">NO</option>
+								<option value="1">SI</option>
+								<option value="9">NC</option>
+							</select>
+						</div>
+						
+						<div class="form-group">
+							<label class="control-label span2 " for="fechaNacimiento">Fecha Fallecimiento:</label>
+							<input name="fallecidoFecha" class="span2" id="fallecidoFecha" type="date"  th:value="${paciente.fallecidoFecha!=null ? #dates.format(paciente.fallecidoFecha, 'yyyy-MM-dd') : ''}" />
+						</div>
+						
+						
 					</div>
 					<div class="row span12">
 						<p>Casos:</p>

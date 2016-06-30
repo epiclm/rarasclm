@@ -110,7 +110,7 @@ public class PacienteController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public String  showPaciente(@PathVariable String id, Model model) {
+	public String  editPaciente(@PathVariable String id, Model model) {
 		Integer clave = Integer.valueOf(id);
 		try {
 			Paciente paciente = servicio.Buscar(clave);
@@ -132,7 +132,14 @@ public class PacienteController extends BaseController {
 			ex.printStackTrace();
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
+		
 		return "pacientes/forms/pacienteEdit";
+	}
+	
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
+	public String  submitPaciente(@PathVariable String id, Model model) {
+		
+		return "redirect:/pacientes/edit/{id}";
 	}
 	
 	
