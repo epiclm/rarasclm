@@ -67,7 +67,9 @@ CasoDao casoDao;
 				bmv.getCie9MC(),
 				bmv.getCie10(),
 				bmv.getEnfermedadRaraCLM(),
-				baseDiagnostico 
+				baseDiagnostico,
+				-1,
+				-1
 			);
 		
 	}
