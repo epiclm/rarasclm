@@ -156,11 +156,14 @@ $(document).ready( function() {
 				</div>
 				<div id="grupo-nombre-paciente" class="form-group">
 					<label class="control-label span1" for="literal">Edad:</label>
-					<p id="literal" class="span1"  th:text="|${baseModel.cache.getEdad(caso.paciente.fechaNacimiento)} años|"></p>
+					<p id="literal" class="span1"  th:text="|${caso.paciente.fechaNacimiento!=null ? baseModel.cache.getEdad(caso.paciente.fechaNacimiento) : '?'} años|"></p>
 				</div>
 				<div id="grupo-nombre-paciente" class="form-group">
 					<label class="control-label span3" for="literal">Muncipio Residencia:</label>
 					<p id="literal" class="span3"  th:text="|${baseModel.cache.getMunipioProvinciaDeno(caso.paciente.municipioResidencia)}|"></p>
+				</div>
+				<div class="form-group">
+					<a class="btn btn-primary" th:href="|/${baseModel.baseApp}/pacientes/edit/${caso.paciente.idPaciente}|">Editar</a>
 				</div>
 			</div>
 			
@@ -383,8 +386,7 @@ $(document).ready( function() {
 		<!-- Modal de enfermedades -->
 		<div id="modalEnf" class="modal hide fade">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h3>Selección de Enfermedad Rara</h3>
 			</div>
 			<div class="modal-body">

@@ -1,0 +1,15 @@
+{
+  "name": "rarasclm-webapp",
+  "version": "1.0.0",
+  "description": "Vista y cliente de rarasclm",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jccm",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-install": "^0.6.0"
+  }
+}

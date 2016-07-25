@@ -80,7 +80,7 @@ $(document).ready( function() {
 					</div>
 					<div class="row span12">
 						<div class="form-group">
-							<label class="control-label span2 " for="fechaNacimiento">Fecha Nacimiento: <span id="pacienteEdad" th:text="|(${baseModel.cache.getEdad(paciente.fechaNacimiento)} años)|"></span></label>
+							<label class="control-label span2 " for="fechaNacimiento">Fecha Nacimiento: <span id="pacienteEdad" th:text="|(${paciente.fechaNacimiento!=null ? baseModel.cache.getEdad(paciente.fechaNacimiento) : ''} años)|"></span></label>
 							<input name="fechaNacimiento" class="span2" id="fechaNacimiento" type="date"  th:value="${paciente.fechaNacimiento!=null ? #dates.format(paciente.fechaNacimiento, 'yyyy-MM-dd') : ''}" />
 						</div>
 						<div class="form-group">

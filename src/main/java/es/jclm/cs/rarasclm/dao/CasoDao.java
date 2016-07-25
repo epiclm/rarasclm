@@ -69,7 +69,7 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 		Session session = this.sf.openSession();
 
 		String sHql = "from Caso c where c.paciente.apellido01 like :apellido1 "
-				+ "and  c.paciente.apellido01 like :apellido2 " + "and  c.paciente.nombre like :nombre ";
+				+ "and  c.paciente.apellido02 like :apellido2 " + "and  c.paciente.nombre like :nombre ";
 
 		if (addCip)
 			sHql += "and c.paciente.cip like :cip ";
