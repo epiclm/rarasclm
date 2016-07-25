@@ -104,6 +104,8 @@ public class MenuModulo implements java.lang.Comparable<MenuModulo>{
 	@Override
 	public boolean equals(Object m)
 	{
+		if(m==null)
+			return false;
 		if(this.getId()==((MenuModulo)m).getId())
 			return true;
 		else

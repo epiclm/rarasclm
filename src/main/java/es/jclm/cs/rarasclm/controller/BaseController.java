@@ -86,6 +86,7 @@ public class BaseController {
 	 */
 	@ModelAttribute("route")
 	public RouteParameters getRoute() {
+		//Obtiene la routa mediante las anotaciones del controlador
 		RouteParameters ret = new RouteParameters();
 		Annotation[] anotaciones = this.getClass().getDeclaredAnnotations();
 		for(Annotation a : anotaciones)

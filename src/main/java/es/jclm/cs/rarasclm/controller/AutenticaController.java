@@ -27,10 +27,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class AutenticaController {
 	
 	
-	private static final Logger log = LoggerFactory.getLogger(IndexController.class);
-	
-	
-	
+	private static final Logger log = LoggerFactory.getLogger(AutenticaController.class);
+
 	/**
 	 * Autentica.
 	 *

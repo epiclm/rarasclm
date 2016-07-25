@@ -1,29 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         	  xmlns:th="http://www.thymeleaf.org">
-        <head>
-            <meta charset="utf-8"/>
-            <title layout:title-pattern="$CONTENT_TITLE - $DECORATOR_TITLE">Registro de Enfermedades Raras CLM</title>
-            <link type="text/css" th:href="@{/bower_components/normalize-css/normalize.css}" rel="stylesheet" />
-            <link type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.css}" rel="stylesheet" />
-            <link type="text/css" th:href="@{/bower_components/bootstrap/dist/css/font-awesome.min.css}" rel="stylesheet" />
-            <!--[if IE 7]>
-            	<link rel="stylesheet" th:href="@{//bower_components/bootstrap/dist/css/font-awesome-ie7.min.css}">
-            <![endif]-->
-            <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-             <!--[if lt IE 9]>
-            	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-            <![endif]-->
-            <link th:href="@{/bower_components/bootstrap/dist/css/docs.css}" rel="stylesheet"/>
-            <!--<link th:href="@{/assets/js/google-code-prettify/prettify.css}" rel="stylesheet"/>-->
-            <link type="text/css" th:href="@{/css/raras.css}" rel="stylesheet" />
-            
-            <script type="text/javascript" th:src="@{/bower_components/jquery/jquery.min.js}" ></script>
-			<script type="text/javascript" th:src="@{/js/jquery.validate.min.js}" ></script>    
-      </head>
+	<head>
+		<meta charset="utf-8"/>
+		<title layout:title-pattern="$CONTENT_TITLE - $DECORATOR_TITLE">Registro de Enfermedades Raras CLM</title>
+         
+		<link type="text/css" th:href="@{/bower_components/normalize-css/normalize.css}" rel="stylesheet" />
+		<link type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.css}" rel="stylesheet" />
+		<link type="text/css" th:href="@{/bower_components/bootstrap/dist/css/font-awesome.min.css}" rel="stylesheet" />
+		<link type="text/css" th:href="@{/js/jquery-ui-1.12.0.custom/jquery-ui.structure.min.css}" rel="stylesheet" />
+		<link type="text/css" th:href="@{/js/jquery-ui-1.12.0.custom/jquery-ui.theme.min.css}" rel="stylesheet" />
+         
+		<!--[if IE 7]>
+			<link rel="stylesheet" th:href="@{//bower_components/bootstrap/dist/css/font-awesome-ie7.min.css}">
+		<![endif]-->
+		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<link th:href="@{/bower_components/bootstrap/dist/css/docs.css}" rel="stylesheet"/>
+           <!--<link th:href="@{/assets/js/google-code-prettify/prettify.css}" rel="stylesheet"/>-->
+           <link type="text/css" th:href="@{/css/raras.css}" rel="stylesheet" />
+           
+           <script type="text/javascript" th:src="@{/bower_components/jquery/jquery.min.js}" ></script>
+		<script type="text/javascript" th:src="@{/js/jquery.validate.js}" ></script>
+		<script type="text/javascript" th:src="@{/js/jquery-ui-1.12.0.custom/jquery-ui.min.js}"></script>  
+		<script type="text/javascript" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>  
+		
+	</head>
+      
 	<body>
 		<header th:replace="fragment/cabeceraMenu"></header>
 		<div id="contenido"  layout:fragment="content">
 		</div>
 	</body>
+	
 </html>
