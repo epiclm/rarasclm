@@ -32,7 +32,6 @@ import es.jclm.cs.rarasclm.entities.UserRarasCLM;
  */
 public class BaseController {
 
-
 	/** The base. */
 	@Autowired
 	public BaseModelViewReflex base;
@@ -45,8 +44,7 @@ public class BaseController {
 	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
-	
-	
+		
 	/**
 	 * Gets the base model.
 	 *

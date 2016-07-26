@@ -4,20 +4,67 @@
 	layout:decorator="layout/rarasClmLayout">
 <head>
 <title>EDITAR Paciente</title>
+
+<script type="text/javascript" th:if="${baseModel.mensaje}!=null" th:inline="javascript">
+/*<![CDATA[*/
+
+var tipoMensaje = /*[[${baseModel.mensaje.tipo}]]*/null;
+var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
+
+/*]]>*/
+</script>
+
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
 var routeBase = /*[[${route.baseUrl}]]*/'';
 var contextApp = /*[[${baseModel.baseApp}]]*/'';  
+
 var imgEspera = '<img id="img-espera-num-paciente" style="width:18px;margin-left:10px" alt="Esperando..." src="/'+ contextApp  +'/img/espera.gif"></img>';
 
+
+
+function mensajeError(mensaje) {
+	$('#mensajes').html('<div class="alert alert-error"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
+	$('#mensajes').modal('show');
+}
+
+function mensajeSuccess(mensaje) {
+	$('#mensajes').html('<div class="alert alert-success"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
+	$('#mensajes').modal('show');
+}
+
+
 $(document).ready( function() {
+	
+	var showModal = false;
+	
+	$('#mensajes').on('hidden', function () {
+		$.ajax({
+			url: '/'+contextApp+'/resetMensaje',
+			type: 'POST'
+		})
+	});
+	
+	if(typeof tipoMensaje === 'undefined') {
+		showModal = false;
+	} else if(tipoMensaje>0) {
+		mensajeSuccess(textoMensaje);
+		showModal=true;
+	} else if(tipoMensaje<0) {
+		mensajeError(textoMensaje)
+		showModal=true;
+	} 
+	
+	if(showModal) {
+		$('#mensajes').modal('show');
+	}
 	
 	$("input").focusout( 
 			function() {
 				$(this).val($(this).val().toUpperCase());
 		  	});
-		
 	
+		
 	$("#provinciaResidencia").change(function() {
 		var provincia = $(this).val();
 		var strHtml='<option value="99" select>DESCONOCIDO</option>\n'
@@ -42,129 +89,154 @@ $(document).ready( function() {
 </head>
 <body>
 	<div id="contenido" layout:fragment="content">
-	<form id="form-edit-paciente" class="form-inline" method='POST'>
 	
-	
-				<input type="hidden" id="idPaciente" name="idPaciente" th:field="${paciente.idPaciente}"/>
-				
-	
-		<legend>Edición Paciente <span th:text="${paciente.idPaciente}"></span></legend>
+		<!-- Mensajes -->
+		<div id="mensajes" class="modal fade">
+			<div th:if="${resultado.error}" class="alert alert-error">
+				<p th:if="${resultado.mensaje} != null"
+					th:text="${resultado.mensaje}">
+				</p>
+			</div>
+			<div th:if="${resultado.success}" class="alert alert-success">
+				<p th:if="${resultado.mensaje} != null"
+					th:text="${resultado.mensaje}">
+				</p>
+			</div>
+			<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+			</div>
+		</div>
 		
-					<div class="row span12">
-						<div id="grupo-apellido01-paciente" class="form-group">
-							<label class="control-label span3" for="apellido01">1er Apellido:</label>
-							<input id="apellido01" class="span3" name="apellido01" type="text" maxlength="65" th:value="${paciente.apellido01}" placeholder="1er apellido"/>
-						</div>
-						<div id="grupo-apellido02-paciente" class="form-group ">	
-							<label class="control-label span3" for="apellido02">2o Apellido:</label>
-							<input id="apellido02" class="span3" name="apellido02" type="text" maxlength="65" th:value="${paciente.apellido02}" placeholder="2o apellido"/>
-						</div>
-						<div id="grupo-nombre-paciente" class="form-group ">		
-							<label class="control-label span3" for="nombre">Nombre:</label>
-							<input id="nombre" class="span3" name="nombre" type="text" maxlength="65" th:value="${paciente.nombre}" placeholder="nombre"/>
-						</div>
-					</div>
-					<div class="row span12">
-						<div  class="form-group">
-							<label class="control-label span3" for="cip">CIP:</label>
-							<input  class="span3" id="cip" name="cip" type="text" maxlength="16" th:value="${paciente.cip}"/>
-						</div>
-						<div  class="form-group">
-							<label class="control-label span3" for="dni">DNI-NIE:</label>
-							<input  class="span3" id="dni" name="dni" type="text" maxlength="12" th:value="${paciente.dni}"/>
-						</div>
-						<div  class="form-group">
-							<label class="control-label span3" for="numeroSegSocial">NSS:</label>
-							<input  class="span3" id="numeroSegSocial" name="numeroSegSocial" type="text" maxlength="12" th:value="${paciente.numeroSegSocial}"/>
-						</div>
-					</div>
-					<div class="row span12">
-						<div class="form-group">
-							<label class="control-label span2 " for="fechaNacimiento">Fecha Nacimiento: <span id="pacienteEdad" th:text="|(${paciente.fechaNacimiento!=null ? baseModel.cache.getEdad(paciente.fechaNacimiento) : ''} años)|"></span></label>
-							<input name="fechaNacimiento" class="span2" id="fechaNacimiento" type="date"  th:value="${paciente.fechaNacimiento!=null ? #dates.format(paciente.fechaNacimiento, 'yyyy-MM-dd') : ''}" />
-						</div>
-						<div class="form-group">
-							<label class="control-label span2 " for="sexo">Sexo:</label>
-							<select name="sexo" class="span2" id="sexo"  th:field="${paciente.sexo}" >
-								<option value="1">VARÓN</option>
-								<option value="6">MUJER</option>
-								<option value="9">DESCONOCIDO</option>
-							</select>
-						</div>
-					</div>
-					<div class="row span12">
-						<p style="margin-top:10px">DOMICILIO:</p>
-					</div>
-					<div class="row span12">
-						<div class="form-group">
-							<label class="control-label span1 " for="domTipoVia">Tipo Vía:</label>
-							<input name="domTipoVia" class="span1" id="domTipoVia" type="text"  th:value="${paciente.domTipoVia}" />
-						</div>
-						<div class="form-group">
-							<label class="control-label span4 " for="domNombreVia">Nombre de la Vía:</label>
-							<input name="domNombreVia" class="span4" id="domNombreVia" type="text"  th:value="${paciente.domNombreVia}" />
-						</div>
-						<div class="form-group">
-							<label class="control-label span1 " for="domNumero">Número:</label>
-							<input name="domNumero" class="span1" id="domNumero" type="text" maxlength="4" th:value="${paciente.domNumero}" />
-						</div>
-						<div class="form-group">
-							<label class="control-label span1 " for="domPisopuerta">Piso Puerta:</label>
-							<input name="domPisopuerta" class="span1" id="domPisopuerta" type="text" maxlength="4"  th:value="${paciente.domPisopuerta}" />
-						</div>
-						<div class="form-group">
-							<label class="control-label span2 " for="domOtros">Otros:</label>
-							<input name="domOtros" class="span2" id="domOtros" type="text"  th:value="${paciente.domOtros}" />
-						</div>
-					</div>
-					<div class="row span12">
-						<div class="form-group">
-							<label class="control-label span2 " for="domTipoVia">Provincia Res.:</label>
-							<select name="provinciaResidencia" class="span2" id="provinciaResidencia"  th:field="${paciente.provinciaResidencia}" >
-								<option th:each="provincia : ${baseModel.cache.provinciasCLM}" th:value="${provincia.provincia}" th:text="${provincia.deno}"></option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label class="control-label span3 " for="domTipoVia">Muncipio Res.:</label>
-							<select name="municipioResidencia" class="span3" id="municipioResidencia"  th:field="${paciente.municipioResidencia}" >
-								<option th:if="${municipiosProvinciaResidencia} !=null " th:each="municipio : ${municipiosProvinciaResidencia}" th:value="${municipio.municipio}" th:text="${municipio.deno}"></option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label class="control-label span1 " for="domCp">CP:</label>
-							<input name="domCp" class="span1" id="domCp" type="text"  th:value="${paciente.domCp}" maxlength="5" />
-						</div>
-					</div>
-					<div class="row span12">
-						<div class="form-group">
-							<label class="control-label span2 " for="domTipoVia">Fallecido:</label>
-							<select name="fallecido" class="span2" id="fallecido"  th:field="${paciente.fallecido}" >
-								<option value="0">NO</option>
-								<option value="1">SI</option>
-								<option value="9">NC</option>
-							</select>
-						</div>
-						
-						<div class="form-group">
-							<label class="control-label span2 " for="fechaNacimiento">Fecha Fallecimiento:</label>
-							<input name="fallecidoFecha" class="span2" id="fallecidoFecha" type="date"  th:value="${paciente.fallecidoFecha!=null ? #dates.format(paciente.fallecidoFecha, 'yyyy-MM-dd') : ''}" />
-						</div>
-						
-						
-					</div>
-					<div class="row span12">
-						<p>Casos:</p>
-						<ul th:each="caso : ${paciente.casos}">
-							<li> <a  th:href="|/${baseModel.baseApp}/casos/edit/${caso.idCaso}|" th:text="|CASO ${caso.numCaso} - ${caso.codCie9mc} ${caso.codCie10} ${caso.literal}|"></a></li>
-						</ul>
-					</div>
-					<div id="grupo-acciones-bajo" class="row span12">
-						<div class="form-actions">
-						  <button type="submit" class="btn btn-primary">Actualiza</button>
-						  <button type="button" class="btn">Cancel</button>
-						</div>
-					</div>
+	  	<div class="row">
+	  	<div class="offset1">
+		<form id="form-edit-paciente" class="form-inline" method='POST'>
+			<input type="hidden" id="idPaciente" name="idPaciente" th:field="${paciente.idPaciente}"/>
+			<div class="row">	
+				<legend>Edición Paciente <span th:text="${paciente.idPaciente}"></span><a style="float:right" class="btn btn-primary" th:href="|${route.baseUrl}nuevaBusqueda|">Buscar otro paciente</a> </legend>
+			</div>
+			<div class="row">
+				<div id="grupo-apellido01-paciente" class="form-group">
+					<label class="control-label span3" for="apellido01">1er Apellido:</label>
+					<input id="apellido01" class="span3" name="apellido01" type="text" maxlength="65" th:value="${paciente.apellido01}" placeholder="1er apellido"/>
+				</div>
+				<div id="grupo-apellido02-paciente" class="form-group ">	
+					<label class="control-label span3" for="apellido02">2o Apellido:</label>
+					<input id="apellido02" class="span3" name="apellido02" type="text" maxlength="65" th:value="${paciente.apellido02}" placeholder="2o apellido"/>
+				</div>
+				<div id="grupo-nombre-paciente" class="form-group ">		
+					<label class="control-label span3" for="nombre">Nombre:</label>
+					<input id="nombre" class="span3" name="nombre" type="text" maxlength="65" th:value="${paciente.nombre}" placeholder="nombre"/>
+				</div>
+			</div>
+			<div class="row">
+				<div  class="form-group">
+					<label class="control-label span3" for="cip">CIP:</label>
+					<input  class="span3" id="cip" name="cip" type="text" maxlength="16" th:value="${paciente.cip}"/>
+				</div>
+				<div  class="form-group">
+					<label class="control-label span3" for="dni">DNI-NIE:</label>
+					<input  class="span3" id="dni" name="dni" type="text" maxlength="12" th:value="${paciente.dni}"/>
+				</div>
+				<div  class="form-group">
+					<label class="control-label span3" for="numeroSegSocial">NSS:</label>
+					<input  class="span3" id="numeroSegSocial" name="numeroSegSocial" type="text" maxlength="12" th:value="${paciente.numeroSegSocial}"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group">
+					<label class="control-label span2 " for="fechaNacimiento">Fecha Nac.: <span id="pacienteEdad" th:text="|(${paciente.fechaNacimiento!=null ? baseModel.cache.getEdad(paciente.fechaNacimiento) : ''} años)|"></span></label>
+					<input name="fechaNacimiento" class="span2" id="fechaNacimiento" type="date"  th:value="${paciente.fechaNacimiento!=null ? #dates.format(paciente.fechaNacimiento, 'yyyy-MM-dd') : ''}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label span2 " for="sexo">Sexo:</label>
+					<select name="sexo" class="span2" id="sexo"  th:field="${paciente.sexo}" >
+						<option value="1">VARÓN</option>
+						<option value="6">MUJER</option>
+						<option value="9">DESCONOCIDO</option>
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<p style="margin-top:5px">DOMICILIO:</p>
+				<div class="form-group">
+					<label class="control-label span1 " for="domTipoVia">Tipo Vía:</label>
+					<input name="domTipoVia" class="span1" id="domTipoVia" type="text"  th:value="${paciente.domTipoVia}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label span4 " for="domNombreVia">Nombre de la Vía:</label>
+					<input name="domNombreVia" class="span4" id="domNombreVia" type="text"  th:value="${paciente.domNombreVia}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label span1 " for="domNumero">Número:</label>
+					<input name="domNumero" class="span1" id="domNumero" type="text" maxlength="4" th:value="${paciente.domNumero}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label span1 " for="domPisopuerta">Piso:</label>
+					<input name="domPisopuerta" class="span1" id="domPisopuerta" type="text" maxlength="4"  th:value="${paciente.domPisopuerta}" />
+				</div>
+				<div class="form-group">
+					<label class="control-label span2 " for="domOtros">Otros:</label>
+					<input name="domOtros" class="span2" id="domOtros" type="text"  th:value="${paciente.domOtros}" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group">
+					<label class="control-label span2 " for="domTipoVia">Provincia Res.:</label>
+					<select name="provinciaResidencia" class="span2" id="provinciaResidencia"  th:field="${paciente.provinciaResidencia}" >
+						<option th:each="provincia : ${baseModel.cache.provinciasCLM}" th:value="${provincia.provincia}" th:text="${provincia.deno}"></option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label class="control-label span3 " for="domTipoVia">Muncipio Res.:</label>
+					<select name="municipioResidencia" class="span3" id="municipioResidencia"  th:field="${paciente.municipioResidencia}" >
+						<option th:if="${municipiosProvinciaResidencia} !=null " th:each="municipio : ${municipiosProvinciaResidencia}" th:value="${municipio.municipio}" th:text="${municipio.deno}"></option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label class="control-label span1 " for="domCp">CP:</label>
+					<input name="domCp" class="span1" id="domCp" type="text"  th:value="${paciente.domCp}" maxlength="5" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group">
+					<label class="control-label span2 " for="domTipoVia">Fallecido:</label>
+					<select name="fallecido" class="span2" id="fallecido"  th:field="${paciente.fallecido}" >
+						<option value="0">NO</option>
+						<option value="1">SI</option>
+						<option value="9">NC</option>
+					</select>
+				</div>
+				
+				<div class="form-group">
+					<label class="control-label span2 " for="fechaNacimiento">Fecha Fallecimiento:</label>
+					<input name="fallecidoFecha" class="span2" id="fallecidoFecha" type="date"  th:value="${paciente.fallecidoFecha!=null ? #dates.format(paciente.fallecidoFecha, 'yyyy-MM-dd') : ''}" />
+				</div>		
+			</div>
+			<div class="row">
+				<div class="form-group">
+					<label class="control-label span3 " for="telefono">Teléfono:</label>
+					<input name="telefono" class="span3" id="telefono" type="text"  th:field="${paciente.telefono}" maxlength="12" />
+				</div>
+				<div class="form-group">
+					<label class="control-label span5 " for="email">Correo Electrónico:</label>
+					<input name="email" class="span5" id="email" type="text"  th:field="${paciente.email}" maxlength="80" />
+				</div>
+			</div>
+			<div class="row">
+				<p>Casos:</p>
+				<ul th:each="caso : ${paciente.casos}">
+					<li> <a  th:href="|/${baseModel.baseApp}/casos/edit/${caso.idCaso}|" th:text="|CASO ${caso.numCaso} - ${caso.codCie9mc} ${caso.codCie10} ${caso.literal}|"></a></li>
+				</ul>
+			</div>
+			<div id="grupo-acciones-bajo" class="row">
+				<div class="form-actions">
+				  <button type="submit" class="btn btn-primary">Actualiza</button>
+				  <button type="button" class="btn">Cancel</button>
+				</div>
+			</div>
 		</form>
+	  </div>
+	 </div>
 	</div> <!-- Fin contenido -->
 </body>
 </html>

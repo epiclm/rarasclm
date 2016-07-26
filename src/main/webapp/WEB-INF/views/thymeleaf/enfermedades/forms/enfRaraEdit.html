@@ -4,7 +4,6 @@
 	layout:decorator="layout/rarasClmLayout">
 <head>
 <title>EDITAR enfRaras</title>
-<script type="text/javascript" th:src="@{/js/ckeditor.js}"></script>
 <script type="text/javascript" th:src="@{/js/rarasclm-fauxiliares.js}"></script>
 
 
@@ -118,7 +117,7 @@ function() {
 		});
 	var validator = $('#edit-enfrara')
 			.validate(
-					{
+					  {
 					   rules : {
 							literal : {
 								required : true,
@@ -205,12 +204,10 @@ function() {
 			.autocomplete(
 				{
 					source : enfermedadesLiterales,
-					search : function(
-							vent, ui) {
+					search : function(event, ui) {
 
 					},
-					select : function(
-							event, ui) {
+					select : function(event, ui) {
 						//Accion de seleccionar una enfermedad CIE9MC en el AutoComplete para asociar
 						//ui.item.value es el texto que aparece en el autocomplete seleccionado
 						base = /*[[|${route.baseUrl}addcie9mc/${enfermedadRaraModel.enfermedadRaraId}/|]]*/'';

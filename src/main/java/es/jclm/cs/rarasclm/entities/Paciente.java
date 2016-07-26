@@ -17,6 +17,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.OrderBy;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -575,7 +576,7 @@ public class Paciente implements java.io.Serializable {
 	/* (non-Javadoc)
 	 * @see es.jclm.cs.rarasclm.entities.IPaciente#getCasos()
 	 */
-	@JsonIgnore
+	@JsonBackReference
 	@OrderBy(clause = "numCaso")
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "paciente")
 	public List<Caso> getCasos() {

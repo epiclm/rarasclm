@@ -19,16 +19,15 @@
 			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 		<link th:href="@{/bower_components/bootstrap/dist/css/docs.css}" rel="stylesheet"/>
-           <!--<link th:href="@{/assets/js/google-code-prettify/prettify.css}" rel="stylesheet"/>-->
-           <link type="text/css" th:href="@{/css/raras.css}" rel="stylesheet" />
+		<!--<link th:href="@{/assets/js/google-code-prettify/prettify.css}" rel="stylesheet"/>-->
+		<link type="text/css" th:href="@{/css/raras.css}" rel="stylesheet" />
            
-           <script type="text/javascript" th:src="@{/bower_components/jquery/jquery.min.js}" ></script>
+		<script type="text/javascript" th:src="@{/bower_components/jquery/dist/jquery.min.js}" ></script>
 		<script type="text/javascript" th:src="@{/js/jquery.validate.js}" ></script>
 		<script type="text/javascript" th:src="@{/js/jquery-ui-1.12.0.custom/jquery-ui.min.js}"></script>  
 		<script type="text/javascript" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>  
-		
+		<script type="text/javascript" th:src="@{/bower_components/ckeditor/ckeditor.js}"></script>  
 	</head>
-      
 	<body>
 		<header th:replace="fragment/cabeceraMenu"></header>
 		<div id="contenido"  layout:fragment="content">

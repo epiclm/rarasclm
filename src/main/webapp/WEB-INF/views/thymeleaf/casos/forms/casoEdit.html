@@ -134,10 +134,12 @@ $(document).ready( function() {
 		</div>
 	
 	
-	
+		<div class="row">
+		<div class="offset1">
 		<form id="form-edit-caso" class="form-inline" method='POST'>
-			<legend>Edición Caso <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span>
-			</legend>
+			<div class="row">
+				<legend>Edición Caso <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span></legend>
+			</div>
 			
 <!-- 			<div class="form-actions"> -->
 <!-- 			  <button type="submit" class="btn btn-primary">Actualiza</button> -->
@@ -145,7 +147,7 @@ $(document).ready( function() {
 <!-- 			</div> -->
 			
 			<!-- CUADRO RESUMEN PACIENTE -->
-			<div id="cuadro-resumen-paciente" class="row span8">
+			<div id="cuadro-resumen-paciente" class="row">
 				<div id="grupo-nombre-paciente" class="form-group">
 					<label class="control-label span3" for="literal">Apellidos y Nombre:</label>
 					<p id="literal" class="span3"  th:text="|${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre}|"></p>
@@ -167,13 +169,13 @@ $(document).ready( function() {
 				</div>
 			</div>
 			
-			<div class="row span12">
+			<div class="row">
 				<div id="grupo-literal-caso" class="form-group">
 					<label class="control-label span8" for="literal">Literal de la Enfermedad:</label>
 					<input id="literal" class="span8" name="literal" type="text" maxlength="255" th:value="${caso.literal}" placeholder="Literal de la Enfermedad"/>
 				</div>
 			</div>
-			<div class="row span12">
+			<div class="row">
 			
 				<input type="hidden" id="codEnfrara" name="codEnfrara" th:field="${caso.codEnfrara}"/>
 				<input type="hidden" id="fechahoraModificacion" th:field="${caso.fechahoraModificacion}"/>
@@ -189,13 +191,13 @@ $(document).ready( function() {
 				</div>
 			</div>
 			
-			<div id="cuadro-resumen-enfrara" class="row span8">
+			<div id="cuadro-resumen-enfrara" class="row">
 				<a id="linkEnfrara" target="_blank" th:href="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfRara.enfermedadRaraId}|" th:text="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfRara.enfermedadRaraId}|"></a>
 			</div>
-			<div id="grupo-fuentes" class="row span12">
+			<div id="grupo-fuentes" class="row">
 				<h5>Codificaciones:</h5>
 			</div>
-			<div id="codificaciones-fuentes" class="row span12">
+			<div id="codificaciones-fuentes" class="row">
 				<div id="grupo-codigos-cie9mc-caso" class="form-group">
 					<label class="control-label span1" for="codCie9mc">CIE9MC:</label>
 					<input id="codCie9mc" class="span1" name="codCie9mc" type="text" maxlength="6" th:value="${caso.codCie9mc}" placeholder="cie9"/>
@@ -213,11 +215,11 @@ $(document).ready( function() {
 					<input id="codOmin" class="span2" name="codOmin" type="text" maxlength="10" th:value="${caso.codOmin}" placeholder="omin"/>
 				</div>
 			</div>
-			<div id="grupo-fuentes" class="row span12">
+			<div id="grupo-fuentes" class="row">
 				<h5>Fuente de Información:</h5>
 			</div>
-			<div id="caja-fuente-informacion" class="row span6">
-				<div id="grupo-fuentes1" class="row span12">
+			<div id="caja-fuente-informacion" class="row">
+				<div id="grupo-fuentes1">
 					<div id="fuente-cmdb-caso" class="form-group">
 						<label class="control-label" for="fuenteCmbdC">CMBD:</label>
 						<input type="checkbox" id="fuenteCmbdC"  name="fuenteCmbdC" th:field="${caso.fuenteCmbdC}"></input>
@@ -243,7 +245,7 @@ $(document).ready( function() {
 						<input type="checkbox" id="fuenteEdoE" name="fuenteEdoE" th:field="${caso.fuenteEdoE}"></input>
 					</div>
 				</div>
-				<div id="grupo-fuentes2" class="row span12">
+				<div id="grupo-fuentes2">
 					<div id="fuente-sociales-caso" class="form-group">
 						<label class="control-label" for="fuenteIsocialesG">R. Soc.:</label>
 						<input type="checkbox" id="fuenteIsocialesG" name="fuenteIsocialesG" th:field="${caso.fuenteIsocialesG}"></input>
@@ -270,7 +272,7 @@ $(document).ready( function() {
 					</div>
 				</div>
 			</div>
-			<div id="grupo-hospital" class="row span12">
+			<div id="grupo-hospital" class="row">
 				<div id="hospital-caso" class="form-group">
 					<label class="control-label span6" for="hospital">Hospital ( historia clínica más relevante del caso ):</label>
 					<select name="hospital" class="span6" id="hospital"  th:field="${caso.hospital}" >
@@ -282,33 +284,33 @@ $(document).ready( function() {
 					<input id="nhc" class="span2" name="nhc" type="text" maxlength="12" th:value="${caso.nhc}" placeholder="nhc"/>
 				</div>
 			</div>
-			<div id="grupo-base-diagnostico" class="row span12">
+			<div id="grupo-base-diagnostico" class="row">
 				<div id="basedtco-caso" class="form-group">
-					<label class="control-label span5 " for="domTipoVia">Base del Diagnóstico:</label>
-					<select name="baseDiagnostico" class="span5" id="baseDiagnostico"  th:field="${caso.baseDiagnostico}" >
+					<label class="control-label span6 " for="domTipoVia">Base del Diagnóstico:</label>
+					<select name="baseDiagnostico" class="span6" id="baseDiagnostico"  th:field="${caso.baseDiagnostico}" >
 						<option th:each="baseDto : ${baseModel.cache.basesDiagnosticas}" th:value="${baseDto.key}" th:text="${baseDto.value}"></option>
 					</select>
 				</div>	
 			</div>
-			<div id="grupo-juicio" class="row span12">
+			<div id="grupo-juicio" class="row">
 				<div id="juicio-clinico-caso" class="form-group">
 					<label class="control-label span7" for="jucioClinico">Juicio Clínico:</label>
 					<textarea id="jucioClinico" class="span7" name="jucioClinico" maxlength="512" th:text="${caso.jucioClinico}" cols="30" rows="5"> </textarea>
 				</div>
 			</div>
-			<div id="grupo-tratamiento" class="row span12">
+			<div id="grupo-tratamiento" class="row">
 				<div id="tratamiento-caso" class="form-group">
 					<label class="control-label span7" for="tratamiento">Tratamiento:</label>
 					<textarea id="tratamiento" class="span7" name="tratamiento" th:text="${caso.tratamiento}" cols="30" rows="5"></textarea>
 				</div>
 			</div>
-			<div id="grupo-observaciones" class="row span12">
+			<div id="grupo-observaciones" class="row">
 				<div id="juicio-clinico-caso" class="form-group">
 					<label class="control-label span7" for="observaciones">Observaciones:</label>
 					<textarea id="observaciones" class="span7" name="observaciones" th:text="${caso.observaciones}" cols="30" rows="5"></textarea>
 				</div>
 			</div>
-			<div id="grupo-fecha-inicio-sintomas" class="row span12">
+			<div id="grupo-fecha-inicio-sintomas" class="row">
 				<div id="fecha-deteccion-caso" class="form-group">
 					<label class="control-label span3" for="fechaDeteccion">Fecha de Detección:</label>
 					<input id="fechaDeteccion" class="span3" name="fechaDeteccion" type="date"
@@ -326,7 +328,7 @@ $(document).ready( function() {
 				</div>
 			</div>
 			
-			<div id="grupo-cronicas-caso" class="row span12">
+			<div id="grupo-cronicas-caso" class="row">
 				<div id="familiaresEnfermedadesRaras-grupo" class="form-group">
 					<label class="control-label span3" for="fechaDiagnostico">Familiares con Enfermedades Raras:</label>
 					<select name="familiaresEnfermedadesRaras" class="span2" id="familiaresEnfermedadesRaras"  th:field="${caso.familiaresEnfermedadesRaras}">
@@ -344,14 +346,14 @@ $(document).ready( function() {
 					</select>
 				</div>
 			</div>
-			<div id="grupo-cronicas-texto-caso" class="row span12">
+			<div id="grupo-cronicas-texto-caso" class="row">
 				<div id="enfermedadesCronicas-caso" class="form-group">
 					<label class="control-label span7" for="enfermedadesCronicas">Enfermedades Crónicas:</label>
 					<textarea id="enfermedadesCronicas" class="span7" name="enfermedadesCronicas" th:text="${caso.enfermedadesCronicas}" cols="30" rows="5"></textarea>
 				</div>
 			</div>
 			
-				<div id="declaracion-caso" class="row span12">
+				<div id="declaracion-caso" class="row">
 				<h5>Declaración:</h5>
 					<div id="declarada-grupo" class="form-group">
 						<label class="control-label span2" for="declarada">DECLARADA:</label>
@@ -375,13 +377,15 @@ $(document).ready( function() {
 				</div>
 
 			
-			<div id="grupo-acciones-bajo" class="row span12">
+			<div id="grupo-acciones-bajo" class="row">
 				<div class="form-actions">
 				  <button type="submit" class="btn btn-primary">Actualiza</button>
 				  <button type="button" class="btn">Cancel</button>
 				</div>
 			</div>
 		</form>
+	  </div>
+	  </div>
 		
 		<!-- Modal de enfermedades -->
 		<div id="modalEnf" class="modal hide fade">

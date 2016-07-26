@@ -13,7 +13,7 @@ var enfermedadesLiterales;
 function renderBotonesPaciente(num,deno) {
 	var strShow = "<a class='btn btn-primary' style='margin-right:5px' href='"+routeBase+"show/"+num+"'>Ver</a>";
 	var strEdit = "<a class='btn btn-success' style='margin-right:5px' href='"+routeBase+"edit/"+num+"'>Editar</a>";
-	return "<p style='display:inline-block;margin-right:10px;font-weight:bold'>"+deno+"</p>"+strShow+strEdit;
+	return "<p style='display:inline-block;margin-right:10px;font-weight:bold'>"+deno+"</p>"+strEdit;
 }
 
 $(document)
@@ -31,7 +31,7 @@ $(document)
 		   $("#img-espera-num-paciente").css('display','inline-block');
 		   
 		   $.ajax({
-			  url: routeBase + "show/json/" + val,
+			  url: routeBase + "json/" + val,
 			  dataType: 'json',
 			  type: 'GET'
 		   }).done(function(data,textStatus,jqXHR) {
@@ -50,7 +50,6 @@ $(document)
 <body>
 	<div id="contenido" layout:fragment="content">
 		<!-- BUSQUEDAS -->
-		<div id="tab-paciente-busqueda" th:attr="class=${pacientes.pacientes==null ? 'tab-pane fade in active' : 'tab-pane fade'}">
 		<div class="row span11 offset1">
 			<form id="form-search-paciente" class="form-horizontal" method='POST'>
 				<div id="grupo-busqueda-numero-paciente" class="form-group row-fluid control-group">
@@ -63,8 +62,7 @@ $(document)
 					<div id="resultado-busqueda-num-paciente" style="display:inline-block"></div>
 				</div>
 			</form>
-		  </div>
-		</div><!-- Fin Tab Formuliario de Búsqueda -->
+		</div>
 	</div><!-- Fin Contenido -->
 </body>
 </html>

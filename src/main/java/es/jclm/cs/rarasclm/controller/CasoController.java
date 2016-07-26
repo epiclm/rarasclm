@@ -39,6 +39,7 @@ import es.jclm.cs.rarasclm.entities.UserRarasCLM;
 import es.jclm.cs.rarasclm.service.CasoService;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
+import es.jclm.cs.rarasclm.service.PacienteService;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 import es.jclm.cs.rarasclm.util.MergeEntity;
 
@@ -54,11 +55,16 @@ public class CasoController extends BaseController {
 	@Autowired
 	private CasoService servicio;
 	
+	@Autowired
+	private PacienteService pacienteServicio;
+	
 	@Autowired 
 	private LocalizacionesService localizacionesService;
 	
 	@Autowired
 	HttpServletRequest request;
+	
+	public static final String OBJETO_CASO_SESION = "caso";
 	
 	
 	@Autowired
@@ -80,24 +86,36 @@ public class CasoController extends BaseController {
 	// Página inicial del módulo
 	@RequestMapping(method = RequestMethod.GET)
 	public String inicioEnvio(Model model) {
-		getRoute().setId("");
-		return "casos/index-casos";
+		if(request.getSession().getAttribute(OBJETO_CASO_SESION)==null) {
+			return "casos/index-casos";
+		} else {
+			Caso c = (Caso)request.getSession().getAttribute(OBJETO_CASO_SESION);
+			return String.format("redirect:/casos/edit/%s",c.getIdCaso());
+		}
 	}
 	
-	@RequestMapping(method = RequestMethod.POST)
-	public String inicioVuelta(Model model, 
-			@ModelAttribute("pacientes") PacientesModelView pacientesMV,
-			SessionStatus status) {
+//	@RequestMapping(method = RequestMethod.POST)
+//	public String inicioVuelta(Model model, 
+//			@ModelAttribute("pacientes") PacientesModelView pacientesMV,
+//			SessionStatus status) {
+//
+//		getRoute().setId("");
+//		return "redirect:/casos"; 
+//	}
+	
+	@RequestMapping(value = "/nuevaBusqueda", method = RequestMethod.GET) 
+	public String nuevoPaciente() {
+		if(request.getSession().getAttribute(OBJETO_CASO_SESION)!=null) {
+			request.getSession().setAttribute(OBJETO_CASO_SESION, null);
+		}
+		return "redirect:/casos";
+	}
 
-		getRoute().setId("");
-		return "redirect:/casos"; //Evita nueva consulta a BD al volver atrás con el navegador
-								  //o actualizar.
-	}
-	
-	
-	@RequestMapping(value = "/show/json/{id}", method = RequestMethod.GET)
-	public  @ResponseBody Caso showJsonPaciente(@PathVariable String id) {
-		Integer clave = Integer.valueOf(id);
+	///////////////////////////////////
+	//MOSTRAR CASO EN JSON
+	///////////////////////////////////
+	@RequestMapping(value = "/json/{id}", method = RequestMethod.GET)
+	public  @ResponseBody Caso showJsonCasoPaciente(@PathVariable String id) {
 		try {
 			Caso ret = servicio.Buscar(id);
 			return ret;
@@ -106,17 +124,27 @@ public class CasoController extends BaseController {
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
 	}
-	
+
 	
 	///////////////////////////////////
 	//EDICIÓN DE UN CASO SEND GET
 	///////////////////////////////////
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public String  editPacienteEnviaFormulario(@PathVariable String id, Model model) {
+		Caso caso;
 		try {
-			Caso caso = servicio.Buscar(id);
+			if(request.getSession().getAttribute(OBJETO_CASO_SESION)==null) {
+				caso = servicio.Buscar(id);
+				request.getSession().setAttribute(OBJETO_CASO_SESION,caso);
+			} else {
+				caso = (Caso)request.getSession().getAttribute(OBJETO_CASO_SESION);
+				if(!caso.getIdCaso().equals(id)) {
+					//Buscamos ya que se está haciendo una petición de un caso distinto
+					//al que tenemeos guardado en sesión
+					caso = servicio.Buscar(id);
+				}
+			}
 			model.addAttribute("caso", caso);
-
 		} catch (ServiceRarasCLMException ex) {
 			ex.printStackTrace();
 			return null; //TO DO Mandar mensaje de error a la vista
@@ -131,6 +159,7 @@ public class CasoController extends BaseController {
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String  editPacienteRecibeFormulario(@PathVariable String id, @ModelAttribute("caso") Caso caso, Model model) {
 		try {
+			
 			Caso casoSinEditar = servicio.Buscar(id);
 			servicio.saveHistoria(casoSinEditar);
 			UserRarasCLM user = (UserRarasCLM)model.asMap().get("userCLM");
@@ -153,6 +182,8 @@ public class CasoController extends BaseController {
 			mensaje.setTipo(MensajeTipo.OK);
 			mensaje.setMensaje(sb.toString());
 			request.getSession().setAttribute("mensaje",mensaje);
+			caso = servicio.Buscar(id);
+			request.getSession().setAttribute(OBJETO_CASO_SESION,caso);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();

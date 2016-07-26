@@ -344,7 +344,7 @@ $(document)
 				<div id="tab-paciente-resultados" th:attr="class=${busqueda.casos!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
 					<div style="padding-top: 10px;">
 						<ul th:each="caso: ${busqueda.casos}">
-							<li><a th:href="|/${baseModel.baseApp}/pacientes/edit/${caso.paciente.idPaciente}|" th:text="|${caso.idCaso} ${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre} ${baseModel.cache.getMunipioDeno(caso.paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(caso.paciente.municipioResidencia.substring(0,2))}) ${caso.literal}|"></a></li>
+							<li><a th:href="|/${baseModel.baseApp}/busqueda/ircaso/${caso.idCaso}|" th:text="|${caso.idCaso} ${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre} ${baseModel.cache.getMunipioDeno(caso.paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(caso.paciente.municipioResidencia.substring(0,2))}) ${caso.literal}|"></a></li>
 						</ul>
 					 </div>
 				</div>

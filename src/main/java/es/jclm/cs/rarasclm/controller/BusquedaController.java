@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -16,13 +17,15 @@ import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.entities.BusquedaModelView;
 import es.jclm.cs.rarasclm.entities.Caso;
 import es.jclm.cs.rarasclm.service.BusquedaService;
+import es.jclm.cs.rarasclm.service.CasoService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
+import es.jclm.cs.rarasclm.service.PacienteService;
+import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 
 @Controller
 @RequestMapping("/busqueda")
 @RarasClmItemModulo(caption="Búsqueda",deno="Búsqueda",modulo="busqueda",orden=1)
 @RarasClmItemMenu(caption="Búsqueda",deno="Búsqueda",modulo="busqueda",orden=1)
-@SessionAttributes("busqueda")
 public class BusquedaController extends BaseController {
 	
 	public static final String OBJETO_BUSQUEDA_SESION="busqueda";
@@ -34,7 +37,16 @@ public class BusquedaController extends BaseController {
 	BusquedaService busquedaService;
 	
 	@Autowired
+	CasoService casoService;
+	
+	@Autowired
+	PacienteService pacienteService;
+	
+	@Autowired
 	HttpServletRequest request;
+	
+	public static final String OBJETO_PACIENTE_SESION="paciente";
+	public static final String OBJETO_CASO_SESION="caso";
 
 	///////////////////////////////////
 	// BÚSQUEDA DE UN CASO SEND GET
@@ -78,6 +90,18 @@ public class BusquedaController extends BaseController {
 		return "redirect:busqueda";
 	}
 	
+	
+	@RequestMapping(value = "/ircaso/{id}", method = RequestMethod.GET)
+	public String irCaso(@PathVariable String id) {
+		try {
+			Caso c = casoService.Buscar(id);
+			request.getSession().setAttribute(OBJETO_CASO_SESION, c);
+			request.getSession().setAttribute(OBJETO_PACIENTE_SESION,c.getPaciente());
+		} catch (ServiceRarasCLMException e) {
+			e.printStackTrace();
+		}
+		return "redirect:/casos";
+	}
 	
 	
 }
