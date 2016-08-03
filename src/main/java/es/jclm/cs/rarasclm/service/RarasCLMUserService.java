@@ -36,7 +36,7 @@ public class RarasCLMUserService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserRarasCLM userCLM = null;
 		List<GrantedAuthority> authorities = null;
-		if(username!=null || username=="") {
+		if(username!=null || username.trim().equals("")) {
 			userCLM = userDao.findByUserName(username);
 			authorities = buildUserAuthority(userCLM.getRoleses());
 			request.getSession().setAttribute("userCLM",userCLM);
@@ -46,12 +46,8 @@ public class RarasCLMUserService implements UserDetailsService {
 		}	
 	}
 
-
-	private User buildUserForAuthentication(UserRarasCLM user, 
-		List<GrantedAuthority> authorities) {
-		return new User(user.getUsername(), 
-			user.getPassword(), user.isEnabled(), 
-                        true, true, true, authorities);
+	private User buildUserForAuthentication(UserRarasCLM user, List<GrantedAuthority> authorities) {
+		return new User(user.getUsername(), user.getPassword(), user.isEnabled(), true, true, true, authorities);
 	}
 	
 	private List<GrantedAuthority> buildUserAuthority(Set<RolesRarasCLM> userRoles) {

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+
+
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var routeBase  = /*[[${route.baseUrl}]]*/'';
+var contextApp = /*[[${baseModel.baseApp}]]*/'';
+
+/*]]>*/
+</script>
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+		<h2>Administrador!</h2>
+	</div>
+</body>
+</html>

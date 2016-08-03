@@ -18,8 +18,13 @@ public class CasoHistoriaDao extends BaseEntityDao<CasoHistoria,CasoHistoriaId>{
 	public int getVersion(String caso) {
 		Session session = getSessionFactory().openSession();
 		try {
-			Query query = session.createQuery("SELECT max(ch.id.idVersion) FROM CasoHistoria ch WHERE ch.id.idCaso=:caso");
-			int ret = (int) query.setParameter("caso", caso).uniqueResult();
+			Query queryCount = session.createQuery("SELECT count(*) FROM CasoHistoria ch WHERE ch.id.idCaso=:caso");
+			long num = (long) queryCount.setParameter("caso", caso).uniqueResult();
+			if(num==0)
+				return 1;
+			
+			Query queryMax = session.createQuery("SELECT max(ch.id.idVersion) FROM CasoHistoria ch WHERE ch.id.idCaso=:caso");
+			int ret = (int) queryMax.setParameter("caso", caso).uniqueResult();
 			if(ret==-1)
 				return 1;
 			else

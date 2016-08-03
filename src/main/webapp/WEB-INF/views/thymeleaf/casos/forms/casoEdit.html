@@ -19,6 +19,7 @@ var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
            
 var routeBase = /*[[${route.baseUrl}]]*/'';
 var contextApp = /*[[${baseModel.baseApp}]]*/'';
+var idCaso = /*[[${caso.idCaso}]]*/'';
 
 
 function mensajeError(mensaje) {
@@ -55,7 +56,16 @@ function doAsociaEnfermedadRara(cod) {
 
 $(document).ready( function() {
 	
+	//evita operación de navegación
+	var editado = false;
+	//preparado para submit (Boton Enviar)
+	var submitOkModificar = false;
+	//preparado para submit (Boton Borrar)
+	var submitOkBorrar = false;
+	
+	///Muestra mensaje modal si es necesario
 	var showModal = false;
+
 	
 	$('#mensajes').on('hidden', function () {
 		$.ajax({
@@ -77,7 +87,29 @@ $(document).ready( function() {
 	if(showModal) {
 		$('#mensajes').modal('show');
 	}
+	//Fin modal
 	
+	//Manejo del submit
+	$('#form-edit-caso').on('submit',function(e) {
+		e.preventDefault();
+		if(submitOkModificar)	{
+			$('#form-edit-caso').submit();
+		}
+		if(submitOkBorrar) {
+			$('#form-edit-caso').attr('action',routeBase+'/'+'delete'+'/'+idCaso);
+			$('#form-edit-caso').submit();
+		}
+	});
+	
+	$('#btnEnviar').on('click',function() {
+		submitOkModificar=true;
+	});
+	
+	$('#btnBorrar').on('click',function() {
+		submitOkBorrar=true;
+	});
+	
+	//fin manejo del submit
 
 	//Autocompletado de la enfermedad rara CLM
 	$.ajax({
@@ -274,7 +306,7 @@ $(document).ready( function() {
 			</div>
 			<div id="grupo-hospital" class="row">
 				<div id="hospital-caso" class="form-group">
-					<label class="control-label span6" for="hospital">Hospital ( historia clínica más relevante del caso ):</label>
+					<label class="control-label span6" for="hospital">Hospital ( historia clínica primaria ):</label>
 					<select name="hospital" class="span6" id="hospital"  th:field="${caso.hospital}" >
 						<option th:each="hospital : ${baseModel.cache.hospitales}" th:value="${hospital.idHospital}" th:text="|${hospital.idHospital} ${hospital.literal}|"></option>
 					</select>
@@ -379,10 +411,14 @@ $(document).ready( function() {
 			
 			<div id="grupo-acciones-bajo" class="row">
 				<div class="form-actions">
-				  <button type="submit" class="btn btn-primary">Actualiza</button>
-				  <button type="button" class="btn">Cancel</button>
+				  <button id="btnEnviar" type="submit" class="btn btn-primary">Guardar Cambios</button>
+				  <button id="btnCancelar" type="button" class="btn">Cancel</button>
+				  <button id="btnBorrar" style="float: right" type="submit" class="btn btn-danger">Borrar</button>
 				</div>
 			</div>
+		</form>
+		<form id="form-borrar-caso" method="post" th:action="|${route.baseUrl}/delete/${caso.idCaso}|">
+		
 		</form>
 	  </div>
 	  </div>

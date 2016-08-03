@@ -36,7 +36,7 @@ public class BaseModelViewReflex implements IBaseModelView {
 	private List<MenuItem> menus;
 
 	/** paquete de búsqueda de controladores **/
-	private String baseControllerPackage = "es.jclm.cs.rarasclm.controller";
+	private final static String baseControllerPackage = "es.jclm.cs.rarasclm.controller";
 	
 	private MensajeResultado mensaje;
 	
@@ -85,7 +85,7 @@ public class BaseModelViewReflex implements IBaseModelView {
 						if(!menus.contains(itemMenu))
 							menus.add(itemMenu);
 					}
-					if(path.length==1) {
+					if(path.length==0) {
 						MenuModulo menuModulo = new MenuModulo();
 						MenuItem itemMenu = new MenuItem();
 						RarasClmItemMenu rarasClmItemMenu = clase.getAnnotation(RarasClmItemMenu.class);

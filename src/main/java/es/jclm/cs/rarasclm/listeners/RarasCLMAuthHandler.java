@@ -14,9 +14,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 
-public class RarasCLMAuthSuccess extends SimpleUrlAuthenticationSuccessHandler {
+public class RarasCLMAuthHandler extends SimpleUrlAuthenticationSuccessHandler {
 	
-	static Log log = LogFactory.getLog(RarasCLMAuthSuccess.class.getName());
+	static Log log = LogFactory.getLog(RarasCLMAuthHandler.class.getName());
 	
 	@Autowired
 	HttpServletRequest req;

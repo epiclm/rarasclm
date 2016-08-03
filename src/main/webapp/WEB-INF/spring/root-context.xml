@@ -59,6 +59,8 @@
 	</bean>
 	
 
+<!-- 	<security:global-method-security secured-annotations="enabled"/> -->
+
 	<security:http pattern="/css/**" security="none" />
 	<security:http pattern="/js/**" security="none" />
 	<security:http pattern="/img/**" security="none" />
@@ -66,7 +68,14 @@
 	
 	
 	<security:http>
-		<security:intercept-url pattern="**" access="ROLE_USER" />
+	
+		<security:intercept-url pattern="/" access="ROLE_USER" />
+		<security:intercept-url pattern="/enfermedades/**" access="ROLE_USER" />
+		<security:intercept-url pattern="/casos/**" access="ROLE_USER" />
+		<security:intercept-url pattern="/pacientes/**" access="ROLE_USER" />
+		<security:intercept-url pattern="/busqueda/**" access="ROLE_USER" />
+		<security:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+		
 		<security:form-login
 			login-page="/autentica" 
 			username-parameter="username" 
@@ -84,7 +93,7 @@
 
 
 	<bean id="mySuccessAuthenticationHandler"
-		  class="es.jclm.cs.rarasclm.listeners.RarasCLMAuthSuccess" />
+		  class="es.jclm.cs.rarasclm.listeners.RarasCLMAuthHandler" />
 	<bean id="rarasClmAuthenticationService" 
 		  class="es.jclm.cs.rarasclm.service.RarasCLMUserService" />
 	<bean id="csrfTokenRepository"

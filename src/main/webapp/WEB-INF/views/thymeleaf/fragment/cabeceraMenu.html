@@ -2,20 +2,29 @@
  <div class="navbar-inner">
   <div class="container">
     <ul  class="nav navbar-nav" th:each="modulo : ${baseModel.menuModel.modulosMenu}">
-	  <li class="dropdown">
-		<a th:if="${modulo.id}==${route.modulo}" class="active" th:href="@{|/${modulo.id}|}" th:text="${modulo.deno}"></a>
+     <li th:if="${modulo.id=='inicio'}">
+     	<a th:if="${modulo.id}==${route.modulo}" class="active" th:href="@{|/|}" th:text="${modulo.deno}"></a>
+		<a th:if="${modulo.id}!=${route.modulo}" th:href="@{|/|}" th:text="${modulo.deno}"></a>	
+	  </li>
+	  <li th:if="${modulo.id!='inicio'}">
+		<a th:if="${modulo.id}==${route.modulo}" class="active" th:href="@{|${modulo.id}|}" th:text="${modulo.deno}"></a>
 		<a th:if="${modulo.id}!=${route.modulo}" th:href="@{|/${modulo.id}|}" th:text="${modulo.deno}"></a>	
 	   </li>
 	</ul>
+	<ul class="nav navbar-brand pull-right">
+	  <li>
+		<a href="#">Usuario</a>
+	  </li>
+	</ul>
    </div>
  </div>
- <div th:if="${baseModel.menuModel.getModuloMenuById(route.modulo)}!=null">
-	 <ul class="breadcrumb" id="menuPath">
-	 	<li th:each="menuItem : ${baseModel.menuModel.getModuloMenuById(route.modulo).itemsMenu}">
-	 		<a th:if="${menuItem.id}==|${route.modulo}/${route.entidad}|" th:href="@{|/${menuItem.id}|}" th:text="|${menuItem.deno}|" class="active"></a>
-	 		<a th:if="${menuItem.id}!=|${route.modulo}/${route.entidad}|" th:href="@{|/${menuItem.id}|}" th:text="|${menuItem.deno}|"></a>
-	 		<span class="divider">/</span>
-	 	</li>	 
-	 </ul>
- </div>
+<!--  <div th:if="${baseModel.menuModel.getModuloMenuById(route.modulo)}!=null"> -->
+<!-- 	 <ul class="breadcrumb" id="menuPath"> -->
+<!-- 	 	<li th:each="menuItem : ${baseModel.menuModel.getModuloMenuById(route.modulo).itemsMenu}"> -->
+<!-- 	 		<a th:if="${menuItem.id}==|${route.modulo}/${route.entidad}|" th:href="@{|/${menuItem.id}|}" th:text="|${menuItem.deno}|" class="active"></a> -->
+<!-- 	 		<a th:if="${menuItem.id}!=|${route.modulo}/${route.entidad}|" th:href="@{|/${menuItem.id}|}" th:text="|${menuItem.deno}|"></a> -->
+<!-- 	 		<span class="divider">/</span> -->
+<!-- 	 	</li>	  -->
+<!-- 	 </ul> -->
+<!--  </div> -->
 </nav>

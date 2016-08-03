@@ -120,7 +120,7 @@ public class CasoController extends BaseController {
 			Caso ret = servicio.Buscar(id);
 			return ret;
 		} catch (ServiceRarasCLMException ex) {
-			ex.printStackTrace();
+			log.error(ex.getMessage(),ex);
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
 	}
@@ -146,7 +146,7 @@ public class CasoController extends BaseController {
 			}
 			model.addAttribute("caso", caso);
 		} catch (ServiceRarasCLMException ex) {
-			ex.printStackTrace();
+			log.error(ex.getMessage(),ex);
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
 		return "casos/forms/casoEdit";
@@ -159,7 +159,6 @@ public class CasoController extends BaseController {
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String  editPacienteRecibeFormulario(@PathVariable String id, @ModelAttribute("caso") Caso caso, Model model) {
 		try {
-			
 			Caso casoSinEditar = servicio.Buscar(id);
 			servicio.saveHistoria(casoSinEditar);
 			UserRarasCLM user = (UserRarasCLM)model.asMap().get("userCLM");
@@ -170,7 +169,8 @@ public class CasoController extends BaseController {
 			
 	
 			StringBuilder sb = new StringBuilder();
-			sb.append(String.format("<p><b>ACTUALIZACIÓN CORRECTA</b></p>caso %07d%n (%s)</p>\n",casoSinEditar.getPaciente().getIdPaciente(),casoSinEditar.getNumCaso()));
+			sb.append(String.format("<p><b>ACTUALIZACIÓN CORRECTA</b></p>caso %07d%n (%s)</p>\n",
+					casoSinEditar.getPaciente().getIdPaciente(),casoSinEditar.getNumCaso()));
 
 //			for(FieldChange f : casoMerge.getFieldsChange())
 //				sb.append(String.format("\t<p>Se ha cambiado campo %s valor: %s por %s</p>\n",f.getFieldName(),
@@ -186,10 +186,40 @@ public class CasoController extends BaseController {
 			request.getSession().setAttribute(OBJETO_CASO_SESION,caso);
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getMessage(),ex);
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
 		return "redirect:/casos/edit/"+id;
+	}
+	
+	
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
+	public String  deletePacienteRecibeFormulario(@PathVariable String id, Model model) {
+		int idPaciente = -1;
+		try {
+			Caso caso = servicio.Buscar(id);
+			idPaciente = caso.getPaciente().getIdPaciente();
+			UserRarasCLM user = (UserRarasCLM)model.asMap().get("userCLM");
+			caso.setUsuarioModificacion(user.getUsername());
+			caso.setFechahoraModificacion(new Date());
+			
+			servicio.saveHistoriaBorrada(caso);
+		
+			StringBuilder sb = new StringBuilder();
+			sb.append(String.format("<p><b>ELIMINACIÓN CORRECTA</b></p>caso %07d%n (%s)</p>\n",caso.getPaciente().getIdPaciente(),caso.getNumCaso()));
+
+			servicio.Borrar(caso);
+			
+			MensajeResultado mensaje = new MensajeResultado();
+			mensaje.setTipo(MensajeTipo.OK);
+			mensaje.setMensaje(sb.toString());
+			request.getSession().setAttribute("mensaje",mensaje);
+			request.getSession().setAttribute(OBJETO_CASO_SESION,null);		
+		} catch (Exception ex) {
+			log.error(ex.getMessage(),ex);
+			return null; //TO DO Mandar mensaje de error a la vista
+		}
+		return "redirect:/pacientes/edit/"+ String.valueOf(idPaciente);
 	}
 	
 	

@@ -95,6 +95,8 @@ public class BaseController {
 				//contralador que gestiona la petición (Alternativa inyectar el request)
 				String[] path =((org.springframework.web.bind.annotation.RequestMapping)a).value();
 				String[] route = path[0].split("/");
+				if(route.length==0 )
+					ret.setModulo("inicio");
 				if(route.length>1 && route[1]!=null)
 					ret.setModulo(route[1]);
 				if(route.length>2 && route[2]!=null)
