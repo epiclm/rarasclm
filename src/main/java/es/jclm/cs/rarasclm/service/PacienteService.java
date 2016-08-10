@@ -1,20 +1,16 @@
 package es.jclm.cs.rarasclm.service;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.jclm.cs.rarasclm.dao.BaseEntityDao;
 import es.jclm.cs.rarasclm.dao.PacienteDao;
 import es.jclm.cs.rarasclm.dao.PacienteHistoriaDao;
 import es.jclm.cs.rarasclm.dao.UnableToSaveException;
 import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.entities.PacienteHistoria;
 import es.jclm.cs.rarasclm.entities.PacienteHistoriaId;
-import es.jclm.cs.rarasclm.entities.PacientesModelView;
 
 
 @Service
@@ -76,10 +72,7 @@ public class PacienteService extends BaseCRUDService<Paciente, Integer> {
 		}
 	}
 
-	
-	public List<Paciente> buscaPacientes(PacientesModelView pmv) {
-		return null;
-	}
+
 	
 	
 }

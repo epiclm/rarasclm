@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
-import es.jclm.cs.rarasclm.entities.UserRarasCLM;
+
 
 /**
  * The Class IndexController.

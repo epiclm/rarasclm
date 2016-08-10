@@ -4,30 +4,27 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.jclm.cs.rarasclm.entities.EnfermedadRara;
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10;
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie9mc;
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraHasEnfermedadRaraCie9mc;
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraHasEnfermedadRaraCie9mcId;
+import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
+
+
 
 /**
  * The Class EnfermedadRaraCie9mcDao.
  */
 @Repository
 @Transactional
-public class EnfermedadRaraCie9mcDao extends BaseEntityDao<EnfermedadRaraCie9mc,String> {
+public class EnfermedadRaraCie9mcDao extends BaseEntityDao<EnfermedadCie9mc,String> {
 
-	public EnfermedadRaraCie9mc getEnfermedadRaraCie9mcById(String cie9mc) {
+	public EnfermedadCie9mc getEnfermedadRaraCie9mcById(String cie9mc) {
 		Session session = getSessionFactory().openSession();
 		try {
 			Query query = session.createQuery("SELECT e FROM EnfermedadRaraCie9mc e WHERE e.cie9Id = :cie9mc");
 			List<?> res = query.setParameter("cie9mc", cie9mc).list();
 			if (res.size() == 1) {
-				return (EnfermedadRaraCie9mc) res.get(0);
+				return (EnfermedadCie9mc) res.get(0);
 			}
 		} catch (Exception ex) {
 			return null;
@@ -40,12 +37,14 @@ public class EnfermedadRaraCie9mcDao extends BaseEntityDao<EnfermedadRaraCie9mc,
 	}
 	
 	
-	public List<EnfermedadRaraCie9mc> getAllEnfermedadesRaraCie9mc()
+	@SuppressWarnings("unchecked")
+	public List<EnfermedadCie9mc> getAllEnfermedadesRaraCie9mc()
 	{
 		Session session = getSessionFactory().openSession();
 		try {
 			Query query = session.createQuery("SELECT e FROM EnfermedadRaraCie9mc e ORDER BY e.literal");
-			return (List<EnfermedadRaraCie9mc>) query.list();
+			List<EnfermedadCie9mc> ret = (List<EnfermedadCie9mc>) query.list();
+			return ret;
 		} catch (Exception ex) {
 			return null;
 		} finally {

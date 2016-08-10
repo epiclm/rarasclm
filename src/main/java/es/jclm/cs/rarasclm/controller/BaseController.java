@@ -24,7 +24,7 @@ import es.jclm.cs.rarasclm.entities.BaseModelViewReflex;
 import es.jclm.cs.rarasclm.entities.IBaseModelView;
 import es.jclm.cs.rarasclm.entities.MensajeResultado;
 import es.jclm.cs.rarasclm.entities.RouteParameters;
-import es.jclm.cs.rarasclm.entities.UserRarasCLM;
+import es.jclm.cs.rarasclm.entities.UserRarasClm;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -62,8 +62,8 @@ public class BaseController {
 	
 	
 	@ModelAttribute("userCLM")
-	private UserRarasCLM getUserCLM() {
-		UserRarasCLM user = (UserRarasCLM)request.getSession().getAttribute("userCLM");
+	private UserRarasClm getUserCLM() {
+		UserRarasClm user = (UserRarasClm)request.getSession().getAttribute("userCLM");
 		return user;
 	}
 	

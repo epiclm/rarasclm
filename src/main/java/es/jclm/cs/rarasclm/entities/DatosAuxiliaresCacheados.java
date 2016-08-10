@@ -7,7 +7,6 @@ package es.jclm.cs.rarasclm.entities;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -30,25 +29,25 @@ public class DatosAuxiliaresCacheados {
 	static Log log = LogFactory.getLog(DatosAuxiliaresCacheados.class.getName());
 
 	/** The cie9mcs. */
-	private List<EnfermedadRaraCie9mc> cie9mcs;
+	private List<EnfermedadCie9mc> cie9mcs;
 	
 	/** The cie10s. */
-	private List<EnfermedadRaraCie10> cie10s;
+	private List<EnfermedadCie10> cie10s;
 	
 	/** The raras clm. */
 	private List<EnfermedadRara> rarasClm;
 	
 	/** Municipios. */
-	private List<Municipios> municipios;
+	private List<Municipio> municipios;
 	
 	/**Map de Municipios */
-	private Map<String,List<Municipios>> municipiosMapProvincia;
+	private Map<String,List<Municipio>> municipiosMapProvincia;
 	
 	/** Provincias. */
-	private List<Provincias> provincias;
+	private List<Provincia> provincias;
 	
 	/** Provincias. */
-	private List<Provincias> provinciasCLM;
+	private List<Provincia> provinciasCLM;
 	
 	/** CCAA */
 	private List<Ccaa> ccaas;
@@ -106,7 +105,7 @@ public class DatosAuxiliaresCacheados {
 	 *
 	 * @return the cie9mcs
 	 */
-	public List<EnfermedadRaraCie9mc> getCie9mcs() {
+	public List<EnfermedadCie9mc> getCie9mcs() {
 		return cie9mcs;
 	}
 
@@ -115,7 +114,7 @@ public class DatosAuxiliaresCacheados {
 	 *
 	 * @return the cie10s
 	 */
-	public List<EnfermedadRaraCie10> getCie10s() {
+	public List<EnfermedadCie10> getCie10s() {
 		return cie10s;
 	}
 
@@ -134,7 +133,7 @@ public class DatosAuxiliaresCacheados {
 	 * @param cie9mcs
 	 *            the new cie9mcs
 	 */
-	public void setCie9mcs(List<EnfermedadRaraCie9mc> cie9mcs) {
+	public void setCie9mcs(List<EnfermedadCie9mc> cie9mcs) {
 		this.cie9mcs = cie9mcs;
 	}
 
@@ -144,7 +143,7 @@ public class DatosAuxiliaresCacheados {
 	 * @param cie10s
 	 *            the new cie10s
 	 */
-	public void setCie10s(List<EnfermedadRaraCie10> cie10s) {
+	public void setCie10s(List<EnfermedadCie10> cie10s) {
 		this.cie10s = cie10s;
 	}
 
@@ -165,8 +164,8 @@ public class DatosAuxiliaresCacheados {
 	 *            the cie9
 	 * @return the cie9mcs by id
 	 */
-	public EnfermedadRaraCie9mc getCie9mcsById(String cie9) {
-		for (EnfermedadRaraCie9mc enfermedadRaraCie9mc : cie9mcs) {
+	public EnfermedadCie9mc getCie9mcsById(String cie9) {
+		for (EnfermedadCie9mc enfermedadRaraCie9mc : cie9mcs) {
 			if (enfermedadRaraCie9mc.getCie9Id().equalsIgnoreCase(cie9))
 				return enfermedadRaraCie9mc;
 		}
@@ -180,8 +179,8 @@ public class DatosAuxiliaresCacheados {
 	 *            the cie10
 	 * @return the cie10s by id
 	 */
-	public EnfermedadRaraCie10 getCie10sById(String cie10) {
-		for (EnfermedadRaraCie10 enfermedadRaraCie10 : cie10s) {
+	public EnfermedadCie10 getCie10sById(String cie10) {
+		for (EnfermedadCie10 enfermedadRaraCie10 : cie10s) {
 			if (enfermedadRaraCie10.getCie10Id().equalsIgnoreCase(cie10))
 				return enfermedadRaraCie10;
 		}
@@ -211,19 +210,19 @@ public class DatosAuxiliaresCacheados {
 		this.rarasClm = rarasClm;
 	}
 
-	public List<Municipios> getMunicipios() {
+	public List<Municipio> getMunicipios() {
 		return municipios;
 	}
 
-	public void setMunicipios(List<Municipios> municipios) {
+	public void setMunicipios(List<Municipio> municipios) {
 		this.municipios = municipios;
 	}
 
-	public List<Provincias> getProvincias() {
+	public List<Provincia> getProvincias() {
 		return provincias;
 	}
 
-	public void setProvincias(List<Provincias> provincias) {
+	public void setProvincias(List<Provincia> provincias) {
 		this.provincias = provincias;
 	}
 
@@ -235,19 +234,19 @@ public class DatosAuxiliaresCacheados {
 		this.ccaas = ccaas;
 	}
 
-	public Map<String, List<Municipios>> getMunicipiosMapProvincia() {
+	public Map<String, List<Municipio>> getMunicipiosMapProvincia() {
 		return municipiosMapProvincia;
 	}
 
-	public void setMunicipiosMapProvincia(Map<String, List<Municipios>> municipiosMapProvincia) {
+	public void setMunicipiosMapProvincia(Map<String, List<Municipio>> municipiosMapProvincia) {
 		this.municipiosMapProvincia = municipiosMapProvincia;
 	}
 
-	public List<Provincias> getProvinciasCLM() {
+	public List<Provincia> getProvinciasCLM() {
 		return provinciasCLM;
 	}
 
-	public void setProvinciasCLM(List<Provincias> provinciasCLM) {
+	public void setProvinciasCLM(List<Provincia> provinciasCLM) {
 		this.provinciasCLM = provinciasCLM;
 	}
 	
@@ -256,7 +255,7 @@ public class DatosAuxiliaresCacheados {
 		if(provincia!=null && provincia.length()==2) {
 			idProvincia=provincia;
 		}
-			for(Provincias p : this.provincias) {
+			for(Provincia p : this.provincias) {
 				if(p.getProvincia().equalsIgnoreCase(idProvincia))
 					return p.getDeno();
 			}
@@ -269,9 +268,9 @@ public class DatosAuxiliaresCacheados {
 			idMunicipio=municipio;
 		}
 		String provincia = idMunicipio.substring(0, 2);
-		for(Provincias p : this.provincias) {
+		for(Provincia p : this.provincias) {
 			if(p.getProvincia().equalsIgnoreCase(provincia))
-				for(Municipios m : this.getMunicipios()) {
+				for(Municipio m : this.getMunicipios()) {
 					if(m.getMunicipio().equalsIgnoreCase(idMunicipio))
 						return m.getDeno();
 				}
@@ -285,9 +284,9 @@ public class DatosAuxiliaresCacheados {
 			idMunicipio=municipio;
 		}
 		String provincia = idMunicipio.substring(0, 2);
-		for(Provincias p : this.provincias) {
+		for(Provincia p : this.provincias) {
 			if(p.getProvincia().equalsIgnoreCase(provincia))
-				for(Municipios m : this.getMunicipios()) {
+				for(Municipio m : this.getMunicipios()) {
 					if(m.getMunicipio().equalsIgnoreCase(idMunicipio))
 						return m.getDeno() + " (" + p.getDeno() + ")"; 
 				}
@@ -296,15 +295,15 @@ public class DatosAuxiliaresCacheados {
 	}
 	
 	
-	public String getSexoLiteral(String codSexo) {
+	public String getSexoLiteral(int codSexo) {
 		switch(codSexo) {
-			case "1":
+			case 1:
 				return "VARÓN";
-			case "6":
+			case 6:
 				return "MUJER";
-			case "8":
+			case 8:
 				return "INDETERMINADO";
-			case "9":
+			case 9:
 				return "DESCONOCIDO";
 			default:
 				return "";

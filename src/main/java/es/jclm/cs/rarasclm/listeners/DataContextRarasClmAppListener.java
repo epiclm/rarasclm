@@ -17,8 +17,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.IBaseModelView;
-import es.jclm.cs.rarasclm.entities.Municipios;
-import es.jclm.cs.rarasclm.entities.Provincias;
+import es.jclm.cs.rarasclm.entities.Municipio;
+import es.jclm.cs.rarasclm.entities.Provincia;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie10Service;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie9mcService;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
@@ -88,10 +88,10 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 			datos.setProvinciasCLM(localizacionesService.getProvinciasCLM(false));
 			log.info("Cargada entidades auxiliares Provincias");
 			datos.setMunicipios(localizacionesService.getMunicipios(false));
-			HashMap<String, List<Municipios>> hMunicipios;
-			hMunicipios = new HashMap<String, List<Municipios>>(52);
-			for(Provincias p : datos.getProvincias()) {
-				hMunicipios.put(p.getProvincia(), p.getMunicipioses());
+			HashMap<String, List<Municipio>> hMunicipios;
+			hMunicipios = new HashMap<String, List<Municipio>>(52);
+			for(Provincia p : datos.getProvincias()) {
+				hMunicipios.put(p.getProvincia(),p.getMunicipios());
 			}
 			datos.setMunicipiosMapProvincia(hMunicipios);
 			log.info("Cargada entidades auxiliares Municipios");

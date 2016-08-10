@@ -16,12 +16,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import es.jclm.cs.rarasclm.dao.UserRarasCLMDao;
-import es.jclm.cs.rarasclm.entities.RolesRarasCLM;
-import es.jclm.cs.rarasclm.entities.UserRarasCLM;
+import es.jclm.cs.rarasclm.entities.RolRarasClm;
+import es.jclm.cs.rarasclm.entities.UserRarasClm;
 
 
 @Service
@@ -34,11 +32,11 @@ public class RarasCLMUserService implements UserDetailsService {
 	private HttpServletRequest request;
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserRarasCLM userCLM = null;
+		UserRarasClm userCLM = null;
 		List<GrantedAuthority> authorities = null;
 		if(username!=null || username.trim().equals("")) {
 			userCLM = userDao.findByUserName(username);
-			authorities = buildUserAuthority(userCLM.getRoleses());
+			authorities = buildUserAuthority(userCLM.getRolRarasClms());
 			request.getSession().setAttribute("userCLM",userCLM);
 			return  buildUserForAuthentication(userCLM,authorities); 
 		} else {
@@ -46,13 +44,13 @@ public class RarasCLMUserService implements UserDetailsService {
 		}	
 	}
 
-	private User buildUserForAuthentication(UserRarasCLM user, List<GrantedAuthority> authorities) {
-		return new User(user.getUsername(), user.getPassword(), user.isEnabled(), true, true, true, authorities);
+	private User buildUserForAuthentication(UserRarasClm user, List<GrantedAuthority> authorities) {
+		return new User(user.getUsername(), user.getPassword(), user.getEnabled()==1, true, true, true, authorities);
 	}
 	
-	private List<GrantedAuthority> buildUserAuthority(Set<RolesRarasCLM> userRoles) {
+	private List<GrantedAuthority> buildUserAuthority(Set<RolRarasClm> userRoles) {
 		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
-		for (RolesRarasCLM userRole : userRoles) {
+		for (RolRarasClm userRole : userRoles) {
 			setAuths.add(new SimpleGrantedAuthority(userRole.getDeno()));
 		}
 		List<GrantedAuthority> Result = new ArrayList<GrantedAuthority>(setAuths);

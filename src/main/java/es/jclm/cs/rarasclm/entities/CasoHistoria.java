@@ -1,5 +1,5 @@
 package es.jclm.cs.rarasclm.entities;
-// Generated 18-jun-2016 4:04:46 by Hibernate Tools 4.3.1.Final
+// Generated 10-ago-2016 9:15:45 by Hibernate Tools 4.3.4.Final
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -18,10 +18,6 @@ import javax.persistence.TemporalType;
 @Table(name = "caso_historia", catalog = "rarasclm")
 public class CasoHistoria implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8379120038591214133L;
 	private CasoHistoriaId id;
 	private Integer paciente;
 	private Short numCaso;

@@ -63,7 +63,7 @@ public class CasoService extends BaseCRUDService<Caso, String>{
 		CasoHistoria ch = new CasoHistoria(id,
 				caso.getPaciente().getIdPaciente(), 
 				caso.getNumCaso(), 
-				caso.getEnfRara().getEnfermedadRaraId(), 
+				caso.getEnfermedadRara().getEnfermedadRaraId(), 
 				caso.getDeclarada(), 
 				caso.getUsuarioDeclara(), 
 				caso.getFechaDeclara(), 

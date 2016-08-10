@@ -18,6 +18,7 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 	@Autowired
 	private ConfiguracionRarasCLM rarasConfig;
 
+	@SuppressWarnings("null") // eclipse crazy??
 	public List<Caso> busqueda(String seccion, String cip, String nombre, String apellido1, String apellido2,
 			String provinciaResidencia, String municipioResidencia, int anioNac, String sexo, String cie9MC,
 			String cie10, String enfraraCLM, Byte baseDiagnostico, int numPagina, int numResultadosPagina) {
@@ -52,9 +53,9 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 			addCip = false;
 
 		if ((cie9MC == null || cie9MC.equals("")) && (cie10 == null || cie10.equals(""))
-				&& (enfraraCLM == null || enfraraCLM.equals("")))
+				&& (enfraraCLM == null || enfraraCLM.equals(""))) {
 			addEnfermedades = false;
-		else {
+		} else {
 			if (cie9MC == null || cie9MC.equals("")) {
 				addCie9 = false;
 			}
@@ -88,7 +89,6 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 		// que es un OR por necesidad marcada por requisitos
 		// hace inviable añadir otra codificación de búsqueda
 		if (addEnfermedades) {
-			String sHqlEnf = "";
 			String sHqlCie10 = "";
 			String sHqlCie9mc = "";
 			String sHqlEnfRaraClm = "";
@@ -238,5 +238,6 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 			
 
 	}
-	
+
+
 }

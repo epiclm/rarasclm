@@ -1,6 +1,5 @@
 package es.jclm.cs.rarasclm.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import es.jclm.cs.rarasclm.dao.PacienteDao;
 import es.jclm.cs.rarasclm.entities.BusquedaModelView;
 import es.jclm.cs.rarasclm.entities.Caso;
 import es.jclm.cs.rarasclm.entities.Paciente;
-import es.jclm.cs.rarasclm.entities.PacientesModelView;
+
 
 @Service
 public class BusquedaService {

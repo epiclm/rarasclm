@@ -209,7 +209,7 @@ $(document).ready( function() {
 			</div>
 			<div class="row">
 			
-				<input type="hidden" id="codEnfrara" name="codEnfrara" th:field="${caso.codEnfrara}"/>
+				<input type="hidden" id="codEnfrara" name="codEnfrara" th:field="${caso.enfermedadRara.enfermedadRaraId}"/>
 				<input type="hidden" id="fechahoraModificacion" th:field="${caso.fechahoraModificacion}"/>
 				<input type="hidden" id="fechahoraCreacion" th:field="${caso.fechahoraCreacion}"/>
 			
@@ -217,14 +217,14 @@ $(document).ready( function() {
 				<div id="grupo-enfRara-caso" class="form-group">
 					<label class="control-label span7" for="enfrara">Enfermedad Rara CLM:</label>
 					<div class="input-append" style="width: 100%">
-						<input id="enfraraObjeto" class="span7"  name="enfRaraCLMliteral" type="text" maxlength="250" th:value="|${caso.enfRara.enfermedadRaraId} ${caso.enfRara.literal}|" placeholder="Escriba Literal o código de la Enfermedad"/>
+						<input id="enfraraObjeto" class="span7"  name="enfRaraCLMliteral" type="text" maxlength="250" th:value="|${caso.enfermedadRara.enfermedadRaraId} ${caso.enfermedadRara.literal}|" placeholder="Escriba Literal o código de la Enfermedad"/>
 						<a class="btn add-on" data-toggle="modal" data-target="#modalEnf" href="" type="button"><i class="icon-search"></i></a>
 					</div>
 				</div>
 			</div>
 			
 			<div id="cuadro-resumen-enfrara" class="row">
-				<a id="linkEnfrara" target="_blank" th:href="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfRara.enfermedadRaraId}|" th:text="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfRara.enfermedadRaraId}|"></a>
+				<a id="linkEnfrara" target="_blank" th:href="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfermedadRara.enfermedadRaraId}|" th:text="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfermedadRara.enfermedadRaraId}|"></a>
 			</div>
 			<div id="grupo-fuentes" class="row">
 				<h5>Codificaciones:</h5>

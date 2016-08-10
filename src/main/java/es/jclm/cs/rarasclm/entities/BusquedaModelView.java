@@ -1,6 +1,5 @@
 package es.jclm.cs.rarasclm.entities;
 
-import java.util.Date;
 import java.util.List;
 
 public class BusquedaModelView {

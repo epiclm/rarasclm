@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 import es.jclm.cs.rarasclm.dao.MunicipiosDao;
 import es.jclm.cs.rarasclm.dao.ProvinciasDao;
 import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
-import es.jclm.cs.rarasclm.entities.Municipios;
-import es.jclm.cs.rarasclm.entities.Provincias;
+import es.jclm.cs.rarasclm.entities.Municipio;
+import es.jclm.cs.rarasclm.entities.Provincia;
+
 
 @Service
 public class LocalizacionesService {
@@ -29,46 +30,46 @@ public class LocalizacionesService {
 	private static final Logger log = LoggerFactory.getLogger(LocalizacionesService.class);
 	
 	
-	public List<Municipios> getMunicipios() {
+	public List<Municipio> getMunicipios() {
 		if(datosCache.getMunicipios().size()>0)
 			return datosCache.getMunicipios(); 
 		else
 			return municipiosDao.getMunicipios();
 	}
 	
-	public List<Municipios> getMunicipios(boolean cache) {
+	public List<Municipio> getMunicipios(boolean cache) {
 		if(cache)
 			return datosCache.getMunicipios(); 
 		else
 			return municipiosDao.getMunicipios();
 	}
 	
-	public List<Provincias> getProvincias(boolean cache) {
+	public List<Provincia> getProvincias(boolean cache) {
 		if(cache)
 			return datosCache.getProvincias(); 
 		else
 			return provinciasDao.getProvincias();
 	}
 	
-	public List<Provincias> getProvinciasCLM(boolean cache) {
-		List<Provincias> provincias = getProvincias(cache);
-		List<Provincias> ret = new ArrayList<Provincias>();
-		Provincias desconocida = new Provincias();
+	public List<Provincia> getProvinciasCLM(boolean cache) {
+		List<Provincia> provincias = getProvincias(cache);
+		List<Provincia> ret = new ArrayList<Provincia>();
+		Provincia desconocida = new Provincia();
 		desconocida.setDeno("DESCONOCIDA");
 		desconocida.setProvincia("99");
 		ret.add(desconocida);
-		for(Provincias p : provincias) {
+		for(Provincia p : provincias) {
 			if(p.getCcaa().getCcaa().equals("08"))
 				ret.add(p);
 		}
 		return ret;
 	}
 	
-	public List<Municipios> getMunicipioDeProvincia(String idProvincia) {
+	public List<Municipio> getMunicipioDeProvincia(String idProvincia) {
 		if(datosCache.getMunicipiosMapProvincia().size()>0) {
 			return datosCache.getMunicipiosMapProvincia().get(idProvincia);
 		} else {
-			return provinciasDao.getProvincia(idProvincia).getMunicipioses();
+			return (List<Municipio>) provinciasDao.getProvincia(idProvincia).getMunicipios();
 		}			
 	}
 	

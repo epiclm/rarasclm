@@ -13,8 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10;
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie9mc;
+
 
 /**
  * The Class EnfermedadRara.

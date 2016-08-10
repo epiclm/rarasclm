@@ -7,7 +7,8 @@ package es.jclm.cs.rarasclm.validator;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10;
+import es.jclm.cs.rarasclm.entities.EnfermedadCie10;
+
 
 
 
@@ -22,7 +23,7 @@ public class EnfermedadCie10Validator implements Validator {
 	 */
 	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
-		return EnfermedadRaraCie10.class.isAssignableFrom(clazz);
+		return EnfermedadCie10.class.isAssignableFrom(clazz);
 	}
 
 	/* (non-Javadoc)

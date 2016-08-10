@@ -1,5 +1,5 @@
 package es.jclm.cs.rarasclm.entities;
-// Generated 28-may-2016 19:18:02 by Hibernate Tools 4.3.1.Final
+// Generated 10-ago-2016 9:15:45 by Hibernate Tools 4.3.4.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +19,7 @@ public class Ccaa implements java.io.Serializable {
 
 	private String ccaa;
 	private String deno;
-	private Set<Provincias> provinciases = new HashSet<Provincias>(0);
+	private Set<Provincia> provincias = new HashSet<Provincia>(0);
 
 	public Ccaa() {
 	}
@@ -28,10 +28,10 @@ public class Ccaa implements java.io.Serializable {
 		this.ccaa = ccaa;
 	}
 
-	public Ccaa(String ccaa, String deno, Set<Provincias> provinciases) {
+	public Ccaa(String ccaa, String deno, Set<Provincia> provincias) {
 		this.ccaa = ccaa;
 		this.deno = deno;
-		this.provinciases = provinciases;
+		this.provincias = provincias;
 	}
 
 	@Id
@@ -55,12 +55,12 @@ public class Ccaa implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ccaa")
-	public Set<Provincias> getProvinciases() {
-		return this.provinciases;
+	public Set<Provincia> getProvincias() {
+		return this.provincias;
 	}
 
-	public void setProvinciases(Set<Provincias> provinciases) {
-		this.provinciases = provinciases;
+	public void setProvincias(Set<Provincia> provincias) {
+		this.provincias = provincias;
 	}
 
 }

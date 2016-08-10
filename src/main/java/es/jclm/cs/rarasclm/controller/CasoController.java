@@ -1,7 +1,6 @@
 package es.jclm.cs.rarasclm.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,21 +20,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
+
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.entities.Caso;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10;
-import es.jclm.cs.rarasclm.entities.FieldChange;
 import es.jclm.cs.rarasclm.entities.MensajeResultado;
 import es.jclm.cs.rarasclm.entities.MensajeTipo;
 import es.jclm.cs.rarasclm.entities.MergeResult;
-import es.jclm.cs.rarasclm.entities.Municipios;
-import es.jclm.cs.rarasclm.entities.Paciente;
-import es.jclm.cs.rarasclm.entities.PacientesModelView;
-import es.jclm.cs.rarasclm.entities.UserRarasCLM;
+import es.jclm.cs.rarasclm.entities.UserRarasClm;
 import es.jclm.cs.rarasclm.service.CasoService;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
@@ -161,7 +155,7 @@ public class CasoController extends BaseController {
 		try {
 			Caso casoSinEditar = servicio.Buscar(id);
 			servicio.saveHistoria(casoSinEditar);
-			UserRarasCLM user = (UserRarasCLM)model.asMap().get("userCLM");
+			UserRarasClm user = (UserRarasClm)model.asMap().get("userCLM");
 			caso.setUsuarioModificacion(user.getUsername());
 			caso.setFechahoraModificacion(new Date());
 			MergeResult<Caso> casoMerge = new MergeEntity<Caso>().merge(casoSinEditar, caso);
@@ -199,7 +193,7 @@ public class CasoController extends BaseController {
 		try {
 			Caso caso = servicio.Buscar(id);
 			idPaciente = caso.getPaciente().getIdPaciente();
-			UserRarasCLM user = (UserRarasCLM)model.asMap().get("userCLM");
+			UserRarasClm user = (UserRarasClm)model.asMap().get("userCLM");
 			caso.setUsuarioModificacion(user.getUsername());
 			caso.setFechahoraModificacion(new Date());
 			

@@ -7,8 +7,7 @@ package es.jclm.cs.rarasclm.validator;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie9mc;
-
+import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -21,7 +20,7 @@ public class EnfermedadCie9mcValidator implements Validator {
 	 */
 	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
-		return EnfermedadRaraCie9mc.class.isAssignableFrom(clazz);
+		return EnfermedadCie9mc.class.isAssignableFrom(clazz);
 	}
 
 	/* (non-Javadoc)

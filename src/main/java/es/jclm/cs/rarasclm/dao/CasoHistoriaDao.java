@@ -14,17 +14,16 @@ public class CasoHistoriaDao extends BaseEntityDao<CasoHistoria,CasoHistoriaId>{
 	
 	private static final Logger log = LoggerFactory.getLogger(CasoHistoriaDao.class);
 	
-	@SuppressWarnings("unchecked")
 	public int getVersion(String caso) {
 		Session session = getSessionFactory().openSession();
 		try {
 			Query queryCount = session.createQuery("SELECT count(*) FROM CasoHistoria ch WHERE ch.id.idCaso=:caso");
-			long num = (long) queryCount.setParameter("caso", caso).uniqueResult();
+			long num = Integer.parseInt(queryCount.setParameter("caso", caso).uniqueResult().toString());
 			if(num==0)
 				return 1;
 			
 			Query queryMax = session.createQuery("SELECT max(ch.id.idVersion) FROM CasoHistoria ch WHERE ch.id.idCaso=:caso");
-			int ret = (int) queryMax.setParameter("caso", caso).uniqueResult();
+			int ret = Integer.parseInt(queryMax.setParameter("caso", caso).uniqueResult().toString());
 			if(ret==-1)
 				return 1;
 			else

@@ -1,48 +1,34 @@
 package es.jclm.cs.rarasclm.controller;
 
-import java.net.MalformedURLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
-import es.jclm.cs.rarasclm.entities.Caso;
-import es.jclm.cs.rarasclm.entities.EnfermedadRara;
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie9mc;
 import es.jclm.cs.rarasclm.entities.MensajeResultado;
 import es.jclm.cs.rarasclm.entities.MensajeTipo;
 import es.jclm.cs.rarasclm.entities.MergeResult;
-import es.jclm.cs.rarasclm.entities.Municipios;
+import es.jclm.cs.rarasclm.entities.Municipio;
 import es.jclm.cs.rarasclm.entities.Paciente;
-import es.jclm.cs.rarasclm.entities.PacientesModelView;
-import es.jclm.cs.rarasclm.entities.Provincias;
-import es.jclm.cs.rarasclm.entities.UserRarasCLM;
-import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
+import es.jclm.cs.rarasclm.entities.UserRarasClm;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
 import es.jclm.cs.rarasclm.service.PacienteService;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 import es.jclm.cs.rarasclm.util.MergeEntity;
-import net.rossillo.spring.web.mvc.CacheControl;
+
 
 @Controller
 @RequestMapping("/pacientes")
@@ -128,8 +114,8 @@ public class PacienteController extends BaseController {
 				}
 			} 
 			model.addAttribute("paciente", paciente);
-			List<Municipios> municipiosResidencia = new ArrayList<Municipios>();
-			Municipios municipioDesconocido = new Municipios();
+			List<Municipio> municipiosResidencia = new ArrayList<Municipio>();
+			Municipio municipioDesconocido = new Municipio();
 			municipioDesconocido.setMunicipio("99999");
 			municipioDesconocido.setDeno("DESCONOCIDO");
 			municipiosResidencia.add(municipioDesconocido);
@@ -156,7 +142,7 @@ public class PacienteController extends BaseController {
 			
 			int pacienteId = Integer.parseInt(id);
 			Paciente pacienteSinEditar = servicio.Buscar(pacienteId);
-			UserRarasCLM user = (UserRarasCLM)model.asMap().get("userCLM");
+			UserRarasClm user = (UserRarasClm)model.asMap().get("userCLM");
 			MergeResult<Paciente> pacienteMerge = new MergeEntity<Paciente>().merge(pacienteSinEditar,paciente);
 			servicio.Actualizar(pacienteMerge.getMergeObject());
 			

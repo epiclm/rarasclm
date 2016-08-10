@@ -4,20 +4,11 @@
  */
 package es.jclm.cs.rarasclm.controller;
 
-
 import java.util.List;
-import java.util.Set;
-
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import javax.validation.ConstraintViolation;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,9 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
-import es.jclm.cs.rarasclm.entities.EnfermedadRara;
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10;
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie9mc;
+import es.jclm.cs.rarasclm.entities.EnfermedadCie10;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie10Service;
 
 // TODO: Auto-generated Javadoc
@@ -47,15 +36,12 @@ public class EnfermedadCie10Controller extends BaseController {
 	@Autowired
 	private EnfermedadRaraCie10Service enfermedadService;
 
-	/** The validator. */
-	private Validator validator;
 
 	/**
 	 * Instantiates a new enfermedad cie10 controller.
 	 */
 	public EnfermedadCie10Controller() {
-		ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-		validator = validatorFactory.getValidator();
+
 	}
 
 	/**
@@ -64,8 +50,8 @@ public class EnfermedadCie10Controller extends BaseController {
 	 * @return the list
 	 */
 	@ModelAttribute("allCie10")
-	public List<EnfermedadRaraCie10> populateEmployees() {
-		List<EnfermedadRaraCie10> enfermedadesCie10 = enfermedadService.getAllEnfermedadesRarasCie10(true);
+	public List<EnfermedadCie10> populateEmployees() {
+		List<EnfermedadCie10> enfermedadesCie10 = enfermedadService.getAllEnfermedadesRarasCie10(true);
 		return enfermedadesCie10;
 	}
 
@@ -93,7 +79,7 @@ public class EnfermedadCie10Controller extends BaseController {
 	@RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
 	public String setupShow(@PathVariable String id, Model model) {
 		getRoute().setId(id);
-		EnfermedadRaraCie10 enfRara = enfermedadService.getEnfermedadRaraCie10ById(id);
+		EnfermedadCie10 enfRara = enfermedadService.getEnfermedadRaraCie10ById(id);
 		model.addAttribute("enfermedadCie10Model", enfRara);
 		return "enfermedades/shows/cie10Show";
 	}
@@ -104,7 +90,7 @@ public class EnfermedadCie10Controller extends BaseController {
 	 * @return the list
 	 */
 	@RequestMapping(value = "/json", produces = "application/json; charset=UTF-8")
-	public @ResponseBody List<EnfermedadRaraCie10> json() {
+	public @ResponseBody List<EnfermedadCie10> json() {
 		return enfermedadService.getAllEnfermedadesRarasCie10(true);
 	}
 
@@ -117,7 +103,7 @@ public class EnfermedadCie10Controller extends BaseController {
 	 */
 	@RequestMapping(value= "/create", method = RequestMethod.GET)
 	public String nuevo(Model model) {
-		EnfermedadRaraCie10 enfRara = new EnfermedadRaraCie10();
+		EnfermedadCie10 enfRara = new EnfermedadCie10();
 		model.addAttribute("enfermedadCie10Model", enfRara);
 		return "enfermedades/forms/cie10Nuevo";
 	}
@@ -134,19 +120,8 @@ public class EnfermedadCie10Controller extends BaseController {
 	 * @return the string
 	 */
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String submitNuevoForm(@ModelAttribute("enfermedadCie10") EnfermedadRaraCie10 enf, BindingResult result,
+	public String submitNuevoForm(@ModelAttribute("enfermedadCie10") EnfermedadCie10 enf, BindingResult result,
 			SessionStatus status) {
-
-		Set<ConstraintViolation<EnfermedadRaraCie10>> violations = validator.validate(enf);
-
-		for (ConstraintViolation<EnfermedadRaraCie10> violation : violations) {
-			String propertyPath = violation.getPropertyPath().toString();
-			String message = violation.getMessage();
-			// Add JSR-303 errors to BindingResult
-			// This allows Spring to display them in view via a FieldError
-			result.addError(
-					new FieldError("enfermedadCie10", propertyPath, "Invalid " + propertyPath + "(" + message + ")"));
-		}
 
 		if (result.hasErrors()) {
 			return "enfermedades/cie10Nuevoc";
@@ -165,13 +140,13 @@ public class EnfermedadCie10Controller extends BaseController {
 	@RequestMapping(value="edit/{id}", method = RequestMethod.GET)
 	public String setupEditIdForm(@PathVariable String id, Model model) {
 		getRoute().setId(id);
-		EnfermedadRaraCie10 enfRara = enfermedadService.getEnfermedadRaraCie10ById(id);
+		EnfermedadCie10 enfRara = enfermedadService.getEnfermedadRaraCie10ById(id);
 		model.addAttribute("enfermedadCie10Model", enfRara);
 		return "enfermedades/forms/cie10Edit";
 	}
 	
 	@RequestMapping(value="edit/{id}",method = RequestMethod.POST)
-	public String submitEditIdForm(@ModelAttribute("enfermedadCie10") EnfermedadRaraCie10 enf, BindingResult result,
+	public String submitEditIdForm(@ModelAttribute("enfermedadCie10") EnfermedadCie10 enf, BindingResult result,
 			SessionStatus status) {
 
 /*		Set<ConstraintViolation<EnfermedadRaraCie10>> violations = validator.validate(enf);
@@ -198,7 +173,7 @@ public class EnfermedadCie10Controller extends BaseController {
 	}
 	
 	@RequestMapping(value = "/json/{id}", produces = "application/json; charset=UTF-8")
-	public @ResponseBody EnfermedadRaraCie10 jsonId(@PathVariable String id) {
+	public @ResponseBody EnfermedadCie10 jsonId(@PathVariable String id) {
 		return enfermedadService.getEnfermedadRaraCie10ById(id);
 	}
 }

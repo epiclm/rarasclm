@@ -1,9 +1,13 @@
 package es.jclm.cs.rarasclm.entities;
-// Generated 14-jun-2016 13:22:23 by Hibernate Tools 4.3.1.Final
+// Generated 10-ago-2016 9:15:45 by Hibernate Tools 4.3.4.Final
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -13,12 +17,9 @@ import javax.persistence.Table;
 @Table(name = "hospital", catalog = "rarasclm")
 public class Hospital implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6183479768645944777L;
 	private String idHospital;
 	private String literal;
+	private Set<HistoriaClinica> historiaClinicas = new HashSet<HistoriaClinica>(0);
 
 	public Hospital() {
 	}
@@ -27,12 +28,14 @@ public class Hospital implements java.io.Serializable {
 		this.idHospital = idHospital;
 	}
 
-	public Hospital(String idHospital, String literal) {
+	public Hospital(String idHospital, String literal, Set<HistoriaClinica> historiaClinicas) {
 		this.idHospital = idHospital;
 		this.literal = literal;
+		this.historiaClinicas = historiaClinicas;
 	}
 
 	@Id
+
 	@Column(name = "id_hospital", unique = true, nullable = false, length = 6)
 	public String getIdHospital() {
 		return this.idHospital;
@@ -49,6 +52,15 @@ public class Hospital implements java.io.Serializable {
 
 	public void setLiteral(String literal) {
 		this.literal = literal;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hospital")
+	public Set<HistoriaClinica> getHistoriaClinicas() {
+		return this.historiaClinicas;
+	}
+
+	public void setHistoriaClinicas(Set<HistoriaClinica> historiaClinicas) {
+		this.historiaClinicas = historiaClinicas;
 	}
 
 }

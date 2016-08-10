@@ -8,10 +8,10 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import es.jclm.cs.rarasclm.entities.UserRarasCLM;
+import es.jclm.cs.rarasclm.entities.UserRarasClm;
 
 @Repository
-public class UserRarasCLMDao extends BaseEntityDao<UserRarasCLM, String>{
+public class UserRarasCLMDao extends BaseEntityDao<UserRarasClm, String>{
 	
 	static Log log = LogFactory.getLog("UserDao");
 	
@@ -23,13 +23,13 @@ public class UserRarasCLMDao extends BaseEntityDao<UserRarasCLM, String>{
 	}
 
 	@SuppressWarnings("unchecked")
-	public UserRarasCLM findByUserName(String username) {
+	public UserRarasClm findByUserName(String username) {
 
-		List<UserRarasCLM> users = new ArrayList<UserRarasCLM>();
+		List<UserRarasClm> users = new ArrayList<UserRarasClm>();
 
 		Session session = getSessionFactory().openSession();
 
-		users = session.createQuery("SELECT u from UserRarasCLM u where u.username=?")
+		users = session.createQuery("SELECT u from UserRarasClm u where u.username=?")
 			.setParameter(0, username).list();
 
 		if (users.size() > 0) {

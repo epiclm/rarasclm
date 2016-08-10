@@ -15,7 +15,7 @@ public class PacienteHistoriaDao extends BaseEntityDao<PacienteHistoria,Paciente
 		Session session = getSessionFactory().openSession();
 		try {
 			Query query = session.createQuery("SELECT MAX(ph.id.idVersion) FROM PacienteHistoria ph WHERE ph.id.idPaciente=:paciente");
-			int ret = (int) query.setParameter("paciente", paciente).uniqueResult();
+			int ret = Integer.parseInt(query.setParameter("paciente", paciente).uniqueResult().toString());
 			if(ret==-1)
 				return 1;
 			else

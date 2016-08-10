@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory name="rarasclm">
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password">alberto01</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/rarasclm</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.search.autoregister_listeners">true</property>
+        <property name="hibernate.validator.apply_to_ddl">false</property>
+        <mapping class="es.jclm.cs.rarasclm.entities.Ccaa" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadRara" />
+        <mapping class="es.jclm.cs.rarasclm.entities.Municipio" />
+        <mapping class="es.jclm.cs.rarasclm.entities.Paciente" />
+        <mapping class="es.jclm.cs.rarasclm.entities.VPacienteCaso" />
+        <mapping class="es.jclm.cs.rarasclm.entities.RolRarasClm" />
+        <mapping class="es.jclm.cs.rarasclm.entities.PacienteHistoria" />
+        <mapping class="es.jclm.cs.rarasclm.entities.Caso" />
+        <mapping class="es.jclm.cs.rarasclm.entities.HistoriaClinica" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadCie10" />
+        <mapping class="es.jclm.cs.rarasclm.entities.Hospital" />
+        <mapping class="es.jclm.cs.rarasclm.entities.CasoHistoria" />
+        <mapping class="es.jclm.cs.rarasclm.entities.EnfermedadCie9mc" />
+        <mapping class="es.jclm.cs.rarasclm.entities.Provincia" />
+        <mapping class="es.jclm.cs.rarasclm.entities.UserRarasClm" />
+    </session-factory>
+</hibernate-configuration>

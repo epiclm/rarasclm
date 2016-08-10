@@ -2,25 +2,14 @@ package es.jclm.cs.rarasclm.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.Transactional;
-
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie10;
-import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
 
 @SuppressWarnings("unchecked")
 /**
@@ -38,7 +27,7 @@ public class BaseEntityDao<Entity, K extends Serializable> {
 	protected SessionFactory sf;
 	
 	public Class<Entity> domainClass = getDomainClass();
-	private Session session;
+	//private Session session;
 
 	public void setClazz(Class<Entity> clazzSet) {
 	}
@@ -57,11 +46,11 @@ public class BaseEntityDao<Entity, K extends Serializable> {
 		return domainClass;
 	}
 
-	private Session getHibernateTemplate() {
-		session = sf.openSession();
-		session.beginTransaction();
-		return session;
-	}
+//	private Session getHibernateTemplate() {
+//		session = sf.openSession();
+//		session.beginTransaction();
+//		return session;
+//	}
 
 	public Entity buscar(K id) throws Exception {
 		Session s = sf.openSession();

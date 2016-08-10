@@ -9,21 +9,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import es.jclm.cs.rarasclm.controller.IndexController;
-import es.jclm.cs.rarasclm.entities.Municipios;
-import es.jclm.cs.rarasclm.entities.Provincias;
+import es.jclm.cs.rarasclm.entities.Municipio;
+import es.jclm.cs.rarasclm.entities.Provincia;
 
 @Repository
-public class ProvinciasDao extends BaseEntityDao<Provincias,String>{
+public class ProvinciasDao extends BaseEntityDao<Provincia,String>{
 	
 
 	private static final Logger log = LoggerFactory.getLogger(ProvinciasDao.class);
 	
 	@SuppressWarnings("unchecked")
-	public List<Provincias> getProvincias() {
+	public List<Provincia> getProvincias() {
 		Session session = getSessionFactory().openSession();
 		try {
-			Query query = session.createQuery("SELECT p FROM Provincias p ORDER BY p.deno");
-			return (List<Provincias>) query.list();
+			Query query = session.createQuery("SELECT p FROM Provincia p ORDER BY p.deno");
+			return (List<Provincia>) query.list();
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			return null;
@@ -35,12 +35,12 @@ public class ProvinciasDao extends BaseEntityDao<Provincias,String>{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Provincias getProvincia(String idProvincia) {
+	public Provincia getProvincia(String idProvincia) {
 		Session session = getSessionFactory().openSession();
 		try {
-			Query query = session.createQuery("SELECT p FROM Provincias p WHERE ORDER BY p.provincia :provincia");
+			Query query = session.createQuery("SELECT p FROM Provincia p WHERE p.provincia = :provincia ORDER BY p.provincia");
 			query.setParameter("provincia", idProvincia);
-			return (Provincias) query.list().get(0);
+			return (Provincia) query.list().get(0);
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			return null;

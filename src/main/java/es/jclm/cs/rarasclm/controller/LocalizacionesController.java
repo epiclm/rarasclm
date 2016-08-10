@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import es.jclm.cs.rarasclm.entities.Municipios;
+import es.jclm.cs.rarasclm.entities.Municipio;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
 
 
@@ -27,9 +27,9 @@ public class LocalizacionesController {
 	private LocalizacionesService service;
 	
 	@RequestMapping(value = "/municipios/deprovincia/{id}", method = RequestMethod.GET)
-	public  @ResponseBody List<Municipios> getMunicipiosDeProvincia(@PathVariable String id) {
+	public  @ResponseBody List<Municipio> getMunicipiosDeProvincia(@PathVariable String id) {
 		try {
-			List<Municipios> ret = service.getMunicipioDeProvincia(id);
+			List<Municipio> ret = service.getMunicipioDeProvincia(id);
 			return ret;
 		} catch (Exception ex) {
 			ex.printStackTrace();

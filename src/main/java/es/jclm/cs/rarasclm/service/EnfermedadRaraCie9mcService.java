@@ -14,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.jclm.cs.rarasclm.dao.EnfermedadRaraCie9mcDao;
 import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
-import es.jclm.cs.rarasclm.entities.EnfermedadRaraCie9mc;
+import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
+
 
 
 // TODO: Auto-generated Javadoc
@@ -53,7 +54,7 @@ public class EnfermedadRaraCie9mcService {
 	 * @param enf
 	 *            the enf
 	 */
-	public void save(EnfermedadRaraCie9mc enf) {
+	public void save(EnfermedadCie9mc enf) {
 		try {
 			dao.guardar(enf);
 			log.info(String.format("Grabada nueva enfermedad cie9mc %s",enf.toString()));
@@ -73,7 +74,7 @@ public class EnfermedadRaraCie9mcService {
 	 * @param enf
 	 *            the enf
 	 */
-	public void update(EnfermedadRaraCie9mc enf) {
+	public void update(EnfermedadCie9mc enf) {
 		try {
 			dao.actualizar(enf);
 			log.info(String.format("Actualizada enfermedad cie9mc %s",enf.toString()));
@@ -94,7 +95,7 @@ public class EnfermedadRaraCie9mcService {
 	 *            the cod
 	 * @return the enfermedad rara cie9 by id
 	 */
-	public EnfermedadRaraCie9mc getEnfermedadRaraCie9ById(String cod) {
+	public EnfermedadCie9mc getEnfermedadRaraCie9ById(String cod) {
 		return dao.getEnfermedadRaraCie9mcById(cod);
 	}
 
@@ -105,7 +106,7 @@ public class EnfermedadRaraCie9mcService {
 	 *            the cache
 	 * @return the all enfermedades raras cie9mc
 	 */
-	public List<EnfermedadRaraCie9mc> getAllEnfermedadesRarasCie9mc(boolean cache) {
+	public List<EnfermedadCie9mc> getAllEnfermedadesRarasCie9mc(boolean cache) {
 		if (cache)
 			return datosCache.getCie9mcs();
 		else
@@ -121,7 +122,7 @@ public class EnfermedadRaraCie9mcService {
 	 *            the cache
 	 * @return the enfermedad rara cie9mc
 	 */
-	public EnfermedadRaraCie9mc getEnfermedadRaraCie9mc(String cie9, boolean cache) {
+	public EnfermedadCie9mc getEnfermedadRaraCie9mc(String cie9, boolean cache) {
 		if (cache)
 			return datosCache.getCie9mcsById(cie9);
 		else

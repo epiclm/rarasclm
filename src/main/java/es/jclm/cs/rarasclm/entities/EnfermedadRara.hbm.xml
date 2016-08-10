@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 10-ago-2016 9:15:45 by Hibernate Tools 4.3.4.Final -->
+<hibernate-mapping>
+    <class name="es.jclm.cs.rarasclm.entities.EnfermedadRara" table="enfermedad_rara" catalog="rarasclm" optimistic-lock="version">
+        <id name="enfermedadRaraId" type="string">
+            <column name="enfermedad_rara_id" length="10" />
+            <generator class="assigned" />
+        </id>
+        <property name="literal" type="string">
+            <column name="literal" />
+        </property>
+        <property name="otroCod" type="string">
+            <column name="otro_cod" length="50" />
+        </property>
+        <property name="denoOtro" type="string">
+            <column name="deno_otro" length="50" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="descripcion" length="4000" />
+        </property>
+        <property name="url" type="string">
+            <column name="url" />
+        </property>
+        <property name="ultimaActualizacion" type="timestamp">
+            <column name="ultima_actualizacion" length="19" />
+        </property>
+        <property name="notas" type="string">
+            <column name="notas" />
+        </property>
+        <set name="casos" table="caso" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="enfrara" length="10" not-null="true" />
+            </key>
+            <one-to-many class="es.jclm.cs.rarasclm.entities.Caso" />
+        </set>
+        <set name="enfermedadCie9mcs" table="enfermedad_rara_enfermedad_cie9mc" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="enfermedad_rara_id" length="10" not-null="true" />
+            </key>
+            <many-to-many entity-name="es.jclm.cs.rarasclm.entities.EnfermedadCie9mc">
+                <column name="cie9_id" length="6" not-null="true" />
+            </many-to-many>
+        </set>
+        <set name="enfermedadCie10s" table="enfermedad_rara_enfermedad_cie10" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="enfermedad_rara_id" length="10" not-null="true" />
+            </key>
+            <many-to-many entity-name="es.jclm.cs.rarasclm.entities.EnfermedadCie10">
+                <column name="cie10_id" length="5" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

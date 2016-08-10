@@ -6,17 +6,18 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import es.jclm.cs.rarasclm.entities.Municipios;
+import es.jclm.cs.rarasclm.entities.Municipio;
+
 
 @Repository
-public class MunicipiosDao extends BaseEntityDao<Municipios,String> {
+public class MunicipiosDao extends BaseEntityDao<Municipio,String> {
 
 	@SuppressWarnings("unchecked")
-	public List<Municipios> getMunicipios() {
+	public List<Municipio> getMunicipios() {
 		Session session = getSessionFactory().openSession();
 		try {
-			Query query = session.createQuery("SELECT m FROM Municipios m ORDER BY m.deno");
-			return (List<Municipios>) query.list();
+			Query query = session.createQuery("SELECT m FROM Municipio m ORDER BY m.deno");
+			return (List<Municipio>) query.list();
 		} catch (Exception ex) {
 			return null;
 		} finally {
