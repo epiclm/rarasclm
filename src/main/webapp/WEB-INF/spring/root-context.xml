@@ -13,7 +13,6 @@
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-
 	<context:component-scan base-package="es.jclm.cs.rarasclm" />
 	
 	<bean id="rarasClmListener" class="es.jclm.cs.rarasclm.listeners.DataContextRarasClmAppListener"></bean>
