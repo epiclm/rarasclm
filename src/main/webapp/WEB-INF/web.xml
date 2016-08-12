@@ -5,7 +5,7 @@
     <param-value>/WEB-INF/spring/root-context.xml</param-value>
   </context-param>
   <resource-ref>
-    <description>jdni conexion base datos</description>
+    <description>jdni conexión base datos</description>
     <res-ref-name>jdbc/rarasclmDS</res-ref-name>
     <res-type>javax.sql.DataSource</res-type>
     <res-auth>Container</res-auth>

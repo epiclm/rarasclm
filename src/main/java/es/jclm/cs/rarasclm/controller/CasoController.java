@@ -59,12 +59,10 @@ public class CasoController extends BaseController {
 	HttpServletRequest request;
 	
 	public static final String OBJETO_CASO_SESION = "caso";
-	
-	
+		
 	@Autowired
 	private EnfermedadRaraService enfermedadService;
 
-	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);

@@ -4,6 +4,9 @@
  */
 package es.jclm.cs.rarasclm.listeners;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,6 +19,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
+import es.jclm.cs.rarasclm.entities.EnfermedadCie10;
+import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
+import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
+import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 import es.jclm.cs.rarasclm.entities.IBaseModelView;
 import es.jclm.cs.rarasclm.entities.Municipio;
 import es.jclm.cs.rarasclm.entities.Provincia;
@@ -27,34 +34,20 @@ import es.jclm.cs.rarasclm.service.LocalizacionesService;
 
 
 // TODO: Auto-generated Javadoc
-/**
- * The listener interface for receiving dataContextRarasClmApp events. The class
- * that is interested in processing a dataContextRarasClmApp event implements
- * this interface, and the object created with that class is registered with a
- * component using the component's <code>addDataContextRarasClmAppListener
- * <code> method. When the dataContextRarasClmApp event occurs, that object's
- * appropriate method is invoked.
- *
- * @see DataContextRarasClmAppEvent
- */
 public class DataContextRarasClmAppListener implements ApplicationListener<ContextRefreshedEvent> {
 
-	/** The log. */
 	static Log log = LogFactory.getLog(DataContextRarasClmAppListener.class.getName());
+	static String ARCHIVO_PROPIEDADES = "rarasclm.properties";
 	
-	/** The datos. */
 	@Autowired
 	private DatosAuxiliaresCacheados datos;
 	
-	/** The cie9 service. */
 	@Autowired
 	EnfermedadRaraCie9mcService cie9Service;
 	
-	/** The cie10 service. */
 	@Autowired
 	EnfermedadRaraCie10Service cie10Service;
 	
-	/** The rara service. */
 	@Autowired
 	EnfermedadRaraService raraService;
 	
@@ -64,25 +57,23 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 	@Autowired
 	HospitalService hospitalService;
 	
-	/** The base model. */
 	@Autowired
 	IBaseModelView baseModel;
 	
 
-
-	/* (non-Javadoc)
-	 * @see org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
-	 */
 	public void onApplicationEvent(ContextRefreshedEvent evt) {
 	
 		log.info("Generando la estructura de módulos de la aplicación rarasCLM");
 		try {
 			log.info("Cargando entidades auxiliares de la aplicación de RarasCLM");
 			datos.setCie9mcs(cie9Service.getAllEnfermedadesRarasCie9mc(false));
+			datos.setCodLiteralesCie9mc(getCodigoLiteralCie9mc(datos.getCie9mcs()));
 			log.info("Cargada entidades auxiliares CIE9MC");
 			datos.setCie10s(cie10Service.getAllEnfermedadesRarasCie10(false));
+			datos.setCodLiteralesCie10(getCodigoLiteralCie10(datos.getCie10s()));
 			log.info("Cargada entidades auxiliares CIE10");
 			datos.setEnfRaras(raraService.getAllEnfermedadesRaras(false));
+			datos.setCodLiteralesEnfRara(getCodigoLiteralEnfRara(datos.getEnfRaras()));
 			log.info("Cargada entidades auxiliares Enfermedades Raras");
 			datos.setProvincias(localizacionesService.getProvincias(false));
 			datos.setProvinciasCLM(localizacionesService.getProvinciasCLM(false));
@@ -97,13 +88,61 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 			log.info("Cargada entidades auxiliares Municipios");
 			datos.setHospitales(hospitalService.getHospitales(false));
 			log.info("Cargada entidades auxiliares Hospitales");
+			
+			InputStream inputStream;
+			inputStream = getClass().getClassLoader().getResourceAsStream(ARCHIVO_PROPIEDADES);
+			
+			if (inputStream != null) {
+				datos.getPropiedades().load(inputStream);
+			} else {
+				throw new FileNotFoundException("El archivo '" + ARCHIVO_PROPIEDADES + "' no se encuentra");
+			}
+			log.info("Leidos archivo de propiedades");
+			datos.setNumMaxResultados(300);
+			if(datos.getPropiedades().getProperty("rarasclm.max_resultados_busqueda")!=null)
+				datos.setNumMaxResultados(Integer.parseInt(datos.getPropiedades().getProperty("rarasclm.max_resultados_busqueda")));
+			
 		}
 		catch(Exception ex) {
 			log.error(ex.getMessage(),ex);
 		}
 		
+	}
+	
+	//java ugly no linq :-(
+	private List<EnfermedadCodigoLiteral> getCodigoLiteralCie9mc(List<EnfermedadCie9mc> enfermedadesCie9mc) {
+		List<EnfermedadCodigoLiteral> ret = new ArrayList<EnfermedadCodigoLiteral>();
+		for (EnfermedadCie9mc cie9 : enfermedadesCie9mc) {
+			EnfermedadCodigoLiteral enfCodLiteral = new EnfermedadCodigoLiteral();
+			enfCodLiteral.setCod(cie9.getCie9Id());
+			enfCodLiteral.setLiteral(cie9.getLiteral());
+			ret.add(enfCodLiteral);
+		}
+		return ret;
+	}
 
-		
+	//java ugly no linq :-(
+	private List<EnfermedadCodigoLiteral> getCodigoLiteralCie10(List<EnfermedadCie10> enfermedadesCie10) {
+		List<EnfermedadCodigoLiteral> ret = new ArrayList<EnfermedadCodigoLiteral>();
+		for (EnfermedadCie10 cie10 : enfermedadesCie10) {
+			EnfermedadCodigoLiteral enfCodLiteral = new EnfermedadCodigoLiteral();
+			enfCodLiteral.setCod(cie10.getCie10Id());
+			enfCodLiteral.setLiteral(cie10.getLiteral());
+			ret.add(enfCodLiteral);
+		}
+		return ret;
+	}
+	
+	//java ugly no linq :-(
+	private List<EnfermedadCodigoLiteral> getCodigoLiteralEnfRara(List<EnfermedadRara> enfermedadesRara) {
+		List<EnfermedadCodigoLiteral> ret = new ArrayList<EnfermedadCodigoLiteral>();
+		for (EnfermedadRara enfRara : enfermedadesRara) {
+			EnfermedadCodigoLiteral enfCodLiteral = new EnfermedadCodigoLiteral();
+			enfCodLiteral.setCod(enfRara.getEnfermedadRaraId());
+			enfCodLiteral.setLiteral(enfRara.getLiteral());
+			ret.add(enfCodLiteral);
+		}
+		return ret;
 	}
 
 	

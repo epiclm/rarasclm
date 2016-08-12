@@ -35,7 +35,7 @@ public class EnfermedadRaraCie10Dao extends BaseEntityDao<EnfermedadCie10,String
 	public EnfermedadCie10 getEnfermedadRaraCie10ById(String cie10) {
 		Session session = getSessionFactory().openSession();
 		try {
-			Query query = session.createQuery("SELECT e FROM EnfermedadRaraCie10 e WHERE e.cie10Id = :cie10");
+			Query query = session.createQuery("SELECT e FROM EnfermedadCie10 e WHERE e.cie10Id = :cie10");
 			List<?> res = query.setParameter("cie10", cie10).list();
 			if (res.size() == 1) {
 				return (EnfermedadCie10) res.get(0);
@@ -54,7 +54,7 @@ public class EnfermedadRaraCie10Dao extends BaseEntityDao<EnfermedadCie10,String
 	public List<EnfermedadCie10> getAllEnfermedadesRaraCie10() {
 		Session session = getSessionFactory().openSession();
 		try {
-			Query query = session.createQuery("SELECT e FROM EnfermedadRaraCie10 e ORDER BY e.literal");
+			Query query = session.createQuery("SELECT e FROM EnfermedadCie10 e ORDER BY e.literal");
 			List<EnfermedadCie10> list = (List<EnfermedadCie10>) query.list();
 			List<EnfermedadCie10> ret = list;
 			return ret;

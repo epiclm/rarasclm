@@ -14,6 +14,9 @@ import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.entities.BusquedaModelView;
 import es.jclm.cs.rarasclm.entities.Caso;
+import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
+import es.jclm.cs.rarasclm.entities.MensajeResultado;
+import es.jclm.cs.rarasclm.entities.MensajeTipo;
 import es.jclm.cs.rarasclm.service.BusquedaService;
 import es.jclm.cs.rarasclm.service.CasoService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
@@ -26,7 +29,6 @@ import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 @RarasClmItemMenu(caption="Búsqueda",deno="Búsqueda",modulo="busqueda",orden=1)
 public class BusquedaController extends BaseController {
 	
-	public static final String OBJETO_BUSQUEDA_SESION="busqueda";
 	
 	@Autowired
 	LocalizacionesService servicioLocalizaciones;
@@ -43,8 +45,12 @@ public class BusquedaController extends BaseController {
 	@Autowired
 	HttpServletRequest request;
 	
+	@Autowired 
+	DatosAuxiliaresCacheados cache;
+	
 	public static final String OBJETO_PACIENTE_SESION="paciente";
 	public static final String OBJETO_CASO_SESION="caso";
+	public static final String OBJETO_BUSQUEDA_SESION="busqueda";
 
 	///////////////////////////////////
 	// BÚSQUEDA DE UN CASO SEND GET
@@ -60,7 +66,7 @@ public class BusquedaController extends BaseController {
 			busquedaModel = (BusquedaModelView)request.getSession().getAttribute(OBJETO_BUSQUEDA_SESION);
 		
 		
-		model.addAttribute("busqueda", busquedaModel);
+		model.addAttribute(OBJETO_BUSQUEDA_SESION, busquedaModel);
 		
 		if(busquedaModel.getMunicipio().length()==5 && busquedaModel.getMunicipio().equals("99999"))
 			model.addAttribute("municipiosProvinciaResidencia",servicioLocalizaciones.getMunicipioDeProvincia(busquedaModel.getMunicipio().substring(0, 2)));
@@ -73,20 +79,30 @@ public class BusquedaController extends BaseController {
 	// BÚSQUEDA DE UN CASO SUBMIT POST
 	/////////////////////////////////////
 	@RequestMapping(method = RequestMethod.POST)
-	public String busquedaSubmit(Model model, @ModelAttribute("busqueda") BusquedaModelView busquedaModel) {
+	public String busquedaSubmit(Model model, @ModelAttribute(OBJETO_BUSQUEDA_SESION) BusquedaModelView busquedaModel) {
 				
-		model.addAttribute("busqueda", busquedaModel);
+		long numCasos = busquedaService.buscaCasosNumResultados(busquedaModel);
 		
+		busquedaModel.setNumResultados(numCasos);
+		
+		if((int)numCasos>cache.getNumMaxResultados()) {
+			MensajeResultado mensaje = new MensajeResultado();
+			mensaje.setMensaje("La consulta responde con demasiados resultados. limite más la búsqueda");
+			mensaje.setTipo(MensajeTipo.ERROR);
+			model.addAttribute("mensaje", mensaje);
+			busquedaModel.setCasos(null);
+		} else {
+			busquedaModel.setCasos(busquedaService.buscaCasos(busquedaModel));
+			if(busquedaModel.getMunicipio().length()==5 && busquedaModel.getMunicipio().equals("99999"))
+				model.addAttribute("municipiosProvinciaResidencia",servicioLocalizaciones.getMunicipioDeProvincia(busquedaModel.getMunicipio().substring(0, 2)));
+		}
+		
+		model.addAttribute(OBJETO_BUSQUEDA_SESION, busquedaModel); //??????????
 		request.getSession().setAttribute(OBJETO_BUSQUEDA_SESION,busquedaModel);
-		
-		busquedaModel.setCasos(busquedaService.buscaCasos(busquedaModel));
-		
-		if(busquedaModel.getMunicipio().length()==5 && busquedaModel.getMunicipio().equals("99999"))
-			model.addAttribute("municipiosProvinciaResidencia",servicioLocalizaciones.getMunicipioDeProvincia(busquedaModel.getMunicipio().substring(0, 2)));
-		
-		
+
 		return "redirect:busqueda";
 	}
+	
 	
 	
 	@RequestMapping(value = "/ircaso/{id}", method = RequestMethod.GET)
@@ -99,6 +115,12 @@ public class BusquedaController extends BaseController {
 			e.printStackTrace();
 		}
 		return "redirect:/casos";
+	}
+	
+	@RequestMapping(value="/borrar")
+	public String borrarBusqueda() {
+		request.getSession().setAttribute(OBJETO_BUSQUEDA_SESION, null);
+		return "redirect:/busqueda";
 	}
 	
 	

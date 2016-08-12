@@ -1,243 +1,335 @@
 package es.jclm.cs.rarasclm.dao;
 
-
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import es.jclm.cs.rarasclm.config.ConfiguracionRarasCLM;
 import es.jclm.cs.rarasclm.entities.Caso;
+
 
 
 @Repository
 @SuppressWarnings("unchecked")
 public class CasoDao extends BaseEntityDao<Caso, String> {
 
-	@Autowired
-	private ConfiguracionRarasCLM rarasConfig;
+	private boolean addSeccion = true;
+	private boolean addMunicipio = true;
+	private boolean addProvincia = true;
+	private boolean addSexo = true;
+	private boolean addBaseDtco = true;
+	private boolean addCip = true;
+	private boolean addEnfermedades = true;
+	private boolean addCie9 = true;
+	private boolean addCie10 = true;
+	private boolean addEnfRaraClm = true;
+	
+	private static final Logger log = LoggerFactory.getLogger(CasoDao.class);
 
 	@SuppressWarnings("null") // eclipse crazy??
-	public List<Caso> busqueda(String seccion, String cip, String nombre, String apellido1, String apellido2,
-			String provinciaResidencia, String municipioResidencia, int anioNac, String sexo, String cie9MC,
-			String cie10, String enfraraCLM, Byte baseDiagnostico, int numPagina, int numResultadosPagina) {
+	public  List<Caso> busqueda(String seccion, 
+			String cip, 
+			String nombre, 
+			String apellido1, 
+			String apellido2,
+			String provinciaResidencia, 
+			String municipioResidencia, 
+			int anioNac, 
+			String sexo, 
+			String cie9MC,
+			String cie10, 
+			String enfraraCLM, 
+			Byte baseDiagnostico, 
+			int numPagina, 
+			int numResultadosPagina) {
+		
+		Session session = this.sf.openSession();
+		
+		try {
+			String sHql = createBodyQuery(seccion, 
+					cip, 
+					nombre, 
+					apellido1, 
+					apellido2, 
+					provinciaResidencia,
+					municipioResidencia, 
+					anioNac, 
+					sexo, 
+					cie9MC, 
+					cie10, 
+					enfraraCLM, 
+					baseDiagnostico);
 
-		boolean addSeccion = true;
-		boolean addMunicipio = true;
-		boolean addProvincia = true;
-		boolean addSexo = true;
-		boolean addBaseDtco = true;
-		boolean addCip = true;
-		boolean addEnfermedades = true;
-		boolean addCie9 = true;
-		boolean addCie10 = true;
-		boolean addEnfRaraClm = true;
+			Query q = session.createQuery(sHql).setString("apellido1", "%" + apellido1 + "%")
+					.setString("apellido2", "%" + apellido2 + "%").setString("nombre", "%" + nombre + "%");
 
-		if (seccion == null || seccion.equals(""))
-			addSeccion = false;
+			if (addCip)
+				q.setString("cip", cip + "%");
 
-		if (municipioResidencia == null || municipioResidencia.length() != 5 || municipioResidencia.equals("99999"))
-			addMunicipio = false;
+			if (addSeccion)
+				q.setString("seccion", seccion);
 
-		if (provinciaResidencia == null || provinciaResidencia.length() != 2 || provinciaResidencia.equals("99"))
-			addProvincia = false;
+			if (addMunicipio)
+				q.setString("municipio", municipioResidencia);
 
-		if (sexo == null || sexo.length() != 1 || sexo.equals("9"))
-			addSexo = false;
+			if (addProvincia)
+				q.setString("provincia", provinciaResidencia);
 
-		if (baseDiagnostico < 0)
-			addBaseDtco = false;
+			if (addSexo)
+				q.setString("sexo", sexo);
 
-		if (cip != null || !cip.equals(""))
-			addCip = false;
+			if (addBaseDtco)
+				q.setByte("baseDiagnostico", baseDiagnostico);
 
-		if ((cie9MC == null || cie9MC.equals("")) && (cie10 == null || cie10.equals(""))
-				&& (enfraraCLM == null || enfraraCLM.equals(""))) {
-			addEnfermedades = false;
-		} else {
-			if (cie9MC == null || cie9MC.equals("")) {
-				addCie9 = false;
+			if (addEnfermedades) {
+				if (addCie9 && !addCie10 && !addEnfRaraClm) {
+					q.setString("cie9", cie9MC);
+				} else if (!addCie9 && addCie10 && !addEnfRaraClm) {
+					q.setString("cie10", cie10);
+				} else if (!addCie9 && !addCie10 && addEnfRaraClm) {
+					q.setString("enfRara", enfraraCLM);
+				} else if (addCie9 && addCie10 && !addEnfRaraClm) {
+					q.setString("cie9", cie9MC);
+					q.setString("cie10", cie10);
+				} else if (!addCie9 && addCie10 && addEnfRaraClm) {
+					q.setString("cie10", cie10);
+					q.setString("enfRara", enfraraCLM);
+				} else if (addCie9 && !addCie10 && addEnfRaraClm) {
+					q.setString("cie9", cie9MC);
+					q.setString("enfRara", enfraraCLM);
+				} else if (addCie9 && addCie10 && addEnfRaraClm) {
+					q.setString("cie9", cie9MC);
+					q.setString("cie10", cie10);
+					q.setString("enfRara", enfraraCLM);
+				}
 			}
-			if (cie10 == null || cie10.equals("")) {
-				addCie10 = false;
+			if (numPagina < 0 || numResultadosPagina < 0) {
+				return q.list();
+			} else {
+				q.setFirstResult(numResultadosPagina * (numPagina - 1)).setMaxResults(numResultadosPagina);
+				return q.list();
 			}
-			if (enfraraCLM == null || enfraraCLM.equals("")) {
-				addEnfRaraClm = false;
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
 			}
 		}
+	}
+	
+	@SuppressWarnings("null") // eclipse crazy??
+	public  long busquedaNumRegistros(String seccion, 
+			String cip, 
+			String nombre, 
+			String apellido1, 
+			String apellido2,
+			String provinciaResidencia, 
+			String municipioResidencia, 
+			int anioNac, 
+			String sexo, 
+			String cie9MC,
+			String cie10, 
+			String enfraraCLM, 
+			Byte baseDiagnostico) {
 
 		Session session = this.sf.openSession();
-
-		String sHql = "from Caso c where c.paciente.apellido01 like :apellido1 "
-				+ "and  c.paciente.apellido02 like :apellido2 " + "and  c.paciente.nombre like :nombre ";
-
-		if (addCip)
-			sHql += "and c.paciente.cip like :cip ";
-		if (addSeccion)
-			sHql += "and c.paciente.seccion = :seccion ";
-		if (addMunicipio)
-			sHql += "and c.paciente.municipioResidencia = :municipio ";
-		if (addProvincia)
-			sHql += "and c.paciente.provinciaResidencia = :provincia ";
-		if (addSexo)
-			sHql += "and c.paciente.sexo = :sexo ";
-		if (addBaseDtco)
-			sHql += "and c.baseDiagnostico = :baseDiagnostico ";
-
-		// Como está implementada la consulta de enfermedades
-		// que es un OR por necesidad marcada por requisitos
-		// hace inviable añadir otra codificación de búsqueda
-		if (addEnfermedades) {
-			String sHqlCie10 = "";
-			String sHqlCie9mc = "";
-			String sHqlEnfRaraClm = "";
-			if (addCie9)
-				sHqlCie9mc = "(c.codCie9mc = :cie9) ";
-			if (addCie10)
-				sHqlCie10 = "(c.codCie10 = :cie10) ";
-			if (addEnfRaraClm)
-				sHqlEnfRaraClm = "(c.codEnfRara = :enfRara) ";
-			if (addCie9 && !addCie10 && !addEnfRaraClm) {
-				sHql += "and " + sHqlCie9mc;
-			} else if (!addCie9 && addCie10 && !addEnfRaraClm) {
-				sHql += "and " + sHqlCie10;
-			} else if (!addCie9 && !addCie10 && addEnfRaraClm) {
-				sHql += "and " + sHqlEnfRaraClm;
-			} else if (addCie9 && addCie10 && !addEnfRaraClm) {
-				sHql += "and (" + sHqlCie9mc + " or " + sHqlCie10.trim() + ")";
-			} else if (!addCie9 && addCie10 && addEnfRaraClm) {
-				sHql += "and (" + sHqlCie10 + " or " + sHqlEnfRaraClm.trim() + ")";
-			} else if (addCie9 && !addCie10 && addEnfRaraClm) {
-				sHql += "and (" + sHqlCie9mc + " or " + sHqlEnfRaraClm.trim() + ")";
-			} else if (addCie9 && addCie10 && addEnfRaraClm) {
-				sHql += "and (" + sHqlCie9mc + " or " + sHqlCie10 + " or " + sHqlEnfRaraClm.trim() + ")";
-			}
-		}
-
-		sHql += " order by c.paciente.apellido01 asc, c.paciente.apellido02 asc, c.paciente.nombre asc";
-
-		Query q = session.createQuery(sHql).setString("apellido1", "%" + apellido1 + "%")
-				.setString("apellido2", "%" + apellido2 + "%").setString("nombre", "%" + nombre + "%");
-
-		if (addCip)
-			q.setString("cip", cip + "%");
-
-		if (addSeccion)
-			q.setString("seccion", seccion);
-
-		if (addMunicipio)
-			q.setString("municipio", municipioResidencia);
-
-		if (addProvincia)
-			q.setString("provincia", provinciaResidencia);
-
-		if (addSexo)
-			q.setString("sexo", sexo);
-
-		if (addBaseDtco)
-			q.setByte("baseDiagnostico", baseDiagnostico);
-
-		if (addEnfermedades) {
-			if (addCie9 && !addCie10 && !addEnfRaraClm) {
-				q.setString("cie9", cie9MC);
-			} else if (!addCie9 && addCie10 && !addEnfRaraClm) {
-				q.setString("cie10", cie10);
-			} else if (!addCie9 && !addCie10 && addEnfRaraClm) {
-				q.setString("enfRara", enfraraCLM);
-			} else if (addCie9 && addCie10 && !addEnfRaraClm) {
-				q.setString("cie9", cie9MC);
-				q.setString("cie10", cie10);
-			} else if (!addCie9 && addCie10 && addEnfRaraClm) {
-				q.setString("cie10", cie10);
-				q.setString("enfRara", enfraraCLM);
-			} else if (addCie9 && !addCie10 && addEnfRaraClm) {
-				q.setString("cie9", cie9MC);
-				q.setString("enfRara", enfraraCLM);
-			} else if (addCie9 && addCie10 && addEnfRaraClm) {
-				q.setString("cie9", cie9MC);
-				q.setString("cie10", cie10);
-				q.setString("enfRara", enfraraCLM);
-			}
-		}
-
-		if (numPagina < 0 || numResultadosPagina < 0) {
-			return q.list();
-		} else {
-			q.setFirstResult(numResultadosPagina * (numPagina - 1)).setMaxResults(numResultadosPagina);
-			return q.list();
-		}
+		try {
 			
-		
-		//		Criteria cr = session.createCriteria(Caso.class,"caso");
-		//		cr.createAlias("caso.paciente", "paciente");
-		//		cr.setMaxResults(rarasConfig.getMaxResultadosBusqueda()); // VARIABLE DE CONFIGURACIÓN
-		//		
-		//		//Creamos un criteria para filtrar paciente ONE TO MANY
-		//		if(cip!=null && !cip.isEmpty())
-		//			cr.add(Restrictions.like("cip", cip+"%"));
-		//		if(nombre!=null && !nombre.isEmpty())
-		//			cr.add(Restrictions.like("nombre", "%"+nombre+"%"));
-		//		if(apellido1!=null && !apellido1.isEmpty())
-		//			cr.add(Restrictions.like("apellido01","%"+apellido1+"%"));
-		//		if(apellido2!=null && !apellido2.isEmpty())
-		//			cr.add(Restrictions.like("apellido02","%"+apellido2+"%"));
-		//		if(provincia!=null && !provincia.isEmpty() && !provincia.equals("99"))
-		//			cr.add(Restrictions.eq("provinciaResidencia", provincia));
-		//		if(municipio!=null && !municipio.isEmpty() && !municipio.equals("99999"))
-		//			cr.add(Restrictions.eq("municipioResidencia", municipio));
-		//		
-				
-		//		if(anioNac>1800) {
-		//			//java ugly complex Date
-		//			GregorianCalendar gcFrom = new GregorianCalendar();
-		//			GregorianCalendar gcTo = new GregorianCalendar();
-		//			gcFrom.set(GregorianCalendar.YEAR, anioNac);
-		//			gcFrom.set(GregorianCalendar.MONTH, 1);
-		//			gcFrom.set(GregorianCalendar.DAY_OF_MONTH,1);
-		//			gcTo.set(GregorianCalendar.YEAR, anioNac);
-		//			gcTo.set(GregorianCalendar.MONTH, 12);
-		//			gcTo.set(GregorianCalendar.DAY_OF_MONTH,31);
-		//			crPaciente.add(Restrictions.ge("fechaNacimiento",gcFrom.getTime()));
-		//			crPaciente.add(Restrictions.le("fechaNacimiento",gcTo.getTime()));
-		//		}
-		//		
-		//		
-		//
-		//		if(sexo!=null && !sexo.isEmpty() && !sexo.equals("9"))
-		//			crPaciente.add(Restrictions.eq("pacient.sexo", sexo));
-		//		
-		//		crPaciente.addOrder(Property.forName("apellido01").asc());
-		//		crPaciente.addOrder(Property.forName("apellido02").asc());
-		//		crPaciente.addOrder(Property.forName("nombre").asc());
-		//		
-		//		Criterion crCie9MC;
-		//		Criterion crCie9MCNotEmpty;
-		//		Criterion crCie10;
-		//		Criterion crCie10NotEmpty;
-		//		Criterion crEnfRaraClm;
-		//		Criterion crEnfRaraClmNotEmpty;
-		//		Criterion crEnfRaraClmNotDesconocida;
-		//
-		//		crCie9MC = Restrictions.eqOrIsNull("codCie9mc", cie9MC);
-		//		crCie9MCNotEmpty = Restrictions.ne("codCie9mc","");
-		//		crCie10 = Restrictions.eqOrIsNull("codCie10", cie10);
-		//		crCie10NotEmpty = Restrictions.ne("codCie10", "");
-		//		crEnfRaraClm = Restrictions.eqOrIsNull("codEnfRara", enfraraCLM);
-		//		crEnfRaraClmNotEmpty = Restrictions.ne("codEnfRara", "");
-		//		crEnfRaraClmNotDesconocida = Restrictions.ne("codEnfRara","9999999999");
-		//		
-		//		Criterion crCie9MCNotNullAndNotEmpty = Restrictions.and(crCie9MC,crCie9MCNotEmpty);
-		//		Criterion crCie10NotNullAndNotEmpty = Restrictions.and(crCie10,crCie10NotEmpty);
-		//		
-		//		cr.add(Restrictions.or(crCie9MCNotNullAndNotEmpty,crCie10NotNullAndNotEmpty));
-				
-		
-		//		return cr.list();
-				
-			
+			String sHql = createBodyQuery(seccion, 
+					cip, 
+					nombre, 
+					apellido1, 
+					apellido2, 
+					provinciaResidencia,
+					municipioResidencia, 
+					anioNac, 
+					sexo, 
+					cie9MC, 
+					cie10, 
+					enfraraCLM, 
+					baseDiagnostico);
+
+			String countHql = "select count(*) " + sHql;
+
+			Query q = session.createQuery(countHql).setString("apellido1", "%" + apellido1 + "%")
+					.setString("apellido2", "%" + apellido2 + "%").setString("nombre", "%" + nombre + "%");
+
+			if (addCip)
+				q.setString("cip", cip + "%");
+
+			if (addSeccion)
+				q.setString("seccion", seccion);
+
+			if (addMunicipio)
+				q.setString("municipio", municipioResidencia);
+
+			if (addProvincia)
+				q.setString("provincia", provinciaResidencia);
+
+			if (addSexo)
+				q.setString("sexo", sexo);
+
+			if (addBaseDtco)
+				q.setByte("baseDiagnostico", baseDiagnostico);
+
+			if (addEnfermedades) {
+				if (addCie9 && !addCie10 && !addEnfRaraClm) {
+					q.setString("cie9", cie9MC);
+				} else if (!addCie9 && addCie10 && !addEnfRaraClm) {
+					q.setString("cie10", cie10);
+				} else if (!addCie9 && !addCie10 && addEnfRaraClm) {
+					q.setString("enfRara", enfraraCLM);
+				} else if (addCie9 && addCie10 && !addEnfRaraClm) {
+					q.setString("cie9", cie9MC);
+					q.setString("cie10", cie10);
+				} else if (!addCie9 && addCie10 && addEnfRaraClm) {
+					q.setString("cie10", cie10);
+					q.setString("enfRara", enfraraCLM);
+				} else if (addCie9 && !addCie10 && addEnfRaraClm) {
+					q.setString("cie9", cie9MC);
+					q.setString("enfRara", enfraraCLM);
+				} else if (addCie9 && addCie10 && addEnfRaraClm) {
+					q.setString("cie9", cie9MC);
+					q.setString("cie10", cie10);
+					q.setString("enfRara", enfraraCLM);
+				}
+			}
+
+			return (long) q.uniqueResult();
+
+		} catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+			return -1;
+		}
 
 	}
 
+	private synchronized String createBodyQuery(String seccion, 
+			String cip, 
+			String nombre, 
+			String apellido1, 
+			String apellido2,
+			String provinciaResidencia, 
+			String municipioResidencia, 
+			int anioNac, 
+			String sexo, 
+			String cie9MC,
+			String cie10, 
+			String enfraraCLM, 
+			Byte baseDiagnostico) {
 
+		// Ojo que la instancia es un singleton en el contenedor spring
+		// por lo tanto se conserva el estado entre peticiones. Por lo
+		// que hay que iniciar los atributos del objeto en cada busqueda
+		try {
+			addSeccion = true;
+			addMunicipio = true;
+			addProvincia = true;
+			addSexo = true;
+			addBaseDtco = true;
+			addCip = true;
+			addEnfermedades = true;
+			addCie9 = true;
+			addCie10 = true;
+			addEnfRaraClm = true;
+
+			if (seccion == null || seccion.equals(""))
+				addSeccion = false;
+
+			if (municipioResidencia == null || municipioResidencia.length() != 5 || municipioResidencia.equals("99999"))
+				addMunicipio = false;
+
+			if (provinciaResidencia == null || provinciaResidencia.length() != 2 || provinciaResidencia.equals("99"))
+				addProvincia = false;
+
+			if (sexo == null || sexo.length() != 1 || sexo.equals("9"))
+				addSexo = false;
+
+			if (baseDiagnostico < 0)
+				addBaseDtco = false;
+
+			if (cip != null || !cip.equals(""))
+				addCip = false;
+
+			if ((cie9MC == null || cie9MC.equals("")) && (cie10 == null || cie10.equals(""))
+					&& (enfraraCLM == null || enfraraCLM.equals(""))) {
+				addEnfermedades = false;
+			} else {
+				if (cie9MC == null || cie9MC.equals("")) {
+					addCie9 = false;
+				}
+				if (cie10 == null || cie10.equals("")) {
+					addCie10 = false;
+				}
+				if (enfraraCLM == null || enfraraCLM.equals("")) {
+					addEnfRaraClm = false;
+				}
+			}
+
+			String sHql = "from Caso c where c.paciente.apellido01 like :apellido1 "
+					+ "and c.paciente.apellido02 like :apellido2 " + "and  c.paciente.nombre like :nombre ";
+
+			if (addCip)
+				sHql += "and c.paciente.cip like :cip ";
+			if (addSeccion)
+				sHql += "and c.paciente.seccion = :seccion ";
+			if (addMunicipio)
+				sHql += "and c.paciente.municipioResidencia = :municipio ";
+			if (addProvincia)
+				sHql += "and c.paciente.provinciaResidencia = :provincia ";
+			if (addSexo)
+				sHql += "and c.paciente.sexo = :sexo ";
+			if (addBaseDtco)
+				sHql += "and c.baseDiagnostico = :baseDiagnostico ";
+
+			// Como está implementada la consulta de enfermedades
+			// que es un OR por necesidad marcada por requisitos
+			// hace inviable añadir otra codificación de búsqueda
+			if (addEnfermedades) {
+				String sHqlCie10 = "";
+				String sHqlCie9mc = "";
+				String sHqlEnfRaraClm = "";
+				if (addCie9)
+					sHqlCie9mc = "(c.codCie9mc = :cie9) ";
+				if (addCie10)
+					sHqlCie10 = "(c.codCie10 = :cie10) ";
+				if (addEnfRaraClm)
+					sHqlEnfRaraClm = "(c.codEnfRara = :enfRara) ";
+				if (addCie9 && !addCie10 && !addEnfRaraClm) {
+					sHql += "and " + sHqlCie9mc;
+				} else if (!addCie9 && addCie10 && !addEnfRaraClm) {
+					sHql += "and " + sHqlCie10;
+				} else if (!addCie9 && !addCie10 && addEnfRaraClm) {
+					sHql += "and " + sHqlEnfRaraClm;
+				} else if (addCie9 && addCie10 && !addEnfRaraClm) {
+					sHql += "and (" + sHqlCie9mc + " or " + sHqlCie10.trim() + ")";
+				} else if (!addCie9 && addCie10 && addEnfRaraClm) {
+					sHql += "and (" + sHqlCie10 + " or " + sHqlEnfRaraClm.trim() + ")";
+				} else if (addCie9 && !addCie10 && addEnfRaraClm) {
+					sHql += "and (" + sHqlCie9mc + " or " + sHqlEnfRaraClm.trim() + ")";
+				} else if (addCie9 && addCie10 && addEnfRaraClm) {
+					sHql += "and (" + sHqlCie9mc + " or " + sHqlCie10 + " or " + sHqlEnfRaraClm.trim() + ")";
+				}
+			}
+
+			sHql += " order by c.paciente.apellido01 asc, c.paciente.apellido02 asc, c.paciente.nombre asc";
+
+			return sHql;
+			
+		} catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+			
+			return null;
+	
+		} finally {
+
+		}
+
+	}
 }

@@ -5,56 +5,37 @@
 package es.jclm.cs.rarasclm.entities;
 
 import java.util.Calendar;
+
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
+
+import javax.persistence.Entity;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
-// TODO: Auto-generated Javadoc
-/**
- * The Class DatosAuxiliaresCacheados.
- */
-/**
- * @author rrog14
- *
- */
 public class DatosAuxiliaresCacheados {
 	
-	/** The log. */
 	static Log log = LogFactory.getLog(DatosAuxiliaresCacheados.class.getName());
-
-	/** The cie9mcs. */
 	private List<EnfermedadCie9mc> cie9mcs;
-	
-	/** The cie10s. */
 	private List<EnfermedadCie10> cie10s;
-	
-	/** The raras clm. */
 	private List<EnfermedadRara> rarasClm;
-	
-	/** Municipios. */
+	private List<EnfermedadCodigoLiteral> codLiteralesCie9mc;
+	private List<EnfermedadCodigoLiteral> codLiteralesCie10;
+	private List<EnfermedadCodigoLiteral> codLiteralesEnfRara;
 	private List<Municipio> municipios;
-	
-	/**Map de Municipios */
 	private Map<String,List<Municipio>> municipiosMapProvincia;
-	
-	/** Provincias. */
 	private List<Provincia> provincias;
-	
-	/** Provincias. */
 	private List<Provincia> provinciasCLM;
-	
-	/** CCAA */
 	private List<Ccaa> ccaas;
-	
 	private Map<Integer,String> basesDiagnosticas;
-	
 	private List<Hospital> hospitales;
+	private Properties propiedades;
+	private int numMaxResultados;
 	
 	
 	public DatosAuxiliaresCacheados() {
@@ -62,8 +43,7 @@ public class DatosAuxiliaresCacheados {
 		
 		///////////////////////
 		//Base del Diagnóstico
-		///////////////////////
-		
+		///////////////////////	
 		
 		//1= Existencia de “evidencia” objetiva de enfermedad (pruebas genéticas, bioquímicas, de imagen, etc.) o forma parte de un registro estandarizado.
 		
@@ -97,73 +77,35 @@ public class DatosAuxiliaresCacheados {
 		
 		log.info("Se crean datos auxiliares menores (Sin tabla en base de datos) : Bases del diagnóstico.");
 		
+		propiedades = new Properties(); 
 		
 	}
 
-	/**
-	 * Gets the cie9mcs.
-	 *
-	 * @return the cie9mcs
-	 */
 	public List<EnfermedadCie9mc> getCie9mcs() {
 		return cie9mcs;
 	}
 
-	/**
-	 * Gets the cie10s.
-	 *
-	 * @return the cie10s
-	 */
+
 	public List<EnfermedadCie10> getCie10s() {
 		return cie10s;
 	}
 
-	/**
-	 * Gets the enf raras.
-	 *
-	 * @return the enf raras
-	 */
 	public List<EnfermedadRara> getEnfRaras() {
 		return rarasClm;
 	}
 
-	/**
-	 * Sets the cie9mcs.
-	 *
-	 * @param cie9mcs
-	 *            the new cie9mcs
-	 */
 	public void setCie9mcs(List<EnfermedadCie9mc> cie9mcs) {
 		this.cie9mcs = cie9mcs;
 	}
 
-	/**
-	 * Sets the cie10s.
-	 *
-	 * @param cie10s
-	 *            the new cie10s
-	 */
 	public void setCie10s(List<EnfermedadCie10> cie10s) {
 		this.cie10s = cie10s;
 	}
 
-	/**
-	 * Sets the enf raras.
-	 *
-	 * @param raras
-	 *            the new enf raras
-	 */
 	public void setEnfRaras(List<EnfermedadRara> raras) {
 		this.rarasClm = raras;
 	}
 
-	/**
-	 * Gets the cie9mcs by id.
-	 *
-	 * @param cie9
-	 *            the cie9
-	 * @return the cie9mcs by id
-	 */
 	public EnfermedadCie9mc getCie9mcsById(String cie9) {
 		for (EnfermedadCie9mc enfermedadRaraCie9mc : cie9mcs) {
 			if (enfermedadRaraCie9mc.getCie9Id().equalsIgnoreCase(cie9))
@@ -172,13 +114,6 @@ public class DatosAuxiliaresCacheados {
 		return null;
 	}
 
-	/**
-	 * Gets the cie10s by id.
-	 *
-	 * @param cie10
-	 *            the cie10
-	 * @return the cie10s by id
-	 */
 	public EnfermedadCie10 getCie10sById(String cie10) {
 		for (EnfermedadCie10 enfermedadRaraCie10 : cie10s) {
 			if (enfermedadRaraCie10.getCie10Id().equalsIgnoreCase(cie10))
@@ -187,13 +122,6 @@ public class DatosAuxiliaresCacheados {
 		return null;
 	}
 
-	/**
-	 * Gets the enf rara by id.
-	 *
-	 * @param cod
-	 *            the cod
-	 * @return the enf rara by id
-	 */
 	public EnfermedadRara getEnfRaraById(String cod) {
 		for (EnfermedadRara enfRara : rarasClm) {
 			if (enfRara.getEnfermedadRaraId().equalsIgnoreCase(cod))
@@ -352,8 +280,47 @@ public class DatosAuxiliaresCacheados {
 	public void setHospitales(List<Hospital> hospitales) {
 		this.hospitales = hospitales;
 	}
-	
-	
-	
 
+	public List<EnfermedadCodigoLiteral> getCodLiteralesCie9mc() {
+		return codLiteralesCie9mc;
+	}
+
+	public void setCodLiteralesCie9mc(List<EnfermedadCodigoLiteral> codLiteralesCie9mc) {
+		this.codLiteralesCie9mc = codLiteralesCie9mc;
+	}
+
+	public List<EnfermedadCodigoLiteral> getCodLiteralesCie10() {
+		return codLiteralesCie10;
+	}
+
+	public void setCodLiteralesCie10(List<EnfermedadCodigoLiteral> codLiteralesCie10) {
+		this.codLiteralesCie10 = codLiteralesCie10;
+	}
+
+	public List<EnfermedadCodigoLiteral> getCodLiteralesEnfRara() {
+		return codLiteralesEnfRara;
+	}
+
+	public void setCodLiteralesEnfRara(List<EnfermedadCodigoLiteral> codLiteralesEnfRara) {
+		this.codLiteralesEnfRara = codLiteralesEnfRara;
+	}
+
+	public Properties getPropiedades() {
+		return propiedades;
+	}
+
+	public void setPropiedades(Properties propiedades) {
+		this.propiedades = propiedades;
+	}
+
+	public int getNumMaxResultados() {
+		return numMaxResultados;
+	}
+
+	public void setNumMaxResultados(int numMaxResultados) {
+		this.numMaxResultados = numMaxResultados;
+	}
+	
+	
+	
 }

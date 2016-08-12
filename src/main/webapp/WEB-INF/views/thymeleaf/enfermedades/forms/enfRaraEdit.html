@@ -198,7 +198,7 @@ function() {
 			enfermedades = data;
 			enfermedadesLiterales = $.map(
 					enfermedades, function(v) {
-						return v.cie9Id + ' ' + v.literal;
+						return v.cod + ' ' + v.literal;
 					});
 			$("#enfermedadCie9Autocomplete")
 			.autocomplete(
@@ -225,20 +225,16 @@ function() {
 			enfermedades = data;
 			enfermedadesLiterales = $.map(
 					enfermedades,function(v) {
-						return v.cie10Id + ' ' + v.literal;
+						return v.cod + ' ' + v.literal;
 					});
 			$("#enfermedadCie10Autocomplete")
 			.autocomplete(
 				{
 					source : enfermedadesLiterales,
-					search : function(
-							event,
-							ui) {
+					search : function(event,ui) {
 
 					},
-					select : function(
-							event,
-							ui) {
+					select : function(event,ui) {
 						//Accion de seleccionar una enfermedad CIE10 en el AutoComplete para asociar
 						//ui.item.value es el texto que aparece en el autocomplete seleccionado
 						base = /*[[|${route.baseUrl}addcie10/${enfermedadRaraModel.enfermedadRaraId}/|]]*/'';

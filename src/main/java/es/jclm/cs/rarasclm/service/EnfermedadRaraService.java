@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import es.jclm.cs.rarasclm.dao.EnfermedadRaraDao;
 import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
+import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 
 
@@ -24,26 +25,17 @@ import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 @Service
 public class EnfermedadRaraService {
 
-	/** The datos auxiliares. */
 	@Autowired
 	private DatosAuxiliaresCacheados datosAuxiliares;
 
-	/** The dao. */
 	@Autowired
 	private EnfermedadRaraDao dao;
 
-
-
-	/** The datos cache. */
 	@Autowired
 	private DatosAuxiliaresCacheados datosCache;
 
-	/** The log. */
 	static Log log = LogFactory.getLog(EnfermedadRaraService.class.getName());
 
-	/**
-	 * Instantiates a new enfermedad rara service.
-	 */
 	public EnfermedadRaraService() {
 
 	}
@@ -55,7 +47,7 @@ public class EnfermedadRaraService {
 		log.info("Cache de tablas auxiliares actualizada");
 	}
 
-
+	
 	public void save(EnfermedadRara enf) {
 		try {
 			dao.update(enf);
@@ -65,7 +57,7 @@ public class EnfermedadRaraService {
 		}
 	}
 
-
+	
 	public void update(EnfermedadRara enf) throws ServiceRarasCLMException {
 		try {
 			dao.actualizar(enf);
@@ -76,7 +68,7 @@ public class EnfermedadRaraService {
 		}
 	}
 
-
+	
 	public List<EnfermedadRara> getAllEnfermedadesRaras(boolean cache) {
 		if (cache)
 			return datosCache.getEnfRaras();
@@ -84,16 +76,21 @@ public class EnfermedadRaraService {
 			return dao.getAllEnfermedadesRaras();
 	}
 
-
+	
 	public EnfermedadRara getEnfermedadRaraById(String cod) {
 		return dao.getEnfermedadRaraById(cod);
 	}
 
-
+	
 	public EnfermedadRara getEnfermedadRaraById(String cod, boolean cache) {
 		if (cache)
 			return datosCache.getEnfRaraById(cod);
 		else
 			return dao.getEnfermedadRaraById(cod);
+	}
+	
+	
+	public List<EnfermedadCodigoLiteral> getListCodLiteral() {
+		return datosCache.getCodLiteralesEnfRara();
 	}
 }

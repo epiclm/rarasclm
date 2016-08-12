@@ -22,11 +22,6 @@
 
 	<!-- <tx:annotation-driven transaction-manager="txManager" /> -->
 	
-	
-	<bean id="configuracion" scope="singleton" class="es.jclm.cs.rarasclm.config.ConfiguracionRarasCLM">
-		<property name="maxResultadosBusqueda" value="1000"></property>
-	</bean>
-
 <!-- 	<bean id="dataSourceRarasCLM" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close"> -->
 <!-- 		<property name="driverClass" value="com.mysql.jdbc.Driver"></property> -->
 <!-- 		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/rarasclm"></property> -->
@@ -46,10 +41,10 @@
 		 <property name="jndiName" value="java:comp/env/jdbc/rarasclmDS" />
 	</bean>
 
-<!--  	<jee:jndi-lookup id="dataSourceRarasCLM" jndi-name="jdbc/rarasclm" expected-type="javax.sql.DataSource" /> -->
+<!--  	<jee:jndi-lookup id="dataSourceRarasCLM" jndi-name="java:comp/env/jdbc/rarasclmDS" expected-type="javax.sql.DataSource" /> -->
    			
    			
-	<!-- Hibernate 4 SessionFactory Bean definition -->
+<!-- Hibernate 4 SessionFactory Bean definition -->
 	<bean id="hibernate4RarasCLMAnnotatedSessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSourceRarasCLM" />

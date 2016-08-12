@@ -21,6 +21,11 @@ var routeBase = /*[[${route.baseUrl}]]*/'';
 var contextApp = /*[[${baseModel.baseApp}]]*/'';
 var idCaso = /*[[${caso.idCaso}]]*/'';
 
+//centinelas para conocer si se ha pulsado 
+// el boton de enviar o borrar
+var submitOkModificar = false;
+var submitOkBorrar = false;
+
 
 function mensajeError(mensaje) {
 	$('#mensajes').html('<div class="alert alert-error"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
@@ -87,17 +92,13 @@ $(document).ready( function() {
 	if(showModal) {
 		$('#mensajes').modal('show');
 	}
-	//Fin modal
+
 	
-	//Manejo del submit
+	//Manejo del submit (evitamos un submit que no sea
+	//realizado mediante un click al botón correcto
 	$('#form-edit-caso').on('submit',function(e) {
-		e.preventDefault();
-		if(submitOkModificar)	{
-			$('#form-edit-caso').submit();
-		}
-		if(submitOkBorrar) {
-			$('#form-edit-caso').attr('action',routeBase+'/'+'delete'+'/'+idCaso);
-			$('#form-edit-caso').submit();
+		if(!submitOkModificar && !submitOkBorrar)	{
+			e.preventDefault();
 		}
 	});
 	
@@ -105,8 +106,12 @@ $(document).ready( function() {
 		submitOkModificar=true;
 	});
 	
+	//Cambiamos el action del formulario para que haga la acción borrar
 	$('#btnBorrar').on('click',function() {
 		submitOkBorrar=true;
+		$('#form-edit-caso').attr('action',routeBase+'/'+'delete'+'/'+idCaso);
+		$('#form-edit-caso').submit();
+
 	});
 	
 	//fin manejo del submit
@@ -120,8 +125,8 @@ $(document).ready( function() {
 				enfermedades = data;
 				enfermedadesLiterales = $.map(enfermedades,
 						function(v) {
-							return {label:v.enfermedadRaraId + ' ' + v.literal,
-									value:v.enfermedadRaraId};
+							return {label:v.cod + ' ' + v.literal,
+									value:v.cod};
 						});
 				$("#enfraraObjeto").autocomplete({
 					source : enfermedadesLiterales,

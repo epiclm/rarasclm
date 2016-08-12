@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.jclm.cs.rarasclm.dao.EnfermedadRaraCie10Dao;
 import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie10;
+import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 
 
 // TODO: Auto-generated Javadoc
@@ -91,6 +92,10 @@ public class EnfermedadRaraCie10Service {
 			return datosCache.getCie10sById(cie10);
 		else
 			return dao.getEnfermedadRaraCie10ById(cie10);
+	}
+	
+	public List<EnfermedadCodigoLiteral> getListCodLiteral() {
+		return datosCache.getCodLiteralesCie10();
 	}
 
 }

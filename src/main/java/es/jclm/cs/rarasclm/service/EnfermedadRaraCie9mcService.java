@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.jclm.cs.rarasclm.dao.EnfermedadRaraCie9mcDao;
 import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
+import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 
 
 
@@ -26,34 +27,23 @@ import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
 @Transactional
 public class EnfermedadRaraCie9mcService {
 
-	/** The datos auxiliares. */
 	@Autowired
 	private DatosAuxiliaresCacheados datosAuxiliares;
 
-	/** The dao. */
 	@Autowired
 	private EnfermedadRaraCie9mcDao dao;
 
-	/** The datos cache. */
 	@Autowired
 	private DatosAuxiliaresCacheados datosCache;
 
-	/** The log. */
 	static Log log = LogFactory.getLog(EnfermedadRaraCie9mcService.class.getName());
 
-	/**
-	 * Instantiates a new enfermedad rara cie9mc service.
-	 */
+
 	public EnfermedadRaraCie9mcService() {
 
 	}
 
-	/**
-	 * Save.
-	 *
-	 * @param enf
-	 *            the enf
-	 */
+
 	public void save(EnfermedadCie9mc enf) {
 		try {
 			dao.guardar(enf);
@@ -68,12 +58,7 @@ public class EnfermedadRaraCie9mcService {
 		}
 	}
 	
-	/**
-	 * Update.
-	 *
-	 * @param enf
-	 *            the enf
-	 */
+
 	public void update(EnfermedadCie9mc enf) {
 		try {
 			dao.actualizar(enf);
@@ -88,45 +73,30 @@ public class EnfermedadRaraCie9mcService {
 		}
 	}
 
-	/**
-	 * Gets the enfermedad rara cie9 by id.
-	 *
-	 * @param cod
-	 *            the cod
-	 * @return the enfermedad rara cie9 by id
-	 */
+
 	public EnfermedadCie9mc getEnfermedadRaraCie9ById(String cod) {
 		return dao.getEnfermedadRaraCie9mcById(cod);
 	}
 
-	/**
-	 * Gets the all enfermedades raras cie9mc.
-	 *
-	 * @param cache
-	 *            the cache
-	 * @return the all enfermedades raras cie9mc
-	 */
+
 	public List<EnfermedadCie9mc> getAllEnfermedadesRarasCie9mc(boolean cache) {
 		if (cache)
 			return datosCache.getCie9mcs();
 		else
 			return dao.getAllEnfermedadesRaraCie9mc();
 	}
+	
+	
 
-	/**
-	 * Gets the enfermedad rara cie9mc.
-	 *
-	 * @param cie9
-	 *            the cie9
-	 * @param cache
-	 *            the cache
-	 * @return the enfermedad rara cie9mc
-	 */
 	public EnfermedadCie9mc getEnfermedadRaraCie9mc(String cie9, boolean cache) {
 		if (cache)
 			return datosCache.getCie9mcsById(cie9);
 		else
 			return dao.getEnfermedadRaraCie9mcById(cie9);
+	}
+	
+	public List<EnfermedadCodigoLiteral> getListCodLiteral() {
+		return datosCache.getCodLiteralesCie9mc();
 	}
 
 }

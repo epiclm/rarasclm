@@ -20,62 +20,37 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie10;
+import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie10Service;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class EnfermedadCie10Controller.
- */
 @Controller
 @RequestMapping("/enfermedades/cie10")
 @RarasClmItemMenu(caption="CIE10",deno="Enfermedades",modulo="enfermedades",orden=3)
 @SessionAttributes("enfermedadescie10")
 public class EnfermedadCie10Controller extends BaseController {
 
-	/** The enfermedad service. */
+
 	@Autowired
 	private EnfermedadRaraCie10Service enfermedadService;
 
-
-	/**
-	 * Instantiates a new enfermedad cie10 controller.
-	 */
 	public EnfermedadCie10Controller() {
 
 	}
 
-	/**
-	 * Populate employees.
-	 *
-	 * @return the list
-	 */
+	
 	@ModelAttribute("allCie10")
 	public List<EnfermedadCie10> populateEmployees() {
 		List<EnfermedadCie10> enfermedadesCie10 = enfermedadService.getAllEnfermedadesRarasCie10(true);
 		return enfermedadesCie10;
 	}
 
-	/**
-	 * Setup form.
-	 *
-	 * @param model
-	 *            the model
-	 * @return the string
-	 */
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public String setupForm(Model model) {
 		return "enfermedades/cie10";
 	}
 
-	/**
-	 * Setup form.
-	 *
-	 * @param id
-	 *            the id
-	 * @param model
-	 *            the model
-	 * @return the string
-	 */
+	
 	@RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
 	public String setupShow(@PathVariable String id, Model model) {
 		getRoute().setId(id);
@@ -84,23 +59,13 @@ public class EnfermedadCie10Controller extends BaseController {
 		return "enfermedades/shows/cie10Show";
 	}
 
-	/**
-	 * Json.
-	 *
-	 * @return the list
-	 */
+
 	@RequestMapping(value = "/json", produces = "application/json; charset=UTF-8")
-	public @ResponseBody List<EnfermedadCie10> json() {
-		return enfermedadService.getAllEnfermedadesRarasCie10(true);
+	public @ResponseBody List<EnfermedadCodigoLiteral> json() {
+		return enfermedadService.getListCodLiteral();
 	}
 
-	/**
-	 * Nuevo.
-	 *
-	 * @param model
-	 *            the model
-	 * @return the string
-	 */
+
 	@RequestMapping(value= "/create", method = RequestMethod.GET)
 	public String nuevo(Model model) {
 		EnfermedadCie10 enfRara = new EnfermedadCie10();
@@ -108,17 +73,7 @@ public class EnfermedadCie10Controller extends BaseController {
 		return "enfermedades/forms/cie10Nuevo";
 	}
 
-	/**
-	 * Submit nuevo form.
-	 *
-	 * @param enf
-	 *            the enf
-	 * @param result
-	 *            the result
-	 * @param status
-	 *            the status
-	 * @return the string
-	 */
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String submitNuevoForm(@ModelAttribute("enfermedadCie10") EnfermedadCie10 enf, BindingResult result,
 			SessionStatus status) {
@@ -126,11 +81,9 @@ public class EnfermedadCie10Controller extends BaseController {
 		if (result.hasErrors()) {
 			return "enfermedades/cie10Nuevoc";
 		}
-		// Store the employee information in database
-		enfermedadService.save(enf);
 
-		// Mark Session Complete and redirect to URL so that page refresh do not
-		// re-submit the form
+		enfermedadService.save(enf);
+		
 		status.setComplete();
 		return "redirect:/enfermedades/cie10/edit/" + enf.getCie10Id();
 	}
@@ -145,32 +98,13 @@ public class EnfermedadCie10Controller extends BaseController {
 		return "enfermedades/forms/cie10Edit";
 	}
 	
+	
 	@RequestMapping(value="edit/{id}",method = RequestMethod.POST)
-	public String submitEditIdForm(@ModelAttribute("enfermedadCie10") EnfermedadCie10 enf, BindingResult result,
-			SessionStatus status) {
-
-/*		Set<ConstraintViolation<EnfermedadRaraCie10>> violations = validator.validate(enf);
-
-		for (ConstraintViolation<EnfermedadRaraCie10> violation : violations) {
-			String propertyPath = violation.getPropertyPath().toString();
-			String message = violation.getMessage();
-			// Add JSR-303 errors to BindingResult
-			// This allows Spring to display them in view via a FieldError
-			result.addError(
-					new FieldError("enfermedadCie10", propertyPath, "Invalid " + propertyPath + "(" + message + ")"));
-		}
-
-		if (result.hasErrors()) {
-			return "enfermedades/cie10";
-		}*/
-		// Store the employee information in database
+	public String submitEditIdForm(@ModelAttribute("enfermedadCie10") EnfermedadCie10 enf, BindingResult result) {
 		enfermedadService.update(enf);
-
-		// Mark Session Complete and redirect to URL so that page refresh do not
-		// re-submit the form
-		status.setComplete();
 		return "redirect:/enfermedades/cie10/edit/"+enf.getCie10Id();
 	}
+	
 	
 	@RequestMapping(value = "/json/{id}", produces = "application/json; charset=UTF-8")
 	public @ResponseBody EnfermedadCie10 jsonId(@PathVariable String id) {

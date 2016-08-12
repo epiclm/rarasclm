@@ -4,17 +4,50 @@
 	layout:decorator="layout/rarasClmLayout">
 <head>
 <script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
+/*<![CDATA[*/
 var routeBase  = /*[[${route.baseUrl}]]*/'';
 var contextApp = /*[[${baseModel.baseApp}]]*/'';
+var municipio = /*[[${busqueda.municipio}]]*/'';
+var provincia = /*[[${busqueda.provincia}]]*/'';
 var enfermedades;
 var enfermedadesLiterales;
 
 $(document)
 .ready(function() {	
 	
-		var isOkForm = false;
+	//Cambia el select de los municipios a una provincia 
+	function cambiaProvincia(provincia) {
 		
+		var isOKForm = false;
+		var strHtml='<option value="99999" select>DESCONOCIDO</option>\n';
+		$.ajax({
+			url:'/'+ contextApp + '/localizaciones/municipios/deprovincia/'+provincia,
+			dataType:'json',
+		}).fail(function(jqXHR, textStatus, errorThrown)   {
+	
+		}).done(function(data, textStatus, jqXHR)   {
+			strHtml = '<option value="99999">DESCONOCIDO</option>';
+			for(i=0;i<data.length;i++) {
+				strHtml += '<option value="' + data[i].municipio +'">'+ data[i].deno + '</option>\n'
+			}
+			$('#busquedaMunicipio').html(strHtml);
+			if(municipio!=null && municipio!="" && municipio!="99999") {
+				$('#busquedaMunicipio option[value='+ municipio +']').attr('selected','selected');
+			}
+		}).always(function() {
+			
+		});
+	}
+
+	
+		//Si el modelo de búsqueda tiene especificada una provincia o municipio
+		//los carga el el formulario
+		if(municipio!=null && municipio!="" && municipio!="99999") {
+			cambiaProvincia(municipio.substring(0, 2));
+	   	} else if(provincia!=null && provincia!="" && provincia!="99") {
+			cambiaProvincia(provincia);
+			};
+			
 		//Evitar submit al pulsar enter
 		$("form").bind("keypress", function (e) {
 		    if (e.keyCode == 13) {
@@ -22,19 +55,19 @@ $(document)
 		    }
 		});
 		
-	
+		//evita un submit cuando no se ha validado o hecho
+		//click en el botón de envio
 		$("#form-edit-paciente").on('submit',function(e) {
 			if(!isOkForm)
 		    	e.preventDefault();
 		  });
 	
-		var isOKForm = false;
-		var strHtml='<option value="99999" select>DESCONOCIDO</option>\n';
-		
+		//Evita mostar el valor por defecto del modelo
 		if($("#anioNacimiento").val()==0) {
 			$("#anioNacimiento").val("");
 		}
 		
+		//da el el valor al campo enfRara para envio del código de enfermedad
 		if(($("#enfermedadRaraCLM").val()!=="") && ($("#enfermedadRaraCLM").val()!=="9999999999")) {
 		   codEnf = $("#enfermedadRaraCLM").val();
 		   $.ajax({
@@ -50,6 +83,7 @@ $(document)
 		   });	   
 		}
 		
+		//da el el valor al campo cie9mc para envio del código de enfermedad
 		if(($("#cie9MC").val()!=="")) {
 			  codEnf = $("#cie9MC").val();
 			   $.ajax({
@@ -65,6 +99,7 @@ $(document)
 			   });	   
 		}
 		
+		//da el el valor al campo cie10 para envio del código de enfermedad
 		if(($("#cie10").val()!=="")) {
 			  codEnf = $("#cie10").val();
 			   $.ajax({
@@ -80,13 +115,12 @@ $(document)
 			   });	   
 		}
 		
-		
+		//Cuando pierde el foco pasar a mayúsculas
 		$("input").focusout( 
 			function() {
 				$(this).val($(this).val().toUpperCase());
 		  	});
 		
-		$('#busquedaMunicipio').html(strHtml);
 	
 		$("#img-espera-num-paciente").css('display','none');
 	
@@ -108,42 +142,19 @@ $(document)
 			$("#busquedaMunicipio").val("99999");
 			$("#busquedaprovincia").val("99");
 			$("#baseDiagnostico").val("");
+			$("#cie10").val("");
+			$("#cie9MC").val("");
+			$("#autocompleteEnfermedadRaraCLM").val("");
+			$("#autocompleteCie9MC").val("");
+			$("#autocompleteCie10").val("");
 		});
 		
 		$("#busquedaProvincia").change(function() {
 			var provincia = $(this).val();
-			
-			$('#busquedaMunicipio').html("<p>CARGANDO...</p>");
-			$.ajax({
-				url:'/'+ contextApp + '/localizaciones/municipios/deprovincia/'+provincia,
-				dataType:'json',
-			}).fail(function(jqXHR, textStatus, errorThrown)   {
-		
-			}).done(function(data, textStatus, jqXHR)   {
-				for(i=0;i<data.length;i++) {
-					strHtml += '<option value="' + data[i].municipio +'">'+ data[i].deno + '</option>\n'
-				}
-			}).always(function() {
-				$('#busquedaMunicipio').html(strHtml);
-			});
-			
+			cambiaProvincia(provincia);
 		});
 	
-// 		$("#busquedaCIP,#busquedaApellido1,#busquedaApellido2,#busquedaNombre")
-// 			.focusout( 
-// 				function() {
-// 					$('#busquedaNumeroPaciente').val('');
-// 					$("#resultado-busqueda-num-paciente").html("");
-// 					$(this).val($(this).val().toUpperCase());
-// 					if($(this).attr("id")==="busquedaCIP")
-// 					{
-// 						if($(this).val().length>0)
-// 						{
-// 							//alert("CIP: "+$(this).val())
-// 						}
-// 					}
-// 			  	});
-		   
+
 	 	//Autocompletado de enfRaraCLM
 		$.ajax({
 			dataType : "json",
@@ -154,8 +165,8 @@ $(document)
 				enfermedadesLiterales = $.map(enfermedades,
 						function(v) {
 										return {
-													label:v.enfermedadRaraId + ' ' + v.literal,
-													value:v.enfermedadRaraId
+													label:v.cod + ' ' + v.literal,
+													value:v.cod
 												};
 									});
 				$("#autocompleteEnfermedadRaraCLM").autocomplete({
@@ -182,8 +193,8 @@ $(document)
 				enfermedadesLiterales = $.map(enfermedades,
 						function(v) {
 										return {
-													label:v.cie9Id + ' ' + v.literal,
-													value:v.cie9Id
+													label:v.cod + ' ' + v.literal,
+													value:v.cod
 												};
 									});
 				$("#autocompleteCie9MC").autocomplete({
@@ -215,8 +226,8 @@ $(document)
 				enfermedadesLiterales = $.map(enfermedades,
 						function(v) {
 										return {
-													label:v.cie10Id + ' ' + v.literal,
-													value:v.cie10Id
+													label:v.cod + ' ' + v.literal,
+													value:v.cod
 												};
 									});
 				$("#autocompleteCie10").autocomplete({
@@ -247,7 +258,7 @@ $(document)
 					<a href="#tab-paciente-busqueda" data-toggle="tab">Búsquedas:</a>
 				</li>
 				<li th:attr="class=${busqueda.casos!=null ? 'active' : ''}">
-					<a href="#tab-paciente-resultados" data-toggle="tab">Resultados</a>
+					<a href="#tab-paciente-resultados" data-toggle="tab">Resultados <b><span th:if="${busqueda.casos!=null}" th:text="|(${busqueda.numResultados})|"></span></b></a>
 				</li>
 			</ul>
 			
@@ -322,11 +333,11 @@ $(document)
 									<input class="span10" id="autocompleteEnfermedadRaraCLM" type="text"></input>
 								</div>
 								<div class="form-group">
-									<label class="control-label span10" for="autocompleteEnfermedadRaraCLM">CIE9MC:</label>
+									<label class="control-label span10" for="autocompleteCie9MC">CIE9MC:</label>
 									<input class="span10" id="autocompleteCie9MC" type="text"></input>
 								</div>
 								<div class="form-group">
-									<label class="control-label span10" for="autocompleteEnfermedadRaraCLM">CIE10:</label>
+									<label class="control-label span10" for="autocompleteCie10">CIE10:</label>
 									<input class="span10" id="autocompleteCie10" type="text"></input>
 								</div>
 							</div>

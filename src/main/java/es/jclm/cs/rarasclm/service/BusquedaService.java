@@ -2,6 +2,8 @@ package es.jclm.cs.rarasclm.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +18,13 @@ import es.jclm.cs.rarasclm.entities.Paciente;
 public class BusquedaService {
 	
 
-@Autowired	
-PacienteDao pacienteDao;
-
-@Autowired
-CasoDao casoDao;
+	@Autowired	
+	PacienteDao pacienteDao;
+	
+	@Autowired
+	CasoDao casoDao;
+	
+	private static final Logger log = LoggerFactory.getLogger(BusquedaService.class);
 
 	public List<Paciente> buscaPacientes(BusquedaModelView bmv) {
 		
@@ -50,9 +54,12 @@ CasoDao casoDao;
 		
 		try {
 			anioNacimiento = Integer.parseInt(bmv.getAnioNacimiento());
-			baseDiagnostico = Byte.parseByte(bmv.getBaseDiagnostico());
 		} catch(Exception ex) {}
 			
+		try {
+			baseDiagnostico = Byte.parseByte(bmv.getBaseDiagnostico());
+		} catch(Exception ex) {}
+		
 		return casoDao.busqueda(
 				bmv.getSeccion(),
 				bmv.getCip(),
@@ -69,10 +76,37 @@ CasoDao casoDao;
 				baseDiagnostico,
 				-1,
 				-1
-			);
-		
+			);		
 	}
 	
+	public long buscaCasosNumResultados(BusquedaModelView bmv) {
+		
+		int anioNacimiento=-1;
+		Byte baseDiagnostico=-1;
+		
+		try {
+			anioNacimiento = Integer.parseInt(bmv.getAnioNacimiento());
+		} catch(Exception ex) {}
+			
+		try {
+			baseDiagnostico = Byte.parseByte(bmv.getBaseDiagnostico());
+		} catch(Exception ex) {}
+		
+		return casoDao.busquedaNumRegistros(
+				bmv.getSeccion(),
+				bmv.getCip(),
+				bmv.getNombre(),
+				bmv.getApellido01(),
+				bmv.getApellido02(),
+				bmv.getProvincia(),
+				bmv.getMunicipio(),
+				anioNacimiento,
+				bmv.getSexo(),
+				bmv.getCie9MC(),
+				bmv.getCie10(),
+				bmv.getEnfermedadRaraCLM(),
+				baseDiagnostico
+			);		
+	}
 	
-
 }

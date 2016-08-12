@@ -27,6 +27,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.entities.AccionRespuesta;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
+import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie10Service;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie9mcService;
@@ -50,24 +51,26 @@ public class EnfermedadRaraController extends BaseController {
 	@Autowired
 	private EnfermedadRaraCie10Service enfermedadCie10Service;
 
-	/** The log. */
 	static Log log = LogFactory.getLog(EnfermedadRaraController.class.getName());
 
+	
 	public EnfermedadRaraController() {
 
 	}
 
+	
 	@ModelAttribute("allRaras")
 	public List<EnfermedadRara> populateAllRaras() {
 		List<EnfermedadRara> enfermedadesRaras = enfermedadService.getAllEnfermedadesRaras(true);
 		return enfermedadesRaras;
 	}
 
-	@ModelAttribute("allCie9mc")
-	public List<EnfermedadCie9mc> populateAllCie9mc() {
-		List<EnfermedadCie9mc> enfermedadesCie9mc = enfermedadCie9mcService.getAllEnfermedadesRarasCie9mc(true);
-		return enfermedadesCie9mc;
-	}
+	
+//	@ModelAttribute("allCie9mc")
+//	public List<EnfermedadCie9mc> populateAllCie9mc() {
+//		List<EnfermedadCie9mc> enfermedadesCie9mc = enfermedadCie9mcService.getAllEnfermedadesRarasCie9mc(true);
+//		return enfermedadesCie9mc;
+//	}
 	
 	
 	// Página inicial del módulo
@@ -77,6 +80,7 @@ public class EnfermedadRaraController extends BaseController {
 		return "enfermedades/enfRara";
 	}
 
+	
 	/*EDICION DE ENFRARA*/
 	/*Carga el formulario*/
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -86,6 +90,7 @@ public class EnfermedadRaraController extends BaseController {
 		return "enfermedades/forms/enfRaraEdit";
 	}
 
+	
 	/* EDICION DE ENFRARA */
 	/* Procesa el formulario */
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
@@ -112,6 +117,7 @@ public class EnfermedadRaraController extends BaseController {
 		return "enfermedades/forms/enfRaraEdit";
 	}
 
+	
 	@RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
 	public String setupShowForm(@PathVariable String id, Model model) {
 		getRoute().setId(id);
@@ -120,6 +126,7 @@ public class EnfermedadRaraController extends BaseController {
 		return "enfermedades/shows/enfRaraShow";
 	}
 
+	
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String nuevo(Model model) {
 		EnfermedadRara enfRara = new EnfermedadRara();
@@ -127,6 +134,7 @@ public class EnfermedadRaraController extends BaseController {
 		return "enfermedades/forms/enfRaraNuevo";
 	}
 
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String submitNuevoForm(@ModelAttribute("enfermedadRara") EnfermedadRara enf, BindingResult result,
 			SessionStatus status) {
@@ -138,6 +146,7 @@ public class EnfermedadRaraController extends BaseController {
 		return "redirect:/enfermedades/enfrara/show/" + enf.getEnfermedadRaraId();
 	}
 
+	
 	@RequestMapping(value = "/addcie9mc/{id}/{id2}", method = RequestMethod.GET)
 	public String addEnfermedadRaraHasCie9mc(@PathVariable String id, @PathVariable String id2, Model model,
 			SessionStatus status) {
@@ -228,8 +237,8 @@ public class EnfermedadRaraController extends BaseController {
 	}
 
 	@RequestMapping(value = "/json", produces = "application/json; charset=UTF-8")
-	public @ResponseBody List<EnfermedadRara> jsonAll() {
-		return enfermedadService.getAllEnfermedadesRaras(true);
+	public @ResponseBody List<EnfermedadCodigoLiteral> json() {
+		return enfermedadService.getListCodLiteral();
 	}
 	
 	@RequestMapping(value = "/json/{id}", produces = "application/json; charset=UTF-8")

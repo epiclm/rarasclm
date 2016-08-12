@@ -21,6 +21,8 @@ public class BusquedaModelView {
 	private String  baseDiagnostico;
 	private String  fuenteInformacion;
 	private String  seccion;
+	
+	private long numResultados = -1;
 
 	public List<Paciente> getPacientes() {
 		return pacientes;
@@ -149,7 +151,13 @@ public class BusquedaModelView {
 	public void setSeccion(String seccion) {
 		this.seccion = seccion;
 	}
-	
-	
 
+	public long getNumResultados() {
+		return numResultados;
+	}
+
+	public void setNumResultados(long numResultados) {
+		this.numResultados = numResultados;
+	}
+	
 }

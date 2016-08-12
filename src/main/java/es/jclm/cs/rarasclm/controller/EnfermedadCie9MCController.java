@@ -18,6 +18,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
+import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie9mcService;
 
 @Controller
@@ -54,8 +55,8 @@ public class EnfermedadCie9MCController extends BaseController {
 	}
 
 	@RequestMapping(value = "/json", produces = "application/json; charset=UTF-8")
-	public @ResponseBody List<EnfermedadCie9mc> json() {
-		return enfermedadService.getAllEnfermedadesRarasCie9mc(true);
+	public @ResponseBody List<EnfermedadCodigoLiteral> json() {
+		return enfermedadService.getListCodLiteral();
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
