@@ -28,7 +28,6 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 	
 	private static final Logger log = LoggerFactory.getLogger(CasoDao.class);
 
-	@SuppressWarnings("null") // eclipse crazy??
 	public  List<Caso> busqueda(String seccion, 
 			String cip, 
 			String nombre, 

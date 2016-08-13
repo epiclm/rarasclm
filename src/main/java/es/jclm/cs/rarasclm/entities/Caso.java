@@ -1,17 +1,21 @@
 package es.jclm.cs.rarasclm.entities;
-// Generated 10-ago-2016 9:15:45 by Hibernate Tools 4.3.4.Final
+// Generated 13-ene-2016 9:31:52 by Hibernate Tools 4.3.4.Final
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
@@ -24,6 +28,7 @@ public class Caso implements java.io.Serializable {
 	private String idCaso;
 	private EnfermedadRara enfermedadRara;
 	private Paciente paciente;
+	private Seccion seccion;
 	private Short numCaso;
 	private Short declarada;
 	private String usuarioDeclara;
@@ -70,6 +75,7 @@ public class Caso implements java.io.Serializable {
 	private Date fechahoraModificacion;
 	private String usuarioModificacion;
 	private Boolean borradoLogico;
+	private Set<CasoRevisionUsuario> casoRevisionUsuarios = new HashSet<CasoRevisionUsuario>(0);
 
 	public Caso() {
 	}
@@ -79,21 +85,22 @@ public class Caso implements java.io.Serializable {
 		this.enfermedadRara = enfermedadRara;
 	}
 
-	public Caso(String idCaso, EnfermedadRara enfermedadRara, Paciente paciente, Short numCaso, Short declarada,
-			String usuarioDeclara, Date fechaDeclara, String literal, String jucioClinico, String observaciones,
-			String hospital, String nhc, Byte baseDiagnostico, String fuenteInformacion, Boolean fuentePacientesA,
-			Boolean fuenteCmbdC, Boolean fuenteDefcongD, Boolean fuenteEdoE, Boolean fuenteIsocialesG,
-			Boolean fuenteMhuerfH, Boolean fuenteMetabolN, Boolean fuenteRinvI, Boolean fuenteRmortM,
-			Boolean fuenteRcancerT, Boolean fuenteRenalR, Boolean fuenteHcPrimariaV, Boolean fuenteHcEspecializadaU,
-			Boolean fuenteHcPrimariaMasivaP, Boolean fuenteHcEspecializadaMasivaQ, Boolean fuenteOtrosO,
-			Date fechaInicioSintomas, Date fechaDeteccion, Date fechaDiagnostico, String codCie9mc, String codCie10,
-			String codSnomed, String codOmin, String codEdta, String codOtros, String codOtroDeno, String tratamiento,
-			Byte familiaresEnfermedadesRaras, Short otrasEnfermedadesCronicas, String enfermedadesCronicas,
-			Date fechahoraCreacion, String usuarioCreacion, Date fechahoraModificacion, String usuarioModificacion,
-			Boolean borradoLogico) {
+	public Caso(String idCaso, EnfermedadRara enfermedadRara, Paciente paciente, Seccion seccion, Short numCaso,
+			Short declarada, String usuarioDeclara, Date fechaDeclara, String literal, String jucioClinico,
+			String observaciones, String hospital, String nhc, Byte baseDiagnostico, String fuenteInformacion,
+			Boolean fuentePacientesA, Boolean fuenteCmbdC, Boolean fuenteDefcongD, Boolean fuenteEdoE,
+			Boolean fuenteIsocialesG, Boolean fuenteMhuerfH, Boolean fuenteMetabolN, Boolean fuenteRinvI,
+			Boolean fuenteRmortM, Boolean fuenteRcancerT, Boolean fuenteRenalR, Boolean fuenteHcPrimariaV,
+			Boolean fuenteHcEspecializadaU, Boolean fuenteHcPrimariaMasivaP, Boolean fuenteHcEspecializadaMasivaQ,
+			Boolean fuenteOtrosO, Date fechaInicioSintomas, Date fechaDeteccion, Date fechaDiagnostico,
+			String codCie9mc, String codCie10, String codSnomed, String codOmin, String codEdta, String codOtros,
+			String codOtroDeno, String tratamiento, Byte familiaresEnfermedadesRaras, Short otrasEnfermedadesCronicas,
+			String enfermedadesCronicas, Date fechahoraCreacion, String usuarioCreacion, Date fechahoraModificacion,
+			String usuarioModificacion, Boolean borradoLogico, Set<CasoRevisionUsuario> casoRevisionUsuarios) {
 		this.idCaso = idCaso;
 		this.enfermedadRara = enfermedadRara;
 		this.paciente = paciente;
+		this.seccion = seccion;
 		this.numCaso = numCaso;
 		this.declarada = declarada;
 		this.usuarioDeclara = usuarioDeclara;
@@ -140,10 +147,10 @@ public class Caso implements java.io.Serializable {
 		this.fechahoraModificacion = fechahoraModificacion;
 		this.usuarioModificacion = usuarioModificacion;
 		this.borradoLogico = borradoLogico;
+		this.casoRevisionUsuarios = casoRevisionUsuarios;
 	}
 
 	@Id
-
 	@Column(name = "id_caso", unique = true, nullable = false, length = 10)
 	public String getIdCaso() {
 		return this.idCaso;
@@ -155,7 +162,6 @@ public class Caso implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "enfrara", nullable = false)
-	@JsonManagedReference
 	public EnfermedadRara getEnfermedadRara() {
 		return this.enfermedadRara;
 	}
@@ -166,12 +172,23 @@ public class Caso implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "paciente")
+	@JsonManagedReference
 	public Paciente getPaciente() {
 		return this.paciente;
 	}
 
 	public void setPaciente(Paciente paciente) {
 		this.paciente = paciente;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "seccion")
+	public Seccion getSeccion() {
+		return this.seccion;
+	}
+
+	public void setSeccion(Seccion seccion) {
+		this.seccion = seccion;
 	}
 
 	@Column(name = "num_caso")
@@ -592,6 +609,16 @@ public class Caso implements java.io.Serializable {
 
 	public void setBorradoLogico(Boolean borradoLogico) {
 		this.borradoLogico = borradoLogico;
+	}
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "caso")
+	@JsonBackReference
+	public Set<CasoRevisionUsuario> getCasoRevisionUsuarios() {
+		return this.casoRevisionUsuarios;
+	}
+
+	public void setCasoRevisionUsuarios(Set<CasoRevisionUsuario> casoRevisionUsuarios) {
+		this.casoRevisionUsuarios = casoRevisionUsuarios;
 	}
 
 }

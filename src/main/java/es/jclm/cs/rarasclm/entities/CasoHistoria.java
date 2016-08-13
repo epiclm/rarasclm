@@ -1,5 +1,5 @@
 package es.jclm.cs.rarasclm.entities;
-// Generated 10-ago-2016 9:15:45 by Hibernate Tools 4.3.4.Final
+// Generated 13-ago-2016 9:31:52 by Hibernate Tools 4.3.4.Final
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -66,6 +66,7 @@ public class CasoHistoria implements java.io.Serializable {
 	private String usuarioCreacion;
 	private Date fechahoraModificacion;
 	private String usuarioModificacion;
+	private Integer seccion;
 
 	public CasoHistoria() {
 	}
@@ -85,7 +86,8 @@ public class CasoHistoria implements java.io.Serializable {
 			Date fechaInicioSintomas, Date fechaDeteccion, Date fechaDiagnostico, String codCie9mc, String codCie10,
 			String codSnomed, String codOmin, String codEdta, String codOtros, String codOtroDeno, String tratamiento,
 			Byte familiaresEnfermedadesRaras, Short otrasEnfermedadesCronicas, String enfermedadesCronicas,
-			Date fechahoraCreacion, String usuarioCreacion, Date fechahoraModificacion, String usuarioModificacion) {
+			Date fechahoraCreacion, String usuarioCreacion, Date fechahoraModificacion, String usuarioModificacion,
+			Integer seccion) {
 		this.id = id;
 		this.paciente = paciente;
 		this.numCaso = numCaso;
@@ -134,6 +136,7 @@ public class CasoHistoria implements java.io.Serializable {
 		this.usuarioCreacion = usuarioCreacion;
 		this.fechahoraModificacion = fechahoraModificacion;
 		this.usuarioModificacion = usuarioModificacion;
+		this.seccion = seccion;
 	}
 
 	@EmbeddedId
@@ -576,6 +579,15 @@ public class CasoHistoria implements java.io.Serializable {
 
 	public void setUsuarioModificacion(String usuarioModificacion) {
 		this.usuarioModificacion = usuarioModificacion;
+	}
+
+	@Column(name = "seccion")
+	public Integer getSeccion() {
+		return this.seccion;
+	}
+
+	public void setSeccion(Integer seccion) {
+		this.seccion = seccion;
 	}
 
 }

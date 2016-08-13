@@ -54,11 +54,18 @@ public class CasoService extends BaseCRUDService<Caso, String>{
 	}
 
 	private void saveHistoria(Caso caso,int version) throws ServiceRarasCLMException {
+		
 		CasoHistoriaId id = new CasoHistoriaId();
-		if(version<0)
+		
+		if(version<0) {
 			id.setIdVersion(casoHistoriaDao.getVersion(caso.getIdCaso()));
-		else
+			id.setIdCaso(caso.getIdCaso());
+		} else {
 			id.setIdVersion(version);
+			id.setIdCaso(caso.getIdCaso());
+		}
+		
+		
 		id.setIdCaso(caso.getIdCaso());
 		CasoHistoria ch = new CasoHistoria(id,
 				caso.getPaciente().getIdPaciente(), 
@@ -107,7 +114,8 @@ public class CasoService extends BaseCRUDService<Caso, String>{
 				caso.getFechahoraCreacion(), 
 				caso.getUsuarioCreacion(), 
 				caso.getFechahoraModificacion(), 
-				caso.getUsuarioModificacion());	
+				caso.getUsuarioModificacion(),
+				caso.getSeccion().getIdSeccion());	
 		try {
 			casoHistoriaDao.guardar(ch);
 		} catch (UnableToSaveException ex) {
