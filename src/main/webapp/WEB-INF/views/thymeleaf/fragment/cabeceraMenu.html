@@ -7,7 +7,7 @@
 		<a th:if="${modulo.id}!=${route.modulo}" th:href="@{|/|}" th:text="${modulo.deno}"></a>	
 	  </li>
 	  <li th:if="${modulo.id!='inicio'}">
-		<a th:if="${modulo.id}==${route.modulo}" class="active" th:href="@{|${modulo.id}|}" th:text="${modulo.deno}"></a>
+		<a th:if="${modulo.id}==${route.modulo}" class="active" th:href="@{|/${modulo.id}|}" th:text="${modulo.deno}"></a>
 		<a th:if="${modulo.id}!=${route.modulo}" th:href="@{|/${modulo.id}|}" th:text="${modulo.deno}"></a>	
 	   </li>
 	</ul>
@@ -18,13 +18,4 @@
 	</ul>
    </div>
  </div>
-<!--  <div th:if="${baseModel.menuModel.getModuloMenuById(route.modulo)}!=null"> -->
-<!-- 	 <ul class="breadcrumb" id="menuPath"> -->
-<!-- 	 	<li th:each="menuItem : ${baseModel.menuModel.getModuloMenuById(route.modulo).itemsMenu}"> -->
-<!-- 	 		<a th:if="${menuItem.id}==|${route.modulo}/${route.entidad}|" th:href="@{|/${menuItem.id}|}" th:text="|${menuItem.deno}|" class="active"></a> -->
-<!-- 	 		<a th:if="${menuItem.id}!=|${route.modulo}/${route.entidad}|" th:href="@{|/${menuItem.id}|}" th:text="|${menuItem.deno}|"></a> -->
-<!-- 	 		<span class="divider">/</span> -->
-<!-- 	 	</li>	  -->
-<!-- 	 </ul> -->
-<!--  </div> -->
 </nav>

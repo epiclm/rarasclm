@@ -5,9 +5,9 @@ label {
 	padding-right: 5px !important;
 }
 
-body {
-	position: relative;
-}
+/* body { */
+/* 	position: relative; */
+/* } */
 
 select,textarea,input {
 	margin-bottom: 2px !important;
@@ -18,16 +18,16 @@ input select {
 }
 
 legend {
-	margin-bottom:10px !important;
+	margin-bottom:0px !important;
 }
 
 h5 {
 	margin: 5px 0px;
 }
 
-.nav {
-	margin-bottom: 5px !important;
-}
+/* .nav { */
+/* 	margin-bottom: 5px !important; */
+/* } */
 
 .enfRelacionada {
 	border: #9CF 1px solid;
@@ -121,10 +121,9 @@ li.rclmEnfermedadModal p{
 }
 
 
-#contenido {
-	max-width: 1800px;
-}
-
+/* #contenido { */
+/* 	max-width: 1800px; */
+/* } */
 
 
 
@@ -142,7 +141,7 @@ li.rclmEnfermedadModal p{
 }
 
 
-#form-busquedas {
+#form-edit-paciente {
 	padding-top: 12px;
 }
 
@@ -160,6 +159,46 @@ li.rclmEnfermedadModal p{
 
 #tabBusquedaIndex {
 	padding-top: 15px;
+}
+
+#paginador .control-label {
+    display: block;
+    float: none;
+    margin: 0;
+    font-size: 12px;
+    font-style: italic;
+}
+
+#tabla-resultados-contenedor {
+	overflow: auto;
+	padding-left: 10px;
+	margin-right: 10px;
+}
+
+#tabla-resultados {
+	text-overflow: ellipsis; white-space: nowrap
+}
+
+#tabla-resultados tbody td {
+	font-size: 12px;
+}
+
+#tabla-resultados tr.hover {
+   cursor: pointer;
+   /* whatever other hover styles you want */
+   
+}
+
+#tabs-busqueda-cabecera {
+	margin-bottom: 0;	
+}
+
+#tabs-busqueda {
+	background-color: #f5f5f5;
+}
+
+#tabs-busqueda-cabecera li.active a {
+	background-color: #f5f5f5 !important;
 }
 
 
@@ -188,6 +227,18 @@ li.rclmEnfermedadModal p{
 	font-family: monospace;
 	font-weight: bolder;
 	font-size: 16px;
+}
+
+#formulario-contenido {
+	
+}
+
+#formulario-contenido > div {
+	background-color: #f5f5f5;
+}
+
+#formulario-contenido > div.row {
+	padding-left: 15px;
 }
 
 
@@ -221,17 +272,14 @@ li.rclmEnfermedadModal p{
 }
 
 #cuadro-resumen-enfrara {
-	margin-top: 3px;
-	margin-bottom: 7px;
-	background-color:#FAFAFA;
+
+	
 }
 
 #cuadro-resumen-paciente,#caja-fuente-informacion {
 	padding: 7px;
-	margin-top: 7px;
-	margin-bottom: 7px;
 	background-color:#FAFAFA;
-	border: 1px #CCF solid;
+
 }
 
 #cuadro-resumen-paciente p {

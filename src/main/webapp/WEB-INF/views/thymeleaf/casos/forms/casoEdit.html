@@ -174,6 +174,9 @@ $(document).ready( function() {
 		<div class="row">
 		<div class="offset1">
 		<form id="form-edit-caso" class="form-inline" method='POST'>
+	
+			<input id="idCaso" name="idCaso" type="hidden" th:value="${caso.idCaso}"/>
+	
 			<div class="row">
 				<legend>Edición Caso <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span></legend>
 			</div>
@@ -182,7 +185,7 @@ $(document).ready( function() {
 <!-- 			  <button type="submit" class="btn btn-primary">Actualiza</button> -->
 <!-- 			  <button type="button" class="btn">Cancel</button> -->
 <!-- 			</div> -->
-			
+			<div id="formulario-contenido">
 			<!-- CUADRO RESUMEN PACIENTE -->
 			<div id="cuadro-resumen-paciente" class="row">
 				<div id="grupo-nombre-paciente" class="form-group">
@@ -202,7 +205,7 @@ $(document).ready( function() {
 					<p id="literal" class="span3"  th:text="|${baseModel.cache.getMunipioProvinciaDeno(caso.paciente.municipioResidencia)}|"></p>
 				</div>
 				<div class="form-group">
-					<a class="btn btn-primary" th:href="|/${baseModel.baseApp}/pacientes/edit/${caso.paciente.idPaciente}|">Editar</a>
+					<a class="btn btn-primary" th:href="|/${baseModel.baseApp}/pacientes/edit/${caso.paciente.idPaciente}|">Editar Paciente</a>
 				</div>
 			</div>
 			
@@ -421,9 +424,7 @@ $(document).ready( function() {
 				  <button id="btnBorrar" style="float: right" type="submit" class="btn btn-danger">Borrar</button>
 				</div>
 			</div>
-		</form>
-		<form id="form-borrar-caso" method="post" th:action="|${route.baseUrl}/delete/${caso.idCaso}|">
-		
+		   </div> <!-- Fin formulario contenido -->
 		</form>
 	  </div>
 	  </div>

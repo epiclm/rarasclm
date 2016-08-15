@@ -25,6 +25,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table(name = "caso", catalog = "rarasclm")
 public class Caso implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3126864594517417788L;
 	private String idCaso;
 	private EnfermedadRara enfermedadRara;
 	private Paciente paciente;

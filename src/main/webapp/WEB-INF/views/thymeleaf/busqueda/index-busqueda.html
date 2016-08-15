@@ -3,7 +3,13 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout/rarasClmLayout">
 <head>
-<script type="text/javascript" th:inline="javascript">
+<link rel="stylesheet" href="bower_components/tablesorter/dist/css/jquery.tablesorter.pager.css"/>
+<link rel="stylesheet" href="bower_components/tablesorter/dist/css/theme.blue.min.css"/>
+<script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.pager.js"></script>
+
+<script type="text/javascript" th:inline="javascript">"src/main/webapp/bower_components/tablesorter/dist/css/jquery.tablesorter.pager.css"
 /*<![CDATA[*/
 var routeBase  = /*[[${route.baseUrl}]]*/'';
 var contextApp = /*[[${baseModel.baseApp}]]*/'';
@@ -39,6 +45,55 @@ $(document)
 		});
 	}
 
+	//////////////////////////
+	// TABLA DE RESULTADOS
+	//////////////////////////
+	
+	//Manejo de link para la fila entera
+	$('tr.clickable').click( function() {
+	    window.location = $(this).find('a').attr('href');
+	}).hover( function() {
+	    $(this).toggleClass('hover');
+	});
+	
+	//Adaptacion de un ejemplo http://jsfiddle.net/Mottie/wty134u7/
+	$('#tabla-resultados').tablesorter({
+		theme:'blue',
+		widthFixed: true,
+		 initWidgets: true,
+		 widgets: ['zebra','resizable'],
+		 widgetOptions: {
+		      resizable_addLastColumn : true,
+		    }
+	}).tablesorterPager({
+	    container: $(".pager"),
+	    ajaxUrl: null,
+// 	    ajaxProcessing: function(ajax) {
+// 	        if (ajax && ajax.hasOwnProperty('data')) {
+// 	            return [ajax.data, ajax.total_rows];
+// 	        }
+// 	    },
+	    output: 'de {startRow} a {endRow} (TOTAL: {totalRows})',
+	    updateArrows: true,
+	    page: 0,
+	    size: 10,
+	    fixedHeight: true,
+	    removeRows: false,
+	    cssNext: '.next',
+	    cssPrev: '.prev',
+	    cssFirst: '.first',
+	    cssLast: '.last',
+	    cssGoto: '.gotoPage',
+	    cssPageDisplay: '.pagedisplay',
+	    cssPageSize: '.pagesize',
+	    cssDisabled: 'disabled'
+
+	});
+	
+	
+	/////////////////////////////
+	// LóGICA DEL FORMULARIO
+	/////////////////////////////
 	
 		//Si el modelo de búsqueda tiene especificada una provincia o municipio
 		//los carga el el formulario
@@ -253,7 +308,7 @@ $(document)
 	
 		<div id="tabBusquedaIndex" class="tab-content row  span12">
 		
-			<ul class="nav nav-tabs">
+			<ul id="tabs-busqueda-cabecera" class="nav nav-tabs">
 				<li th:attr="class=${busqueda.casos==null ? 'active' : ''}">
 					<a href="#tab-paciente-busqueda" data-toggle="tab">Búsquedas:</a>
 				</li>
@@ -263,11 +318,11 @@ $(document)
 			</ul>
 			
 			
-			<div class="tab-content">
+			<div id="tabs-busqueda" class="tab-content">
 			
 				<!-- BUSQUEDAS -->
-				<div id="tab-paciente-busqueda" th:attr="class=${busqueda.casos==null ? 'tab-pane fade in active' : 'tab-pane fade'}">
-					<div class="row offset1">
+				<div id="tab-paciente-busqueda" class="row" th:attr="class=${busqueda.casos==null ? 'tab-pane fade in active' : 'tab-pane fade'}">
+					<div class="offset1">
 						<form id="form-edit-paciente" class="form-edit-busqueda" method='POST'>
 							<div class="row span10">
 								<div id="grupo-apellido01-paciente" class="form-group">
@@ -343,7 +398,7 @@ $(document)
 							</div>
 							<div id="grupo-acciones-bajo" class="row span10">
 								<div class="form-actions">
-							  		<button id="submitBuscarPacientes" type="submit" class="btn btn-primary"><i class="icon-user icon-white"></i>&nbsp; Buscar Pacientes</button>
+							  		<button id="submitBuscarPacientes" type="submit" class="btn btn-primary"><i class="icon-user icon-white"></i>&nbsp; Buscar Casos</button>
 									<button id="borrarFormulario" class="btn"><i class="icon-trash"></i>&nbsp; Borrar Formulario</button>
 								</div>
 							</div>
@@ -352,11 +407,50 @@ $(document)
 				</div><!-- Fin Tab Formuliario de Búsqueda -->
 
 				<!-- PACIENTES -->
-				<div id="tab-paciente-resultados" th:attr="class=${busqueda.casos!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
-					<div style="padding-top: 10px;">
-						<ul th:each="caso: ${busqueda.casos}">
-							<li><a th:href="|/${baseModel.baseApp}/busqueda/ircaso/${caso.idCaso}|" th:text="|${caso.idCaso} ${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre} ${baseModel.cache.getMunipioDeno(caso.paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(caso.paciente.municipioResidencia.substring(0,2))}) ${caso.literal}|"></a></li>
-						</ul>
+				<div id="tab-paciente-resultados" class="row" th:attr="class=${busqueda.casos!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
+					<div  th:if="${busqueda.casos}!=null">
+<!-- 						<ul th:each="caso: ${busqueda.casos}"> -->
+<!-- 							<li><a th:href="|/${baseModel.baseApp}/busqueda/ircaso/${caso.idCaso}|" th:text="|${caso.idCaso} ${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre} ${baseModel.cache.getMunipioDeno(caso.paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(caso.paciente.municipioResidencia.substring(0,2))}) ${caso.literal}|"></a></li> -->
+<!-- 						</ul> -->
+							<div id="paginador" class="pager"> 
+						        <img src="https://mottie.github.io/tablesorter/addons/pager/icons/first.png" class="first"/> 
+						        <img src="https://mottie.github.io/tablesorter/addons/pager/icons/prev.png" class="prev"/> 
+						        <span class="pagedisplay"></span> <!-- this can be any element, including an input --> 
+						        <img src="https://mottie.github.io/tablesorter/addons/pager/icons/next.png" class="next"/> 
+						        <img src="https://mottie.github.io/tablesorter/addons/pager/icons/last.png" class="last"/>
+						        <select class="pagesize" title="Select page size"> 
+						            <option selected="selected" value="10" style="width:20px">10</option> 
+						            <option value="20">20</option> 
+						            <option value="30">30</option> 
+						            <option value="40">40</option> 
+						        </select>						  
+							</div>
+							<div id="tabla-resultados-contenedor">
+							  <table id="tabla-resultados">
+								 <thead>
+									 <tr>
+										<td>ID</td>
+										<td>1er Apellido</td>
+										<td>2o Apellido</td>
+										<td>Nombre</td>
+										<td>Municipio</td>
+										<td>Provincia</td>
+										<td>Literal</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="caso: ${busqueda.casos}" class="clickable">
+										<td><a th:href="|casos/edit/${caso.idCaso}|" th:text="${caso.idCaso}" ></a></td>
+										<td th:text="${caso.paciente.apellido01}"></td>
+										<td th:text="${caso.paciente.apellido02}"></td>
+										<td th:text="${caso.paciente.nombre}"></td>
+										<td th:text="${baseModel.cache.getMunipioDeno(caso.paciente.municipioResidencia)}"></td>
+										<td th:text="${baseModel.cache.getProvinciaDeno(caso.paciente.municipioResidencia.substring(0,2))}"></td>
+										<td th:text="${caso.literal}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					 </div>
 				</div>
 				

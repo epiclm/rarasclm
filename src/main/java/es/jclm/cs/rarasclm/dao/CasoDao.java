@@ -201,15 +201,16 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
+			return -1;
+		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
 			}
-			return -1;
 		}
 
 	}
 
-	private synchronized String createBodyQuery(String seccion, 
+	private String createBodyQuery(String seccion, 
 			String cip, 
 			String nombre, 
 			String apellido1, 

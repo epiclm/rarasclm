@@ -12,5 +12,5 @@
 	 type="javax.sql.DataSource" 
 	 url="jdbc:mysql://localhost:3306/rarasclm" 
 	 username="root" validationQuery="Select 1"/>
- 
+
 </Context>

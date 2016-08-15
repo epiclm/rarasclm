@@ -78,7 +78,7 @@ public class PacienteController extends BaseController {
 	
 	
 	///////////////////////////////////
-	//MOSTRAR CASO EN JSON
+	// PACIENTE EN JSON
 	///////////////////////////////////
 	@RequestMapping(value = "/json/{id}", method = RequestMethod.GET)
 	public  @ResponseBody Paciente showJsonPaciente(@PathVariable String id) {

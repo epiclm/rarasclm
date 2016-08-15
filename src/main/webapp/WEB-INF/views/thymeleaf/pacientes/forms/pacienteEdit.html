@@ -114,6 +114,7 @@ $(document).ready( function() {
 			<div class="row">	
 				<legend>Edición Paciente <span th:text="${paciente.idPaciente}"></span><a style="float:right" class="btn btn-primary" th:href="|${route.baseUrl}nuevaBusqueda|">Buscar otro paciente</a> </legend>
 			</div>
+			<div id="formulario-contenido">
 			<div class="row">
 				<div id="grupo-apellido01-paciente" class="form-group">
 					<label class="control-label span3" for="apellido01">1er Apellido:</label>
@@ -160,7 +161,7 @@ $(document).ready( function() {
 				<p style="margin-top:5px">DOMICILIO:</p>
 				<div class="form-group">
 					<label class="control-label span1 " for="domTipoVia">Tipo Vía:</label>
-					<input name="domTipoVia" class="span1" id="domTipoVia" type="text"  th:value="${paciente.domTipoVia}" />
+					<input name="domTipoVia" class="span1" id="domTipoVia" type="text" maxlength="5" th:value="${paciente.domTipoVia}" />
 				</div>
 				<div class="form-group">
 					<label class="control-label span4 " for="domNombreVia">Nombre de la Vía:</label>
@@ -234,6 +235,7 @@ $(document).ready( function() {
 				  <button type="button" class="btn">Cancel</button>
 				</div>
 			</div>
+		   </div> <!-- Fin de formulario contenido -->
 		</form>
 	  </div>
 	 </div>
