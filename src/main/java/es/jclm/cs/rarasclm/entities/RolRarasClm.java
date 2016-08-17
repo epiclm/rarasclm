@@ -55,7 +55,7 @@ public class RolRarasClm implements java.io.Serializable {
 		this.deno = deno;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "rolRarasClms")
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "rolRarasClms")
 	public Set<UserRarasClm> getUserRarasClms() {
 		return this.userRarasClms;
 	}

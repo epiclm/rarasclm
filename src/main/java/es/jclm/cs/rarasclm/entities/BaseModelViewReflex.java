@@ -54,8 +54,10 @@ public class BaseModelViewReflex implements IBaseModelView {
 		for (Class<?> clase : classes) {
 			log.info("Examinando: "+clase.getName());
 			if (clase.getSuperclass().getName() == BaseController.class.getName()) {
-				Annotation anotation = clase.getAnnotation(RequestMapping.class);
-				String[] value = ((RequestMapping)anotation).value();
+				Annotation annotation = clase.getAnnotation(RequestMapping.class);
+				if(annotation==null)
+					continue;
+				String[] value = ((RequestMapping)annotation).value();
 				if(value.length>0 && value[0]!=null) {
 					String[] path = value[0].split("/");
 					if(path.length==2) {
@@ -63,6 +65,8 @@ public class BaseModelViewReflex implements IBaseModelView {
 						MenuItem itemMenu = new MenuItem();
 						RarasClmItemMenu rarasClmItemMenu = clase.getAnnotation(RarasClmItemMenu.class);
 						RarasClmItemModulo rarasClmItemModulo = clase.getAnnotation(RarasClmItemModulo.class);
+						if(rarasClmItemMenu==null || rarasClmItemModulo==null)
+							continue;
 						itemMenu.setId(path[1]);
 						itemMenu.setDeno(rarasClmItemMenu.caption());
 						itemMenu.setModulo(rarasClmItemMenu.modulo());

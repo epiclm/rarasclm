@@ -8,7 +8,14 @@
 <script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
 <script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.pager.js"></script>
+<script type="text/javascript" th:if="${baseModel.mensaje}!=null" th:inline="javascript">
+/*<![CDATA[*/
 
+var tipoMensaje = /*[[${baseModel.mensaje.tipo}]]*/null;
+var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
+
+/*]]>*/
+</script>
 <script type="text/javascript" th:inline="javascript">"src/main/webapp/bower_components/tablesorter/dist/css/jquery.tablesorter.pager.css"
 /*<![CDATA[*/
 var routeBase  = /*[[${route.baseUrl}]]*/'';
@@ -18,8 +25,44 @@ var provincia = /*[[${busqueda.provincia}]]*/'';
 var enfermedades;
 var enfermedadesLiterales;
 
+
+function mensajeError(mensaje) {
+	$('#mensajes').html('<div class="alert alert-error"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
+	$('#mensajes').modal('show');
+}
+
+function mensajeSuccess(mensaje) {
+	$('#mensajes').html('<div class="alert alert-success"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
+	$('#mensajes').modal('show');
+}
+
+
 $(document)
 .ready(function() {	
+	
+	//Manejo de mensajes de retorno
+	var showModal = false;
+	
+	$('#mensajes').on('hidden', function () {
+		$.ajax({
+			url: '/'+contextApp+'/resetMensaje',
+			type: 'POST'
+		})
+	});
+	
+	if(typeof tipoMensaje === 'undefined') {
+		showModal = false;
+	} else if(tipoMensaje>0) {
+		mensajeSuccess(textoMensaje);
+		showModal=true;
+	} else if(tipoMensaje<0) {
+		mensajeError(textoMensaje)
+		showModal=true;
+	} 
+	
+	if(showModal) {
+		$('#mensajes').modal('show');
+	}
 	
 	//Cambia el select de los municipios a una provincia 
 	function cambiaProvincia(provincia) {
@@ -48,13 +91,42 @@ $(document)
 	//////////////////////////
 	// TABLA DE RESULTADOS
 	//////////////////////////
+
+	var pulsadoBotonRevision = false;
+	
+	function addRevisionCaso(idCaso) {
+		$.ajax({
+			dataType : 'json',
+			method : 'POST',
+			url :   '/'+ contextApp + '/usuario/addrevision/' + idCaso,
+			//contentType : "application/json; charset=utf-8" 
+			}).done( function(data) {
+				alert("OK")
+			}).fail( function() {
+				alert("Fallo")
+			}).always( function() {
+				pulsadoBotonRevision=false;
+			});
+	}
+	
+	$('td.btn-caso-revision button').click(
+		function() {
+			pulsadoBotonRevision = true;
+			addRevisionCaso($(this).attr('data-idCaso'));
+		}		
+	);
 	
 	//Manejo de link para la fila entera
-	$('tr.clickable').click( function() {
-	    window.location = $(this).find('a').attr('href');
+	$('tr.clickable').click( function(event) {
+		if(!pulsadoBotonRevision) {
+			window.location = $(this).find('a').attr('href');
+		} else {
+			pulsadoBotonRevision=false;
+		}
 	}).hover( function() {
 	    $(this).toggleClass('hover');
 	});
+	
 	
 	//Adaptacion de un ejemplo http://jsfiddle.net/Mottie/wty134u7/
 	$('#tabla-resultados').tablesorter({
@@ -94,6 +166,7 @@ $(document)
 	/////////////////////////////
 	// LóGICA DEL FORMULARIO
 	/////////////////////////////
+	
 	
 		//Si el modelo de búsqueda tiene especificada una provincia o municipio
 		//los carga el el formulario
@@ -306,6 +379,23 @@ $(document)
 <body>
 	<div id="contenido" layout:fragment="content">
 	
+		<!-- Mensajes -->
+		<div id="mensajes" class="modal fade">
+			<div th:if="${resultado.error}" class="alert alert-error">
+				<p th:if="${resultado.mensaje} != null"
+					th:text="${resultado.mensaje}">
+				</p>
+			</div>
+			<div th:if="${resultado.success}" class="alert alert-success">
+				<p th:if="${resultado.mensaje} != null"
+					th:text="${resultado.mensaje}">
+				</p>
+			</div>
+			<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+			</div>
+		</div>
+	
 		<div id="tabBusquedaIndex" class="tab-content row  span12">
 		
 			<ul id="tabs-busqueda-cabecera" class="nav nav-tabs">
@@ -408,6 +498,9 @@ $(document)
 
 				<!-- PACIENTES -->
 				<div id="tab-paciente-resultados" class="row" th:attr="class=${busqueda.casos!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
+					<div  th:if="${busqueda.casos}==null">
+						<p style="padding: 20px 10px 10px 15px">No hay resultados.</p>
+					</div>
 					<div  th:if="${busqueda.casos}!=null">
 <!-- 						<ul th:each="caso: ${busqueda.casos}"> -->
 <!-- 							<li><a th:href="|/${baseModel.baseApp}/busqueda/ircaso/${caso.idCaso}|" th:text="|${caso.idCaso} ${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre} ${baseModel.cache.getMunipioDeno(caso.paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(caso.paciente.municipioResidencia.substring(0,2))}) ${caso.literal}|"></a></li> -->
@@ -429,9 +522,10 @@ $(document)
 							  <table id="tabla-resultados">
 								 <thead>
 									 <tr>
+									 	<td></td>
 										<td>ID</td>
-										<td>1er Apellido</td>
-										<td>2o Apellido</td>
+										<td>Primer Apellido</td>
+										<td>Segundo Apellido</td>
 										<td>Nombre</td>
 										<td>Municipio</td>
 										<td>Provincia</td>
@@ -440,6 +534,7 @@ $(document)
 								</thead>
 								<tbody>
 									<tr th:each="caso: ${busqueda.casos}" class="clickable">
+										<td class="btn-caso-revision"><button th:attr="data-idCaso=${caso.idCaso}"><i class="icon-plus-sign"></i></button></td>
 										<td><a th:href="|casos/edit/${caso.idCaso}|" th:text="${caso.idCaso}" ></a></td>
 										<td th:text="${caso.paciente.apellido01}"></td>
 										<td th:text="${caso.paciente.apellido02}"></td>

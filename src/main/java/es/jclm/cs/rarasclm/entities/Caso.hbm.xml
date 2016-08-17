@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 10-ago-2016 9:15:45 by Hibernate Tools 4.3.4.Final -->
+<!-- Generated 16-ago-2016 11:38:26 by Hibernate Tools 4.3.4.Final -->
 <hibernate-mapping>
     <class name="es.jclm.cs.rarasclm.entities.Caso" table="caso" catalog="rarasclm" optimistic-lock="version">
         <id name="idCaso" type="string">
@@ -13,6 +13,9 @@
         </many-to-one>
         <many-to-one name="paciente" class="es.jclm.cs.rarasclm.entities.Paciente" fetch="select">
             <column name="paciente" />
+        </many-to-one>
+        <many-to-one name="seccion" class="es.jclm.cs.rarasclm.entities.Seccion" fetch="select">
+            <column name="seccion" />
         </many-to-one>
         <property name="numCaso" type="java.lang.Short">
             <column name="num_caso" />
@@ -152,5 +155,11 @@
         <property name="borradoLogico" type="java.lang.Boolean">
             <column name="borrado_logico" />
         </property>
+        <set name="casoRevisionUsuarios" table="caso_revision_usuario" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="caso" length="10" not-null="true" />
+            </key>
+            <one-to-many class="es.jclm.cs.rarasclm.entities.CasoRevisionUsuario" />
+        </set>
     </class>
 </hibernate-mapping>

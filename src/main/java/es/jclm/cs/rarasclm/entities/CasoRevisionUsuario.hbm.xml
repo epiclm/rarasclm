@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16-ago-2016 11:38:26 by Hibernate Tools 4.3.4.Final -->
+<hibernate-mapping>
+    <class name="es.jclm.cs.rarasclm.entities.CasoRevisionUsuario" table="caso_revision_usuario" catalog="rarasclm" optimistic-lock="version">
+        <composite-id name="id" class="es.jclm.cs.rarasclm.entities.CasoRevisionUsuarioId">
+            <key-property name="usuario" type="string">
+                <column name="usuario" length="45" />
+            </key-property>
+            <key-property name="caso" type="string">
+                <column name="caso" length="10" />
+            </key-property>
+            <key-property name="numRev" type="int">
+                <column name="num_rev" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="caso" class="es.jclm.cs.rarasclm.entities.Caso" update="false" insert="false" fetch="select">
+            <column name="caso" length="10" not-null="true" />
+        </many-to-one>
+        <many-to-one name="userRarasClm" class="es.jclm.cs.rarasclm.entities.UserRarasClm" update="false" insert="false" fetch="select">
+            <column name="usuario" length="45" not-null="true" />
+        </many-to-one>
+        <property name="revisado" type="java.lang.Boolean">
+            <column name="revisado" />
+        </property>
+        <property name="fechaRevision" type="timestamp">
+            <column name="fecha_revision" length="19" />
+        </property>
+        <property name="fechaCreacion" type="timestamp">
+            <column name="fecha_creacion" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

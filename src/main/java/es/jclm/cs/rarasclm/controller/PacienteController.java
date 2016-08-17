@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,8 @@ import es.jclm.cs.rarasclm.util.MergeEntity;
 @RarasClmItemMenu(caption="Pacientes",deno="Pacientes",modulo="pacientes",orden=1)
 public class PacienteController extends BaseController {
 	
+	private static final Logger log = LoggerFactory.getLogger(PacienteController.class);
+	
 	@Autowired
 	PacienteService servicio;
 	
@@ -44,6 +47,7 @@ public class PacienteController extends BaseController {
 	
 	@Autowired
 	HttpServletRequest request;
+	
 	
 	
 	public static final String OBJETO_PACIENTE_SESION="paciente";

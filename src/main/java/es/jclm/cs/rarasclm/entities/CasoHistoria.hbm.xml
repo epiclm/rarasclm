@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 10-ago-2016 9:15:45 by Hibernate Tools 4.3.4.Final -->
+<!-- Generated 16-ago-2016 11:38:26 by Hibernate Tools 4.3.4.Final -->
 <hibernate-mapping>
     <class name="es.jclm.cs.rarasclm.entities.CasoHistoria" table="caso_historia" catalog="rarasclm" optimistic-lock="version">
         <composite-id name="id" class="es.jclm.cs.rarasclm.entities.CasoHistoriaId">
@@ -152,6 +152,9 @@
         </property>
         <property name="usuarioModificacion" type="string">
             <column name="usuario_modificacion" length="45" />
+        </property>
+        <property name="seccion" type="java.lang.Integer">
+            <column name="seccion" />
         </property>
     </class>
 </hibernate-mapping>

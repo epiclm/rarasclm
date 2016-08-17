@@ -60,7 +60,6 @@ public class UserRarasClm implements java.io.Serializable {
 	}
 
 	@Id
-
 	@Column(name = "username", unique = true, nullable = false, length = 45)
 	public String getUsername() {
 		return this.username;
@@ -152,7 +151,7 @@ public class UserRarasClm implements java.io.Serializable {
 		this.puesto = puesto;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role_raras_clm", catalog = "rarasclm", joinColumns = {
 			@JoinColumn(name = "username", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "user_rol", nullable = false, updatable = false) })

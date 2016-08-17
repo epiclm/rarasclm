@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.entities.Caso;
+import es.jclm.cs.rarasclm.entities.CasoRevisionUsuario;
+import es.jclm.cs.rarasclm.entities.CasoRevisionUsuarioId;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 import es.jclm.cs.rarasclm.entities.MensajeResultado;
 import es.jclm.cs.rarasclm.entities.MensajeTipo;
@@ -35,6 +37,7 @@ import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
 import es.jclm.cs.rarasclm.service.PacienteService;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
+import es.jclm.cs.rarasclm.service.CasoRevisionService;
 import es.jclm.cs.rarasclm.util.MergeEntity;
 
 @Controller
@@ -54,6 +57,9 @@ public class CasoController extends BaseController {
 	
 	@Autowired 
 	private LocalizacionesService localizacionesService;
+	
+	@Autowired
+	private CasoRevisionService casoRevisionService;
 	
 	@Autowired
 	HttpServletRequest request;
@@ -159,6 +165,8 @@ public class CasoController extends BaseController {
 			MergeResult<Caso> casoMerge = new MergeEntity<Caso>().merge(casoSinEditar, caso);
 			servicio.Actualizar(casoMerge.getMergeObject());
 			
+			//referencia a caso con persistencia
+			caso = casoMerge.getMergeObject();
 	
 			StringBuilder sb = new StringBuilder();
 			sb.append(String.format("<p><b>ACTUALIZACIÓN CORRECTA</b></p>caso %07d%n (%s)</p>\n",
@@ -169,6 +177,24 @@ public class CasoController extends BaseController {
 //						f.getSerializeOldValue(),
 //						f.getSerializeNewValue()));
 			
+
+			if(casoRevisionService.isCasoRevisionSet(caso.getIdCaso(), user.getUsername())) {
+				//El caso estaba para revision. Se completa
+				CasoRevisionUsuario casoRevision = casoRevisionService.getCasoRevision(caso.getIdCaso(), user.getUsername());
+				casoRevision.setRevisado(true);
+				casoRevision.setFechaRevision(new Date());
+				casoRevisionService.Actualizar(casoRevision);
+			} else {
+				CasoRevisionUsuario casoRevision = new CasoRevisionUsuario();
+				CasoRevisionUsuarioId idRevision = new CasoRevisionUsuarioId();
+				idRevision.setCaso(caso.getIdCaso());
+				idRevision.setNumRev(casoRevisionService.getNumUltimaRevision(caso.getIdCaso(), user.getUsername())+1);
+				idRevision.setUsuario(user.getUsername());
+				casoRevision.setCaso(caso);
+				casoRevision.setRevisado(true);
+				casoRevisionService.Guardar(casoRevision);
+			}
+				
 			//Esta acción genera un mensaje al usuario
 			MensajeResultado mensaje = new MensajeResultado();
 			mensaje.setTipo(MensajeTipo.OK);

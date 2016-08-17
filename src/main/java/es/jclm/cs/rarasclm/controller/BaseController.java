@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import es.jclm.cs.rarasclm.entities.AccionRespuesta;
+import es.jclm.cs.rarasclm.entities.AccionResultado;
 import es.jclm.cs.rarasclm.entities.BaseModelViewReflex;
 import es.jclm.cs.rarasclm.entities.IBaseModelView;
 import es.jclm.cs.rarasclm.entities.MensajeResultado;
@@ -68,8 +68,8 @@ public class BaseController {
 	}
 	
 	@ModelAttribute("resultado")
-	public AccionRespuesta getResultado() {
-		AccionRespuesta ret = new AccionRespuesta();
+	public AccionResultado getResultado() {
+		AccionResultado ret = new AccionResultado();
 		return ret;
 	}
 	

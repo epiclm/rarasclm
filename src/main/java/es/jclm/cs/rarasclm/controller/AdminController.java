@@ -11,13 +11,11 @@ import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.entities.BusquedaModelView;
 
 @Controller
-@Secured("ROLE_ADMIN")
 @RequestMapping("/admin")
 @RarasClmItemModulo(caption="Administración",deno="Administración",modulo="admin",orden=5)
 @RarasClmItemMenu(caption="Administración",deno="Administración",modulo="admin",orden=1)
-public class AdministracionController extends BaseController {
+public class AdminController extends BaseController {
 
-	@Secured("ROLE_ADMIN")
 	@RequestMapping(method = RequestMethod.GET)
 	public String busqueda(Model model) {
 		

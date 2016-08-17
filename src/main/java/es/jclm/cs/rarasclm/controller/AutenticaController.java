@@ -22,17 +22,6 @@ public class AutenticaController {
 	
 	private static final Logger log = LoggerFactory.getLogger(AutenticaController.class);
 
-	/**
-	 * Autentica.
-	 *
-	 * @param error
-	 *            the error
-	 * @param logout
-	 *            the logout
-	 * @param request
-	 *            the request
-	 * @return the model and view
-	 */
 	@RequestMapping("/autentica")
 	public ModelAndView autentica(HttpServletRequest req) {
 		

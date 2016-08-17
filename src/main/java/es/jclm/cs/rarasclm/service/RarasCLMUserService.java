@@ -22,7 +22,6 @@ import es.jclm.cs.rarasclm.entities.RolRarasClm;
 import es.jclm.cs.rarasclm.entities.UserRarasClm;
 
 
-@Service
 public class RarasCLMUserService implements UserDetailsService {
 	
 	@Autowired
@@ -43,6 +42,10 @@ public class RarasCLMUserService implements UserDetailsService {
 			throw new UsernameNotFoundException("El nombre de usuario no puede estar vacío");
 		}	
 	}
+	
+	public boolean isEnabledAndExists(String user) {
+		return userDao.isUserEnabled(user);
+	}
 
 	private User buildUserForAuthentication(UserRarasClm user, List<GrantedAuthority> authorities) {
 		return new User(user.getUsername(), user.getPassword(), user.getEnabled()==1, true, true, true, authorities);
@@ -56,6 +59,8 @@ public class RarasCLMUserService implements UserDetailsService {
 		List<GrantedAuthority> Result = new ArrayList<GrantedAuthority>(setAuths);
 		return Result;
 	}
+	
+
 
 
 }

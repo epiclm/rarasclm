@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16-ago-2016 11:38:26 by Hibernate Tools 4.3.4.Final -->
+<hibernate-mapping>
+    <class name="es.jclm.cs.rarasclm.entities.Seccion" table="seccion" catalog="rarasclm" optimistic-lock="version">
+        <id name="idSeccion" type="int">
+            <column name="id_seccion" />
+            <generator class="assigned" />
+        </id>
+        <property name="deno" type="string">
+            <column name="deno" length="45" />
+        </property>
+        <set name="casos" table="caso" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="seccion" />
+            </key>
+            <one-to-many class="es.jclm.cs.rarasclm.entities.Caso" />
+        </set>
+    </class>
+</hibernate-mapping>

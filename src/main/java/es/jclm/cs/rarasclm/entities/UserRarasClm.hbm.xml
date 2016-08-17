@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 10-ago-2016 9:15:45 by Hibernate Tools 4.3.4.Final -->
+<!-- Generated 16-ago-2016 11:38:26 by Hibernate Tools 4.3.4.Final -->
 <hibernate-mapping>
     <class name="es.jclm.cs.rarasclm.entities.UserRarasClm" table="user_raras_clm" catalog="rarasclm" optimistic-lock="version">
         <id name="username" type="string">
@@ -42,6 +42,12 @@
             <many-to-many entity-name="es.jclm.cs.rarasclm.entities.RolRarasClm">
                 <column name="user_rol" not-null="true" />
             </many-to-many>
+        </set>
+        <set name="casoRevisionUsuarios" table="caso_revision_usuario" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="usuario" length="45" not-null="true" />
+            </key>
+            <one-to-many class="es.jclm.cs.rarasclm.entities.CasoRevisionUsuario" />
         </set>
     </class>
 </hibernate-mapping>

@@ -65,12 +65,14 @@ public class CasoService extends BaseCRUDService<Caso, String>{
 			id.setIdCaso(caso.getIdCaso());
 		}
 		
+		String enfRaraId = caso.getEnfermedadRara()!=null ? caso.getEnfermedadRara().getEnfermedadRaraId() : "";
+		int seccion = caso.getSeccion()!=null ? caso.getSeccion().getIdSeccion() : 0;
 		
 		id.setIdCaso(caso.getIdCaso());
 		CasoHistoria ch = new CasoHistoria(id,
 				caso.getPaciente().getIdPaciente(), 
 				caso.getNumCaso(), 
-				caso.getEnfermedadRara().getEnfermedadRaraId(), 
+				enfRaraId, 
 				caso.getDeclarada(), 
 				caso.getUsuarioDeclara(), 
 				caso.getFechaDeclara(), 
@@ -115,7 +117,7 @@ public class CasoService extends BaseCRUDService<Caso, String>{
 				caso.getUsuarioCreacion(), 
 				caso.getFechahoraModificacion(), 
 				caso.getUsuarioModificacion(),
-				caso.getSeccion().getIdSeccion());	
+				seccion);	
 		try {
 			casoHistoriaDao.guardar(ch);
 		} catch (UnableToSaveException ex) {

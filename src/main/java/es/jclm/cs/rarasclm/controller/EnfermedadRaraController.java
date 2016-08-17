@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
-import es.jclm.cs.rarasclm.entities.AccionRespuesta;
+import es.jclm.cs.rarasclm.entities.AccionResultado;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
 import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
@@ -95,7 +95,7 @@ public class EnfermedadRaraController extends BaseController {
 	/* Procesa el formulario */
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String submitForm(@ModelAttribute("enfermedadRaraModel") EnfermedadRara enf,
-			@ModelAttribute("resultado") AccionRespuesta resultado, SessionStatus status) {
+			@ModelAttribute("resultado") AccionResultado resultado, SessionStatus status) {
 		try {
 			enfermedadService.update(enf);
 			//Se actualiza para que carge las entidades relacionadas a la vista
@@ -197,7 +197,7 @@ public class EnfermedadRaraController extends BaseController {
 	}
 
 	@RequestMapping(value = "/updatecie9mc/{id}/{id2}", method = RequestMethod.POST)
-	public @ResponseBody AccionRespuesta updateEnfermedadRaraHasCie9Mc(@PathVariable String id,
+	public @ResponseBody AccionResultado updateEnfermedadRaraHasCie9Mc(@PathVariable String id,
 			@PathVariable String id2,
 			@RequestParam("notas") String notas,
 			@RequestParam("numPrioridad") String numPrioridad) {
@@ -216,7 +216,7 @@ public class EnfermedadRaraController extends BaseController {
 	}
 
 	@RequestMapping(value = "/deletecie9mc/{id}/{id2}", method = RequestMethod.POST)
-	public @ResponseBody AccionRespuesta deleteEnfermedadRaraHasCie9Mc(@PathVariable String id,
+	public @ResponseBody AccionResultado deleteEnfermedadRaraHasCie9Mc(@PathVariable String id,
 			@PathVariable String id2) {
 //		AccionRespuesta respuesta = new AccionRespuesta();
 //		respuesta.setId(id2);
