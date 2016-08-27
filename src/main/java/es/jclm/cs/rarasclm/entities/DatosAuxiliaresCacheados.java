@@ -35,7 +35,8 @@ public class DatosAuxiliaresCacheados {
 	private Map<Integer,String> basesDiagnosticas;
 	private List<Hospital> hospitales;
 	private Properties propiedades;
-	private int numMaxResultados;
+	private int numMaxResultadosBusqueda;
+	private int numMaxRevisiones;
 	
 	
 	public DatosAuxiliaresCacheados() {
@@ -313,14 +314,21 @@ public class DatosAuxiliaresCacheados {
 		this.propiedades = propiedades;
 	}
 
-	public int getNumMaxResultados() {
-		return numMaxResultados;
+	public int getNumMaxResultadosBusqueda() {
+		return numMaxResultadosBusqueda;
 	}
 
-	public void setNumMaxResultados(int numMaxResultados) {
-		this.numMaxResultados = numMaxResultados;
+	public void setNumMaxResultadosBusqueda(int numMaxResultados) {
+		this.numMaxResultadosBusqueda = numMaxResultados;
 	}
-	
-	
+
+	public int getNumMaxRevisiones() {
+		return numMaxRevisiones;
+	}
+
+	public void setNumMaxRevisiones(int numMaxRevisiones) {
+		this.numMaxRevisiones = numMaxRevisiones;
+	}
+
 	
 }

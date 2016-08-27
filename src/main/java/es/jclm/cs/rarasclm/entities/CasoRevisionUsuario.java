@@ -61,7 +61,7 @@ public class CasoRevisionUsuario implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "caso", nullable = false, insertable = false, updatable = false)
 	public Caso getCaso() {
 		return this.caso;
@@ -71,7 +71,7 @@ public class CasoRevisionUsuario implements java.io.Serializable {
 		this.caso = caso;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "usuario", nullable = false, insertable = false, updatable = false)
 	public UserRarasClm getUserRarasClm() {
 		return this.userRarasClm;

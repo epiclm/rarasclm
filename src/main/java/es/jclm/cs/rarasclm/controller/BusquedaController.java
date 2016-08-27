@@ -85,7 +85,7 @@ public class BusquedaController extends BaseController {
 		
 		busquedaModel.setNumResultados(numCasos);
 		
-		if((int)numCasos>cache.getNumMaxResultados()) {
+		if((int)numCasos>cache.getNumMaxResultadosBusqueda()) {
 			MensajeResultado mensaje = new MensajeResultado();
 			mensaje.setMensaje("La consulta responde con demasiados resultados. limite más la búsqueda");
 			mensaje.setTipo(MensajeTipo.ERROR);

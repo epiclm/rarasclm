@@ -7,11 +7,12 @@
 </head>
 <body>
 	<div id="contenido"  layout:fragment="content">
-		<div class="row offset1">
-			<h3>Uuario:</h3>
-			<p th:text="${userCLM.username}"></p>
-			<p th:text="|${userCLM.apellido01} ${userCLM.apellido02}, ${userCLM.nombre}|"></p>
-			<p th:text="${route.modulo}"></p>
+		<div id="info-usuario" class="row offset1 pull-right">
+			<table class="span12 ">
+				<tr><td class="text-right span2"><strong>Usuario:</strong></td><td th:text="${userCLM.username}"></td></tr>
+				<tr><td class="text-right span2"><strong>Nombre:</strong></td><td th:text="|${userCLM.apellido01} ${userCLM.apellido02}, ${userCLM.nombre}|"></td></tr>
+				<tr><td class="text-right span2"><strong>Último acceso:</strong></td><td th:text="${#dates.format(userCLM.ultimoAcceso,'dd/MMM/yyyy')}"></td></tr>
+			</table>
 		</div>
 	</div>
 </body>

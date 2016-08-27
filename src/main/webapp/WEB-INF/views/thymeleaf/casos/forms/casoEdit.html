@@ -185,12 +185,13 @@ $(document).ready( function() {
 <!-- 			  <button type="submit" class="btn btn-primary">Actualiza</button> -->
 <!-- 			  <button type="button" class="btn">Cancel</button> -->
 <!-- 			</div> -->
+
 			<div id="formulario-contenido">
 			<!-- CUADRO RESUMEN PACIENTE -->
 			<div id="cuadro-resumen-paciente" class="row">
 				<div id="grupo-nombre-paciente" class="form-group">
-					<label class="control-label span3" for="literal">Apellidos y Nombre:</label>
-					<p id="literal" class="span3"  th:text="|${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre}|"></p>
+					<label class="control-label" for="literal">Apellidos y Nombre:</label>
+					<p id="literal" class="span4"  th:text="|${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre}|"></p>
 				</div>
 				<div id="grupo-nombre-paciente" class="form-group">
 					<label class="control-label span1" for="literal">Sexo:</label>
@@ -203,9 +204,6 @@ $(document).ready( function() {
 				<div id="grupo-nombre-paciente" class="form-group">
 					<label class="control-label span3" for="literal">Muncipio Residencia:</label>
 					<p id="literal" class="span3"  th:text="|${baseModel.cache.getMunipioProvinciaDeno(caso.paciente.municipioResidencia)}|"></p>
-				</div>
-				<div class="form-group">
-					<a class="btn btn-primary" th:href="|/${baseModel.baseApp}/pacientes/edit/${caso.paciente.idPaciente}|">Editar Paciente</a>
 				</div>
 			</div>
 			

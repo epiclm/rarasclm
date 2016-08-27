@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +38,7 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 	static String ARCHIVO_PROPIEDADES = "rarasclm.properties";
 	
 	@Autowired
-	private DatosAuxiliaresCacheados datos;
+	private DatosAuxiliaresCacheados cache;
 	
 	@Autowired
 	EnfermedadRaraCie9mcService cie9Service;
@@ -66,42 +64,52 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 		log.info("Generando la estructura de módulos de la aplicación rarasCLM");
 		try {
 			log.info("Cargando entidades auxiliares de la aplicación de RarasCLM");
-			datos.setCie9mcs(cie9Service.getAllEnfermedadesRarasCie9mc(false));
-			datos.setCodLiteralesCie9mc(getCodigoLiteralCie9mc(datos.getCie9mcs()));
+			cache.setCie9mcs(cie9Service.getAllEnfermedadesRarasCie9mc(false));
+			
+			cache.setCodLiteralesCie9mc(getCodigoLiteralCie9mc(cache.getCie9mcs()));
 			log.info("Cargada entidades auxiliares CIE9MC");
-			datos.setCie10s(cie10Service.getAllEnfermedadesRarasCie10(false));
-			datos.setCodLiteralesCie10(getCodigoLiteralCie10(datos.getCie10s()));
+			
+			cache.setCie10s(cie10Service.getAllEnfermedadesRarasCie10(false));
+			cache.setCodLiteralesCie10(getCodigoLiteralCie10(cache.getCie10s()));
 			log.info("Cargada entidades auxiliares CIE10");
-			datos.setEnfRaras(raraService.getAllEnfermedadesRaras(false));
-			datos.setCodLiteralesEnfRara(getCodigoLiteralEnfRara(datos.getEnfRaras()));
+			
+			cache.setEnfRaras(raraService.getAllEnfermedadesRaras(false));
+			cache.setCodLiteralesEnfRara(getCodigoLiteralEnfRara(cache.getEnfRaras()));
 			log.info("Cargada entidades auxiliares Enfermedades Raras");
-			datos.setProvincias(localizacionesService.getProvincias(false));
-			datos.setProvinciasCLM(localizacionesService.getProvinciasCLM(false));
+			
+			cache.setProvincias(localizacionesService.getProvincias(false));
+			cache.setProvinciasCLM(localizacionesService.getProvinciasCLM(false));
 			log.info("Cargada entidades auxiliares Provincias");
-			datos.setMunicipios(localizacionesService.getMunicipios(false));
+			
+			cache.setMunicipios(localizacionesService.getMunicipios(false));
 			HashMap<String, List<Municipio>> hMunicipios;
 			hMunicipios = new HashMap<String, List<Municipio>>(52);
-			for(Provincia p : datos.getProvincias()) {
+			for(Provincia p : cache.getProvincias()) {
 				hMunicipios.put(p.getProvincia(),p.getMunicipios());
 			}
-			datos.setMunicipiosMapProvincia(hMunicipios);
+			
+			cache.setMunicipiosMapProvincia(hMunicipios);
 			log.info("Cargada entidades auxiliares Municipios");
-			datos.setHospitales(hospitalService.getHospitales(false));
+			cache.setHospitales(hospitalService.getHospitales(false));
 			log.info("Cargada entidades auxiliares Hospitales");
 			
+			//Carga el archivo de propiedades
 			InputStream inputStream;
 			inputStream = getClass().getClassLoader().getResourceAsStream(ARCHIVO_PROPIEDADES);
 			
 			if (inputStream != null) {
-				datos.getPropiedades().load(inputStream);
+				cache.getPropiedades().load(inputStream);
 			} else {
 				throw new FileNotFoundException("El archivo '" + ARCHIVO_PROPIEDADES + "' no se encuentra");
 			}
-			log.info("Leidos archivo de propiedades");
-			datos.setNumMaxResultados(300);
-			if(datos.getPropiedades().getProperty("rarasclm.max_resultados_busqueda")!=null)
-				datos.setNumMaxResultados(Integer.parseInt(datos.getPropiedades().getProperty("rarasclm.max_resultados_busqueda")));
 			
+			log.info("Leidos archivo de propiedades");
+			cache.setNumMaxResultadosBusqueda(300);
+			if(cache.getPropiedades().getProperty("rarasclm.max_resultados_busqueda")!=null)
+				cache.setNumMaxResultadosBusqueda(Integer.parseInt(cache.getPropiedades().getProperty("rarasclm.max_resultados_busqueda")));
+			cache.setNumMaxRevisiones(100);
+			if(cache.getPropiedades().getProperty("rarasclm.max_num_revisiones")!=null)
+				cache.setNumMaxRevisiones(Integer.parseInt(cache.getPropiedades().getProperty("rarasclm.max_num_revisiones")));
 		}
 		catch(Exception ex) {
 			log.error(ex.getMessage(),ex);

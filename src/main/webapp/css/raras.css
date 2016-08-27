@@ -121,10 +121,32 @@ li.rclmEnfermedadModal p{
 }
 
 
-/* #contenido { */
-/* 	max-width: 1800px; */
-/* } */
+/**************/
+/* INICIO     */
 
+#info-usuario  {
+	
+}
+
+#tabla-revisiones-contenedor {
+	overflow: auto;
+	padding-left: 10px;
+	margin-right: 10px;
+}
+
+#tabla-revisiones {
+	text-overflow: ellipsis; white-space: nowrap
+}
+
+#tabla-revisiones tbody td {
+	font-size: 12px;
+}
+
+#tabla-revisiones tr.hover {
+   cursor: pointer;
+   /* whatever other hover styles you want */
+   
+}
 
 
 /**************/

@@ -40,7 +40,10 @@ function mensajeSuccess(mensaje) {
 $(document)
 .ready(function() {	
 	
+	////////////////////////////////
 	//Manejo de mensajes de retorno
+	////////////////////////////////
+	
 	var showModal = false;
 	
 	$('#mensajes').on('hidden', function () {
@@ -64,7 +67,11 @@ $(document)
 		$('#mensajes').modal('show');
 	}
 	
-	//Cambia el select de los municipios a una provincia 
+	
+	///////////////////////////////////
+	//Cambio localidades de Provincia
+	///////////////////////////////////
+	
 	function cambiaProvincia(provincia) {
 		
 		var isOKForm = false;
@@ -506,11 +513,11 @@ $(document)
 <!-- 							<li><a th:href="|/${baseModel.baseApp}/busqueda/ircaso/${caso.idCaso}|" th:text="|${caso.idCaso} ${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre} ${baseModel.cache.getMunipioDeno(caso.paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(caso.paciente.municipioResidencia.substring(0,2))}) ${caso.literal}|"></a></li> -->
 <!-- 						</ul> -->
 							<div id="paginador" class="pager"> 
-						        <img src="https://mottie.github.io/tablesorter/addons/pager/icons/first.png" class="first"/> 
-						        <img src="https://mottie.github.io/tablesorter/addons/pager/icons/prev.png" class="prev"/> 
+						        <button class="first"><i class="icon-fast-backward"></i></button> 
+						        <button class="prev"><i class="icon-chevron-left"></i></button> 
 						        <span class="pagedisplay"></span> <!-- this can be any element, including an input --> 
-						        <img src="https://mottie.github.io/tablesorter/addons/pager/icons/next.png" class="next"/> 
-						        <img src="https://mottie.github.io/tablesorter/addons/pager/icons/last.png" class="last"/>
+						        <button class="next"><i class="icon-chevron-right"></i></button> 
+						        <button class="last"><i class="icon-fast-forward"></i></button> 
 						        <select class="pagesize" title="Select page size"> 
 						            <option selected="selected" value="10" style="width:20px">10</option> 
 						            <option value="20">20</option> 

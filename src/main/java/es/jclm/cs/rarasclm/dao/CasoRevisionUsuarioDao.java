@@ -18,13 +18,15 @@ public class CasoRevisionUsuarioDao extends BaseEntityDao<CasoRevisionUsuario,Ca
 	private static final Logger log = LoggerFactory.getLogger(CasoRevisionUsuarioDao.class);
 
 	
-	public List<CasoRevisionUsuario> getRevisionesPorHacer(String idUsuario) {
-		String sHql = "from CasoRevisionUsuario r where r.userRarasClm.username=:username and r.revisado=false";
+	public List<CasoRevisionUsuario> getRevisionesPorHacer(String idUsuario,int maxResults,int numPagina) {
+		String sHql = "from CasoRevisionUsuario r where r.userRarasClm.username=:username and r.revisado=false and r.fechaCreacion!=null order by r.fechaCreacion desc";
 		Session session = getSessionFactory().openSession();
 		List<CasoRevisionUsuario> ret = new ArrayList<CasoRevisionUsuario>();
 		try {
 			Query q = session.createQuery(sHql);
 			q.setParameter("username",idUsuario);
+			q.setMaxResults(maxResults);
+			q.setFirstResult(maxResults*(numPagina-1));
 			return (List<CasoRevisionUsuario>) q.list();
 		} catch(Exception ex) {
 			log.error(ex.getMessage(),ex);
@@ -37,13 +39,15 @@ public class CasoRevisionUsuarioDao extends BaseEntityDao<CasoRevisionUsuario,Ca
 	}
 	
 	
-	public List<CasoRevisionUsuario> getRevisionesHechas(String idUsuario) {
-		String sHql = "from CasoRevisionUsuario r where r.userRarasClm.username=:username and r.revisado=true";
+	public List<CasoRevisionUsuario> getRevisionesHechas(String idUsuario,int maxResults,int numPagina) {
+		String sHql = "from CasoRevisionUsuario r where r.userRarasClm.username=:username and r.revisado=true and r.fechaRevision!=null order by r.fechaRevision desc";
 		Session session = getSessionFactory().openSession();
 		List<CasoRevisionUsuario> ret = new ArrayList<CasoRevisionUsuario>();
 		try {
 			Query q = session.createQuery(sHql);
 			q.setParameter("username",idUsuario);
+			q.setMaxResults(maxResults);
+			q.setFirstResult(maxResults*(numPagina-1));
 			return (List<CasoRevisionUsuario>) q.list();
 		} catch(Exception ex) {
 			log.error(ex.getMessage(),ex);

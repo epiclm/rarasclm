@@ -64,7 +64,9 @@ public class CasoController extends BaseController {
 	@Autowired
 	HttpServletRequest request;
 	
-	public static final String OBJETO_CASO_SESION = "caso";
+	private static final String OBJETO_CASO_SESION = "caso";
+	private static final String OBJETO_PACIENTE_SESION = "paciente";
+	private static final String REVISADO_CASOS = "revisados_casos";
 		
 	@Autowired
 	private EnfermedadRaraService enfermedadService;
@@ -130,18 +132,11 @@ public class CasoController extends BaseController {
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public String  editPacienteEnviaFormulario(@PathVariable String id, Model model) {
 		Caso caso;
-		try {
-			if(request.getSession().getAttribute(OBJETO_CASO_SESION)==null) {
-				caso = servicio.Buscar(id);
-				request.getSession().setAttribute(OBJETO_CASO_SESION,caso);
-			} else {
-				caso = (Caso)request.getSession().getAttribute(OBJETO_CASO_SESION);
-				if(!caso.getIdCaso().equals(id)) {
-					//Buscamos ya que se está haciendo una petición de un caso distinto
-					//al que tenemeos guardado en sesión
-					caso = servicio.Buscar(id);
-				}
-			}
+		try {	
+			caso = servicio.Buscar(id);
+			request.getSession().setAttribute(OBJETO_CASO_SESION,caso);
+			request.getSession().setAttribute(OBJETO_PACIENTE_SESION, caso.getPaciente());
+			caso = (Caso)request.getSession().getAttribute(OBJETO_CASO_SESION);
 			model.addAttribute("caso", caso);
 		} catch (ServiceRarasCLMException ex) {
 			log.error(ex.getMessage(),ex);
@@ -190,10 +185,16 @@ public class CasoController extends BaseController {
 				idRevision.setCaso(caso.getIdCaso());
 				idRevision.setNumRev(casoRevisionService.getNumUltimaRevision(caso.getIdCaso(), user.getUsername())+1);
 				idRevision.setUsuario(user.getUsername());
+				casoRevision.setId(idRevision);
+				Date fecha = new Date();
+				casoRevision.setFechaCreacion(fecha);
+				casoRevision.setFechaRevision(fecha);
 				casoRevision.setCaso(caso);
 				casoRevision.setRevisado(true);
 				casoRevisionService.Guardar(casoRevision);
 			}
+			
+			request.getSession().setAttribute(REVISADO_CASOS, true);
 				
 			//Esta acción genera un mensaje al usuario
 			MensajeResultado mensaje = new MensajeResultado();

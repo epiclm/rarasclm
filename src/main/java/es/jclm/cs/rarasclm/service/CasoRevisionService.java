@@ -1,6 +1,7 @@
 package es.jclm.cs.rarasclm.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,6 +136,14 @@ public class CasoRevisionService extends BaseCRUDService<CasoRevisionUsuario, Ca
 	
 	public CasoRevisionUsuario getCasoRevision(String idCaso, String idUsuario) {
 		return casoRevisonDao.getCasoRevision(idCaso, idUsuario);
+	}
+	
+	public List<CasoRevisionUsuario> getRevisionesPorHacer(String idUsuario, int maxResults, int numPagina) {
+		return casoRevisonDao.getRevisionesPorHacer(idUsuario, maxResults, numPagina);
+	}
+	
+	public List<CasoRevisionUsuario> getRevisionesHechas(String idUsuario, int maxResults, int numPagina) {
+		return casoRevisonDao.getRevisionesHechas(idUsuario, maxResults, numPagina);
 	}
 	
 }
