@@ -51,6 +51,7 @@ public class BusquedaController extends BaseController {
 	public static final String OBJETO_PACIENTE_SESION="paciente";
 	public static final String OBJETO_CASO_SESION="caso";
 	public static final String OBJETO_BUSQUEDA_SESION="busqueda";
+	public static final String OBJETO_MENSAJE_SESION = "mensaje";
 
 	///////////////////////////////////
 	// BÚSQUEDA DE UN CASO SEND GET
@@ -89,7 +90,7 @@ public class BusquedaController extends BaseController {
 			MensajeResultado mensaje = new MensajeResultado();
 			mensaje.setMensaje("La consulta responde con demasiados resultados. limite más la búsqueda");
 			mensaje.setTipo(MensajeTipo.ERROR);
-			model.addAttribute("mensaje", mensaje);
+			request.getSession().setAttribute(OBJETO_MENSAJE_SESION,mensaje);
 			busquedaModel.setCasos(null);
 		} else {
 			busquedaModel.setCasos(busquedaService.buscaCasos(busquedaModel));

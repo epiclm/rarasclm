@@ -8,6 +8,7 @@
 <script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
 <script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.pager.js"></script>
+
 <script type="text/javascript" th:if="${baseModel.mensaje}!=null" th:inline="javascript">
 /*<![CDATA[*/
 
@@ -16,7 +17,7 @@ var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
 
 /*]]>*/
 </script>
-<script type="text/javascript" th:inline="javascript">"src/main/webapp/bower_components/tablesorter/dist/css/jquery.tablesorter.pager.css"
+<script type="text/javascript" th:inline="javascript" >
 /*<![CDATA[*/
 var routeBase  = /*[[${route.baseUrl}]]*/'';
 var contextApp = /*[[${baseModel.baseApp}]]*/'';

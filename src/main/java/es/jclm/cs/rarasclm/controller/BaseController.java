@@ -31,6 +31,8 @@ import es.jclm.cs.rarasclm.entities.UserRarasClm;
  * The Class BaseController.
  */
 public class BaseController {
+	
+	public static final String OBJETO_MENSAJE_SESION = "mensaje";
 
 	/** The base. */
 	@Autowired
@@ -54,7 +56,7 @@ public class BaseController {
 	public BaseModelViewReflex getBaseModel(HttpServletRequest request) {
 		//para enviar la baseApp o contextPath a la vista
 		String baseApp = request.getContextPath().replace("/", "");
-		MensajeResultado mensaje = (MensajeResultado)request.getSession().getAttribute("mensaje");
+		MensajeResultado mensaje = (MensajeResultado)request.getSession().getAttribute(OBJETO_MENSAJE_SESION);
 		base.setMensaje(mensaje);
 		base.setBaseapp(baseApp);
 		return base;
