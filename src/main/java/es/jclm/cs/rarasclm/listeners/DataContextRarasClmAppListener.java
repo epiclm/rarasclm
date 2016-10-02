@@ -4,6 +4,8 @@
  */
 package es.jclm.cs.rarasclm.listeners;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -35,7 +37,11 @@ import es.jclm.cs.rarasclm.service.LocalizacionesService;
 public class DataContextRarasClmAppListener implements ApplicationListener<ContextRefreshedEvent> {
 
 	static Log log = LogFactory.getLog(DataContextRarasClmAppListener.class.getName());
+	
 	static String ARCHIVO_PROPIEDADES = "rarasclm.properties";
+	String DIR_PROPIEDADES = "";
+	
+	//String ARCHIVOS_PROPIEDADES="";
 	
 	@Autowired
 	private DatosAuxiliaresCacheados cache;
@@ -58,7 +64,15 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 	@Autowired
 	IBaseModelView baseModel;
 	
-
+	public DataContextRarasClmAppListener() {
+		try {
+			DIR_PROPIEDADES = String.format("%s%s%s",System.getProperty("catalina.base"),File.separator,"conf");
+		} catch (Exception ex) {
+			log.warn("No se puede establecer el directorio catalina.base");
+		}
+	}
+	
+	
 	public void onApplicationEvent(ContextRefreshedEvent evt) {
 	
 		log.info("Generando la estructura de módulos de la aplicación rarasCLM");
@@ -95,15 +109,26 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 			
 			//Carga el archivo de propiedades
 			InputStream inputStream;
-			inputStream = getClass().getClassLoader().getResourceAsStream(ARCHIVO_PROPIEDADES);
-			
-			if (inputStream != null) {
-				cache.getPropiedades().load(inputStream);
+			if(DIR_PROPIEDADES.equals("")) {
+				inputStream = getClass().getClassLoader().getResourceAsStream(ARCHIVO_PROPIEDADES);		
+				if (inputStream != null) {
+					cache.getPropiedades().load(inputStream);
+					log.info(String.format("Leído el archivo de propiedades por defecto"));
+				} else {
+					throw new FileNotFoundException("El archivo '" + ARCHIVO_PROPIEDADES + "' no se encuentra");
+				} 
 			} else {
-				throw new FileNotFoundException("El archivo '" + ARCHIVO_PROPIEDADES + "' no se encuentra");
+				String s_archivo_propiedades = String.format("%s%s%s",DIR_PROPIEDADES,File.separator,ARCHIVO_PROPIEDADES);
+				try { 
+					inputStream = new FileInputStream(s_archivo_propiedades);
+					cache.getPropiedades().load(inputStream);
+					log.info(String.format("Leído el archivo de propiedades en %s",s_archivo_propiedades));
+				} catch(Exception ex) {
+					throw new FileNotFoundException("El archivo '" + s_archivo_propiedades + "' no se encuentra");
+				} 
 			}
 			
-			log.info("Leidos archivo de propiedades");
+			
 			cache.setNumMaxResultadosBusqueda(300);
 			if(cache.getPropiedades().getProperty("rarasclm.max_resultados_busqueda")!=null)
 				cache.setNumMaxResultadosBusqueda(Integer.parseInt(cache.getPropiedades().getProperty("rarasclm.max_resultados_busqueda")));

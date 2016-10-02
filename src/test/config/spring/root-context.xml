@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+          http://www.springframework.org/schema/jee 
+          http://www.springframework.org/schema/jee/spring-jee.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<context:component-scan base-package="es.jclm.cs.rarasclm" />
+	
+	<bean id="rarasClmListener" class="es.jclm.cs.rarasclm.listeners.DataContextRarasClmAppListener"></bean>
+	<bean id="datosAuxiliares"  class="es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados"></bean>
+	<bean id="baseModelView"    class="es.jclm.cs.rarasclm.entities.BaseModelViewReflex"></bean>
+	
+
+	<!-- <tx:annotation-driven transaction-manager="txManager" /> -->
+	
+<!-- 	<bean id="dataSourceRarasCLM" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close"> -->
+<!-- 		<property name="driverClass" value="com.mysql.jdbc.Driver"></property> -->
+<!-- 		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/rarasclm"></property> -->
+<!-- 		<property name="user" value="root"></property> -->
+<!-- 		<property name="password" value="alberto01"></property> -->
+<!-- 		<property name="maxPoolSize" value="50" /> -->
+<!-- 		<property name="minPoolSize" value="5" /> -->
+<!-- 		<property name="maxStatements" value="100" /> -->
+<!-- 		<property name="testConnectionOnCheckout" value="false" /> -->
+<!-- 		<property name="testConnectionOnCheckin" value="true" /> -->
+<!-- 		<property name="idleConnectionTestPeriod" value="30"/> -->
+<!-- 		<property name="connectionCustomizerClassName" -->
+<!-- 			value="es.jclm.cs.rarasclm.listeners.ConexionDBListener" /> -->
+<!-- 	</bean> -->
+
+	<bean id="dataSourceRarasCLM" class="org.springframework.jndi.JndiObjectFactoryBean" scope="singleton">
+		 <property name="jndiName" value="java:comp/env/jdbc/rarasclmTestDS" />
+	</bean>
+
+<!--  	<jee:jndi-lookup id="dataSourceRarasCLM" jndi-name="java:comp/env/jdbc/rarasclmDS" expected-type="javax.sql.DataSource" /> -->
+   			
+   			
+<!-- Hibernate 4 SessionFactory Bean definition -->
+	<bean id="hibernate4RarasCLMAnnotatedSessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceRarasCLM" />
+		<property name="packagesToScan" value="es.jclm.cs.rarasclm.entities" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.current_session_context_class">thread</prop>
+				<prop key="hibernate.show_sql">false</prop>
+			</props>
+		</property>
+	</bean>
+	
+
+<!--<security:global-method-security secured-annotations="enabled"/> -->
+
+	<security:http pattern="/css/**" security="none" />
+	<security:http pattern="/js/**" security="none" />
+	<security:http pattern="/img/**" security="none" />
+	<security:http pattern="/autentica" security="none" />
+	
+	
+	<security:http>
+	
+		<security:intercept-url pattern="/" access="ROLE_USER" />
+		<security:intercept-url pattern="/enfermedades/**" access="ROLE_USER" />
+		<security:intercept-url pattern="/casos/**" access="ROLE_USER" />
+		<security:intercept-url pattern="/pacientes/**" access="ROLE_USER" />
+		<security:intercept-url pattern="/busqueda/**" access="ROLE_USER" />
+		<security:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+		
+		<security:form-login
+			login-page="/autentica" 
+			username-parameter="username" 
+			password-parameter="password" 
+			authentication-success-handler-ref="mySuccessAuthenticationHandler"/>	
+		</security:http>
+
+
+	<!-- Select users and user_roles from database authentication-success-handler-ref="rarasCLMAuthSuccess"-->
+	<security:authentication-manager>
+	  <security:authentication-provider user-service-ref="rarasClmAuthenticationService">
+		<security:password-encoder hash="plaintext" /> 
+	  </security:authentication-provider>
+	</security:authentication-manager>
+
+
+	<bean id="mySuccessAuthenticationHandler"
+		  class="es.jclm.cs.rarasclm.listeners.RarasCLMAuthHandler" />
+	<bean id="rarasClmAuthenticationService" 
+		  class="es.jclm.cs.rarasclm.service.RarasCLMUserService" />
+
+</beans>

@@ -20,8 +20,9 @@
 	<bean id="baseModelView"    class="es.jclm.cs.rarasclm.entities.BaseModelViewReflex"></bean>
 	
 
-	<!-- <tx:annotation-driven transaction-manager="txManager" /> -->
-	
+<!-- <tx:annotation-driven transaction-manager="txManager" /> -->
+
+<!--  INSTANCIACIÓN DEL POOL DENTRO DE SPRING  -->
 <!-- 	<bean id="dataSourceRarasCLM" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close"> -->
 <!-- 		<property name="driverClass" value="com.mysql.jdbc.Driver"></property> -->
 <!-- 		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/rarasclm"></property> -->
