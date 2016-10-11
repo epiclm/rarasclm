@@ -3,16 +3,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout/rarasClmLayout">
 <head>
-<title>EDITAR Paciente</title>
-<script type="text/javascript" th:if="${baseModel.mensaje}!=null" th:inline="javascript">
-/*<![CDATA[*/
-
-var tipoMensaje = /*[[${baseModel.mensaje.tipo}]]*/null;
-var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
-
-/*]]>*/
-</script>
-
+<title th:text="|CASO ${caso.idCaso} ${caso.paciente.apellido01} ${caso.paciente.apellido02}|"></title>
 
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
@@ -25,19 +16,6 @@ var idCaso = /*[[${caso.idCaso}]]*/'';
 // el boton de enviar o borrar
 var submitOkModificar = false;
 var submitOkBorrar = false;
-
-
-function mensajeError(mensaje) {
-	$('#mensajes').html('<div class="alert alert-error"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
-	$('#mensajes').modal('show');
-}
-
-function mensajeSuccess(mensaje) {
-	$('#mensajes').html('<div class="alert alert-success"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
-	$('#mensajes').modal('show');
-}
-
-
 
 var imgEspera = '<img id="img-espera-num-paciente" style="width:18px;margin-left:10px" alt="Esperando..." src="/'+ contextApp  +'/img/espera.gif"></img>';
 
@@ -52,7 +30,7 @@ function doAsociaEnfermedadRara(cod) {
 		$("#linkEnfrara").text("/"+contextApp+"/enfermedades/enfrara/show/"+data.enfermedadRaraId);
 		$("#linkEnfrara").attr("href","/"+contextApp+"/enfermedades/enfrara/show/"+data.enfermedadRaraId);
 	}).fail(function( jqXHR, textStatus, errorThrown) {
-		alert("¡Error! al asociar enfermededad rara a paciente");
+		mensajeError("¡Error! al asociar enfermededad rara al paciente");
 	}).always(function() {
 		$('#modalEnf').modal('hide');
 	})
@@ -61,38 +39,9 @@ function doAsociaEnfermedadRara(cod) {
 
 $(document).ready( function() {
 	
-	//evita operación de navegación
-	var editado = false;
-	//preparado para submit (Boton Enviar)
-	var submitOkModificar = false;
-	//preparado para submit (Boton Borrar)
-	var submitOkBorrar = false;
 	
-	//Manejo de mensajes de retorno
-	var showModal = false;
-
+	addMensanjesFuncionalidad();
 	
-	$('#mensajes').on('hidden', function () {
-		$.ajax({
-			url: '/'+contextApp+'/resetMensaje',
-			type: 'POST'
-		})
-	});
-	
-	if(typeof tipoMensaje === 'undefined') {
-		showModal = false;
-	} else if(tipoMensaje>0) {
-		mensajeSuccess(textoMensaje);
-		showModal=true;
-	} else if(tipoMensaje<0) {
-		mensajeError(textoMensaje)
-		showModal=true;
-	} 
-
-	if(showModal) {
-		$('#mensajes').modal('show');
-	}
-
 	
 	//Manejo del submit (evitamos un submit que no sea
 	//realizado mediante un click al botón correcto
@@ -119,6 +68,7 @@ $(document).ready( function() {
 	//Autocompletado de la enfermedad rara CLM
 	$.ajax({
 		dataType : "json",
+		method : 'POST',
 		url : "/" + contextApp + "/enfermedades/enfrara/json",
 		contentType : "application/json; charset=utf-8"
 	}).done( function(data) {
@@ -144,7 +94,20 @@ $(document).ready( function() {
 		$(this).addClass("modificado");
 	});
 	
-})
+	$("#btn-revision").on('click',function() {
+		$.ajax({
+			dataType : "json",
+			method: 'POST',
+			url : "/" + contextApp + "/usuario/addrevision/"+idCaso,
+			contentType : "application/json; charset=utf-8"
+			}).fail(function(jqXHR,status,error) {
+				mensajeError("<p><b>ERROR:</b></p> " + jqXHR.responseText)
+			}).done(function (data) {
+				showRespuesta(data);
+			});
+		});
+	
+	});//Fin ready event
 
 /*]]>*/
 </script>
@@ -152,35 +115,13 @@ $(document).ready( function() {
 
 <body>
 	<div id="contenido" layout:fragment="content">
-	
-		<!-- Mensajes -->
-		<div id="mensajes" class="modal fade">
-			<div th:if="${resultado.error}" class="alert alert-error">
-				<p th:if="${resultado.mensaje} != null"
-					th:text="${resultado.mensaje}">
-				</p>
-			</div>
-			<div th:if="${resultado.success}" class="alert alert-success">
-				<p th:if="${resultado.mensaje} != null"
-					th:text="${resultado.mensaje}">
-				</p>
-			</div>
-			<div class="modal-footer">
-					<button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-			</div>
-		</div>
-	
-	
 		<div class="row">
 		<div class="offset1">
-		<form id="form-edit-caso" class="form-inline" method='POST'>
-	
+		<form id="form-edit-caso" class="form" method='POST'>
 			<input id="idCaso" name="idCaso" type="hidden" th:value="${caso.idCaso}"/>
-	
 			<div class="row">
-				<legend>Edición Caso <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span></legend>
+				<h4>Edición Caso <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span><button style="float:right" id="btn-revision" class="btn btn-success">Añadir a Revisión</button></h4>
 			</div>
-			
 <!-- 			<div class="form-actions"> -->
 <!-- 			  <button type="submit" class="btn btn-primary">Actualiza</button> -->
 <!-- 			  <button type="button" class="btn">Cancel</button> -->
@@ -188,266 +129,278 @@ $(document).ready( function() {
 
 			<div id="formulario-contenido">
 			<!-- CUADRO RESUMEN PACIENTE -->
-			<div id="cuadro-resumen-paciente" class="row">
-				<div id="grupo-nombre-paciente" class="form-group">
+			<div id="cuadro-resumen-paciente" class="row col-md-12">
+				<div id="grupo-nombre-paciente" class="form-group col-md-5">
 					<label class="control-label" for="literal">Apellidos y Nombre:</label>
-					<p id="literal" class="span4"  th:text="|${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre}|"></p>
+					<p id="literal" class="control-label"  th:text="|${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre}|"></p>
 				</div>
-				<div id="grupo-nombre-paciente" class="form-group">
-					<label class="control-label span1" for="literal">Sexo:</label>
-					<p id="literal" class="span1"  th:text="${baseModel.cache.getSexoLiteral(caso.paciente.sexo)}"></p>
+				<div id="grupo-nombre-paciente" class="form-group col-md-3">
+					<label class="control-label" for="literal">Sexo:</label>
+					<p id="literal" class="control-label"  th:text="${baseModel.cache.getSexoLiteral(caso.paciente.sexo)}"></p>
 				</div>
-				<div id="grupo-nombre-paciente" class="form-group">
+				<div id="grupo-nombre-paciente" class="form-group col-md-2">
 					<label class="control-label span1" for="literal">Edad:</label>
-					<p id="literal" class="span1"  th:text="|${caso.paciente.fechaNacimiento!=null ? baseModel.cache.getEdad(caso.paciente.fechaNacimiento) : '?'} años|"></p>
+					<p id="literal" class=""  th:text="|${caso.paciente.fechaNacimiento!=null ? baseModel.cache.getEdad(caso.paciente.fechaNacimiento) : '?'} años|"></p>
 				</div>
-				<div id="grupo-nombre-paciente" class="form-group">
-					<label class="control-label span3" for="literal">Muncipio Residencia:</label>
-					<p id="literal" class="span3"  th:text="|${baseModel.cache.getMunipioProvinciaDeno(caso.paciente.municipioResidencia)}|"></p>
+				<div id="grupo-nombre-paciente" class="form-group col-md-7">
+					<label class="control-label" for="literal">Muncipio Residencia:</label>
+					<p id="literal" class=""  th:text="|${baseModel.cache.getMunipioProvinciaDeno(caso.paciente.municipioResidencia)}|"></p>
 				</div>
 			</div>
 			
 			<div class="row">
-				<div id="grupo-literal-caso" class="form-group">
-					<label class="control-label span8" for="literal">Literal de la Enfermedad:</label>
-					<input id="literal" class="span8" name="literal" type="text" maxlength="255" th:value="${caso.literal}" placeholder="Literal de la Enfermedad"/>
+				<div id="grupo-literal-caso" class="form-group col-md-9">
+					<label class="control-label" for="literal">Literal de la Enfermedad:</label>
+					<input id="literal" class="form-control" name="literal" type="text" maxlength="255" th:value="${caso.literal}" placeholder="Literal de la Enfermedad"/>
 				</div>
 			</div>
-			<div class="row">
+			<!-- Enfermedad Rara CLM -->
+			<div id="enfermedad-rara-input-group" class="row">
 			
 				<input type="hidden" id="codEnfrara" name="codEnfrara" th:field="${caso.enfermedadRara.enfermedadRaraId}"/>
 				<input type="hidden" id="fechahoraModificacion" th:field="${caso.fechahoraModificacion}"/>
 				<input type="hidden" id="fechahoraCreacion" th:field="${caso.fechahoraCreacion}"/>
 			
 				<!--  ENF. RARA CLM -->
-				<div id="grupo-enfRara-caso" class="form-group">
-					<label class="control-label span7" for="enfrara">Enfermedad Rara CLM:</label>
-					<div class="input-append" style="width: 100%">
-						<input id="enfraraObjeto" class="span7"  name="enfRaraCLMliteral" type="text" maxlength="250" th:value="|${caso.enfermedadRara.enfermedadRaraId} ${caso.enfermedadRara.literal}|" placeholder="Escriba Literal o código de la Enfermedad"/>
-						<a class="btn add-on" data-toggle="modal" data-target="#modalEnf" href="" type="button"><i class="icon-search"></i></a>
+				<div id="grupo-enfRara-caso" class="form-group col-md-7">
+					<label class="control-label" for="enfrara">Enfermedad Rara CLM:</label>
+					<div class="input-group">
+						<input id="enfraraObjeto" class="form-control"  name="enfRaraCLMliteral" type="text" maxlength="250" th:value="|${caso.enfermedadRara.enfermedadRaraId} ${caso.enfermedadRara.literal}|" placeholder="Escriba Literal o código de la Enfermedad"/>
+						<span class="input-group-btn">
+							<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalEnf"><i class="glyphicon glyphicon-search"></i></button>
+						</span>
 					</div>
+				</div>
+				<div id="cuadro-resumen-enfrara" class="col-md-12">
+					<a id="linkEnfrara" target="_blank" th:href="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfermedadRara.enfermedadRaraId}|" th:text="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfermedadRara.enfermedadRaraId}|"></a>
 				</div>
 			</div>
 			
-			<div id="cuadro-resumen-enfrara" class="row">
-				<a id="linkEnfrara" target="_blank" th:href="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfermedadRara.enfermedadRaraId}|" th:text="|/${baseModel.baseApp}/enfermedades/enfrara/show/${caso.enfermedadRara.enfermedadRaraId}|"></a>
-			</div>
+			
 			<div id="grupo-fuentes" class="row">
-				<h5>Codificaciones:</h5>
+				<h5><b>Codificaciones:</b></h5>
 			</div>
 			<div id="codificaciones-fuentes" class="row">
-				<div id="grupo-codigos-cie9mc-caso" class="form-group">
-					<label class="control-label span1" for="codCie9mc">CIE9MC:</label>
-					<input id="codCie9mc" class="span1" name="codCie9mc" type="text" maxlength="6" th:value="${caso.codCie9mc}" placeholder="cie9"/>
+				<div id="grupo-codigos-cie9mc-caso" class="form-group col-md-2">
+					<label class="control-label" for="codCie9mc">CIE9MC:</label>
+					<input id="codCie9mc" class="form-control" name="codCie9mc" type="text" maxlength="6" th:value="${caso.codCie9mc}" placeholder="cie9"/>
 				</div>
-				<div id="grupo-codigos-cie10-caso" class="form-group">
-					<label class="control-label span1" for="codCie10">CIE10:</label>
-					<input id="codCie10" class="span1" name="codCie10" type="text" maxlength="5" th:value="${caso.codCie10}" placeholder="cie10"/>
+				<div id="grupo-codigos-cie10-caso" class="form-group col-md-2">
+					<label class="control-label" for="codCie10">CIE10:</label>
+					<input id="codCie10" class="form-control" name="codCie10" type="text" maxlength="5" th:value="${caso.codCie10}" placeholder="cie10"/>
 				</div>
-				<div id="grupo-codigos-edta-caso" class="form-group">
-					<label class="control-label span1" for="codEdta">EDTA:</label>
-					<input id="codEdta" class="span1" name="codEdta" type="text" maxlength="2" th:value="${caso.codEdta}" placeholder="edta"/>
+				<div id="grupo-codigos-edta-caso" class="form-group col-md-2">
+					<label class="control-label" for="codEdta">EDTA:</label>
+					<input id="codEdta" class="form-control" name="codEdta" type="text" maxlength="2" th:value="${caso.codEdta}" placeholder="edta"/>
 				</div>
-				<div id="grupo-codigos-omin-caso" class="form-group">
-					<label class="control-label span2" for="codOmin">OMIN:</label>
-					<input id="codOmin" class="span2" name="codOmin" type="text" maxlength="10" th:value="${caso.codOmin}" placeholder="omin"/>
+				<div id="grupo-codigos-omin-caso" class="form-group col-md-2">
+					<label class="control-label" for="codOmin">OMIN:</label>
+					<input id="codOmin" class="form-control" name="codOmin" type="text" maxlength="10" th:value="${caso.codOmin}" placeholder="omin"/>
 				</div>
 			</div>
+			
 			<div id="grupo-fuentes" class="row">
-				<h5>Fuente de Información:</h5>
+				<h5><b>Fuente de Información:</b></h5>
 			</div>
-			<div id="caja-fuente-informacion" class="row">
+			<div id="caja-fuente-informacion" class="row col-md-offset-1 col-md-9">
 				<div id="grupo-fuentes1">
 					<div id="fuente-cmdb-caso" class="form-group">
 						<label class="control-label" for="fuenteCmbdC">CMBD:</label>
-						<input type="checkbox" id="fuenteCmbdC"  name="fuenteCmbdC" th:field="${caso.fuenteCmbdC}"></input>
+						<input type="checkbox" class="" id="fuenteCmbdC"  name="fuenteCmbdC" th:field="${caso.fuenteCmbdC}"></input>
 					</div>
 					<div id="fuente-mortalidad-caso" class="form-group">
 						<label class="control-label" for="fuenteRmortM">Mort.:</label>
-						<input type="checkbox" id="fuenteRmortM" name="fuenteRmortM" th:field="${caso.fuenteRmortM}" ></input>
+						<input type="checkbox" class="" id="fuenteRmortM" name="fuenteRmortM" th:field="${caso.fuenteRmortM}" ></input>
 					</div>
 					<div id="fuente-renales-caso" class="form-group">
 						<label class="control-label" for="fuenteRenalR">Renales:</label>
-						<input type="checkbox" id="fuenteRenalR" name="fuenteRenalR"  th:field="${caso.fuenteRenalR}"></input>
+						<input type="checkbox" class="" id="fuenteRenalR" name="fuenteRenalR"  th:field="${caso.fuenteRenalR}"></input>
 					</div>
 					<div id="fuente-investigacion-caso" class="form-group">
 						<label class="control-label" for="fuenteRinvI">R. Invest.:</label>
-						<input type="checkbox" id="fuenteRinvI" name="fuenteRinvI" th:field="${caso.fuenteRinvI}"></input>
+						<input type="checkbox" class="" id="fuenteRinvI" name="fuenteRinvI" th:field="${caso.fuenteRinvI}"></input>
 					</div>
 					<div id="fuente-defcongenitos-caso" class="form-group">
-						<label class="control-label" for="fuenteDefcongD">Def. Congé.:</label>
-						<input type="checkbox" id="fuenteDefcongD" name="fuenteDefcongD" th:field="${caso.fuenteDefcongD}"></input>
+						<label class="control-label" for="fuenteDefcongD">Def. Con.:</label>
+						<input type="checkbox" class="" id="fuenteDefcongD" name="fuenteDefcongD" th:field="${caso.fuenteDefcongD}"></input>
 					</div>
 					<div id="fuente-defcongenitos-caso" class="form-group">
 						<label class="control-label" for="fuenteEdoE">E.D.O.:</label>
-						<input type="checkbox" id="fuenteEdoE" name="fuenteEdoE" th:field="${caso.fuenteEdoE}"></input>
+						<input type="checkbox" class="" id="fuenteEdoE" name="fuenteEdoE" th:field="${caso.fuenteEdoE}"></input>
 					</div>
 				</div>
 				<div id="grupo-fuentes2">
 					<div id="fuente-sociales-caso" class="form-group">
 						<label class="control-label" for="fuenteIsocialesG">R. Soc.:</label>
-						<input type="checkbox" id="fuenteIsocialesG" name="fuenteIsocialesG" th:field="${caso.fuenteIsocialesG}"></input>
+						<input type="checkbox" class="" id="fuenteIsocialesG" name="fuenteIsocialesG" th:field="${caso.fuenteIsocialesG}"></input>
 					</div>
 					<div id="fuente-mhuerfanos-caso" class="form-group">
 						<label class="control-label" for="fuenteMhuerfH">M. Huerf.:</label>
-						<input type="checkbox" id="fuenteMhuerfH" name="fuenteMhuerfH" th:field="${caso.fuenteMhuerfH}"></input>
+						<input type="checkbox" class="" id="fuenteMhuerfH" name="fuenteMhuerfH" th:field="${caso.fuenteMhuerfH}"></input>
 					</div>
 					<div id="fuente-rtutores-caso" class="form-group">
 						<label class="control-label" for="fuenteRcancerT">R. Cáncer:</label>
-						<input type="checkbox" id="fuenteRcancerT" name="fuenteRcancerT" th:field="${caso.fuenteRcancerT}"></input>
+						<input type="checkbox" class="" id="fuenteRcancerT" name="fuenteRcancerT" th:field="${caso.fuenteRcancerT}"></input>
 					</div>
 					<div id="fuente-rtutores-caso" class="form-group">
 						<label class="control-label" for="fuenteMetabolN">Metabolo.:</label>
-						<input type="checkbox" id="fuenteMetabolN" name="fuenteMetabolN" th:field="${caso.fuenteMetabolN}"></input>
+						<input type="checkbox" class="" id="fuenteMetabolN" name="fuenteMetabolN" th:field="${caso.fuenteMetabolN}"></input>
 					</div>
 					<div id="fuente-rtutores-caso" class="form-group">
 						<label class="control-label" for="fuenteHcPrimariaV">HC Primar.:</label>
-						<input type="checkbox" id="fuenteHcPrimariaV" name="fuenteHcPrimariaV" th:field="${caso.fuenteHcPrimariaV}"></input>
+						<input type="checkbox" class="" id="fuenteHcPrimariaV" name="fuenteHcPrimariaV" th:field="${caso.fuenteHcPrimariaV}"></input>
 					</div>
 					<div id="fuente-rtutores-caso" class="form-group">
 						<label class="control-label" for="fuenteHcEspecializadaU">HC Secun.:</label>
-						<input type="checkbox" id="fuenteHcEspecializadaU" name="fuenteHcEspecializadaU" th:field="${caso.fuenteHcEspecializadaU}"></input>
+						<input type="checkbox" class="" id="fuenteHcEspecializadaU" name="fuenteHcEspecializadaU" th:field="${caso.fuenteHcEspecializadaU}"></input>
 					</div>
 				</div>
 			</div>
 			<div id="grupo-hospital" class="row">
-				<div id="hospital-caso" class="form-group">
-					<label class="control-label span6" for="hospital">Hospital ( historia clínica primaria ):</label>
-					<select name="hospital" class="span6" id="hospital"  th:field="${caso.hospital}" >
+				<div id="hospital-caso" class="form-group col-md-9">
+					<label class="control-label" for="hospital">Hospital ( historia clínica primaria ):</label>
+					<select name="hospital" class="form-control" id="hospital"  th:field="${caso.hospital}" >
 						<option th:each="hospital : ${baseModel.cache.hospitales}" th:value="${hospital.idHospital}" th:text="|${hospital.idHospital} ${hospital.literal}|"></option>
 					</select>
 				</div>
-				<div id="grupo-nhc-caso" class="form-group">
-					<label class="control-label span2" for="literal">Número Historia Clínica:</label>
-					<input id="nhc" class="span2" name="nhc" type="text" maxlength="12" th:value="${caso.nhc}" placeholder="nhc"/>
+				<div id="grupo-nhc-caso" class="form-group col-md-2">
+					<label class="control-label" for="literal">N. Historia Clínica:</label>
+					<input id="nhc" class="form-control" name="nhc" type="text" maxlength="12" th:value="${caso.nhc}" placeholder="nhc"/>
 				</div>
 			</div>
 			<div id="grupo-base-diagnostico" class="row">
-				<div id="basedtco-caso" class="form-group">
-					<label class="control-label span6 " for="domTipoVia">Base del Diagnóstico:</label>
-					<select name="baseDiagnostico" class="span6" id="baseDiagnostico"  th:field="${caso.baseDiagnostico}" >
+				<div id="basedtco-caso" class="form-group col-md-9">
+					<label class="control-label" for="domTipoVia">Base del Diagnóstico:</label>
+					<select name="baseDiagnostico" class="form-control" id="baseDiagnostico"  th:field="${caso.baseDiagnostico}" >
 						<option th:each="baseDto : ${baseModel.cache.basesDiagnosticas}" th:value="${baseDto.key}" th:text="${baseDto.value}"></option>
 					</select>
 				</div>	
 			</div>
 			<div id="grupo-juicio" class="row">
-				<div id="juicio-clinico-caso" class="form-group">
-					<label class="control-label span7" for="jucioClinico">Juicio Clínico:</label>
-					<textarea id="jucioClinico" class="span7" name="jucioClinico" maxlength="512" th:text="${caso.jucioClinico}" cols="30" rows="5"> </textarea>
+				<div id="juicio-clinico-caso" class="form-group col-md-7">
+					<label class="control-label" for="jucioClinico">Juicio Clínico:</label>
+					<textarea id="jucioClinico" class="form-control" name="jucioClinico" maxlength="512" th:text="${caso.jucioClinico}" cols="30" rows="5"> </textarea>
 				</div>
 			</div>
 			<div id="grupo-tratamiento" class="row">
-				<div id="tratamiento-caso" class="form-group">
-					<label class="control-label span7" for="tratamiento">Tratamiento:</label>
-					<textarea id="tratamiento" class="span7" name="tratamiento" th:text="${caso.tratamiento}" cols="30" rows="5"></textarea>
+				<div id="tratamiento-caso" class="form-group col-md-7">
+					<label class="control-label" for="tratamiento">Tratamiento:</label>
+					<textarea id="tratamiento" class="form-control" name="tratamiento" th:text="${caso.tratamiento}" cols="30" rows="5"></textarea>
 				</div>
 			</div>
 			<div id="grupo-observaciones" class="row">
-				<div id="juicio-clinico-caso" class="form-group">
-					<label class="control-label span7" for="observaciones">Observaciones:</label>
-					<textarea id="observaciones" class="span7" name="observaciones" th:text="${caso.observaciones}" cols="30" rows="5"></textarea>
+				<div id="juicio-clinico-caso" class="form-group col-md-7">
+					<label class="control-label" for="observaciones">Observaciones:</label>
+					<textarea id="observaciones" class="form-control" name="observaciones" th:text="${caso.observaciones}" cols="30" rows="5"></textarea>
 				</div>
 			</div>
+			
 			<div id="grupo-fecha-inicio-sintomas" class="row">
-				<div id="fecha-deteccion-caso" class="form-group">
-					<label class="control-label span3" for="fechaDeteccion">Fecha de Detección:</label>
-					<input id="fechaDeteccion" class="span3" name="fechaDeteccion" type="date"
+				<div id="fecha-deteccion-caso" class="form-group col-md-3">
+					<label class="control-label" for="fechaDeteccion">Fecha de Detección:</label>
+					<input id="fechaDeteccion" class="form-control" name="fechaDeteccion" type="date"
 						 th:value="${caso.fechaDeteccion}" />
 				</div>
-				<div id="inicio-sintomas-clinico-caso" class="form-group">
-					<label class="control-label span3" for="fechaInicioSintomas">Fecha Inicio sintomas:</label>
-					<input id="fechaInicioSintomas" class="span3" name="fechaInicioSintomas" type="date"
+				<div id="inicio-sintomas-clinico-caso" class="form-group col-md-3">
+					<label class="control-label" for="fechaInicioSintomas">Fecha Inicio sintomas:</label>
+					<input id="fechaInicioSintomas" class="form-control" name="fechaInicioSintomas" type="date"
 						 th:value="${caso.fechaInicioSintomas}" />
 				</div>
-				<div id="fecha-diagnostico-clinico-caso" class="form-group">
-					<label class="control-label span3" for="fechaDiagnostico">Fecha Diagnostico:</label>
-					<input id="fechaDiagnostico" class="span3" name="fechaDiagnostico" type="date"
+				<div id="fecha-diagnostico-clinico-caso" class="form-group col-md-3">
+					<label class="control-label" for="fechaDiagnostico">Fecha Diagnostico:</label>
+					<input id="fechaDiagnostico" class="form-control" name="fechaDiagnostico" type="date"
 						 th:value="${caso.fechaDiagnostico}" />
 				</div>
 			</div>
 			
 			<div id="grupo-cronicas-caso" class="row">
-				<div id="familiaresEnfermedadesRaras-grupo" class="form-group">
-					<label class="control-label span3" for="fechaDiagnostico">Familiares con Enfermedades Raras:</label>
-					<select name="familiaresEnfermedadesRaras" class="span2" id="familiaresEnfermedadesRaras"  th:field="${caso.familiaresEnfermedadesRaras}">
+				<div id="familiaresEnfermedadesRaras-grupo" class="form-group col-md-2">
+					<label class="control-label" for="fechaDiagnostico">Familiares con Enfermedades Raras:</label>
+					<select name="familiaresEnfermedadesRaras" class="form-control" id="familiaresEnfermedadesRaras"  th:field="${caso.familiaresEnfermedadesRaras}">
 						<option value="0">NO</option>
 						<option value="1">SI</option>
 						<option value="9">NC</option>
 					</select>
 				</div>
-				<div id="otrasEnfermedadesCronicas-grupo" class="form-group">
-					<label class="control-label span3" for="fechaDiagnostico">Otras enfermedades Crónicas:</label>
-					<select name="otrasEnfermedadesCronicas" class="span2" id="otrasEnfermedadesCronicas"  th:field="${caso.otrasEnfermedadesCronicas}">
+				<div id="otrasEnfermedadesCronicas-grupo" class="form-group col-md-2">
+					<label class="control-label" for="fechaDiagnostico">Otras enfermedades Crónicas:</label>
+					<select name="otrasEnfermedadesCronicas" class="form-control" id="otrasEnfermedadesCronicas"  th:field="${caso.otrasEnfermedadesCronicas}">
 						<option value="0">NO</option>
 						<option value="1">SI</option>
 						<option value="9">NC</option>
 					</select>
-				</div>
-			</div>
-			<div id="grupo-cronicas-texto-caso" class="row">
-				<div id="enfermedadesCronicas-caso" class="form-group">
-					<label class="control-label span7" for="enfermedadesCronicas">Enfermedades Crónicas:</label>
-					<textarea id="enfermedadesCronicas" class="span7" name="enfermedadesCronicas" th:text="${caso.enfermedadesCronicas}" cols="30" rows="5"></textarea>
 				</div>
 			</div>
 			
-				<div id="declaracion-caso" class="row">
-				<h5>Declaración:</h5>
-					<div id="declarada-grupo" class="form-group">
-						<label class="control-label span2" for="declarada">DECLARADA:</label>
-						<select name="declarada" class="span2" id="declarada"  th:field="${caso.declarada}">
+			<div id="grupo-cronicas-texto-caso" class="row">
+				<div id="enfermedadesCronicas-caso (Despcripción)" class="form-group col-md-7">
+					<label class="control-label" for="enfermedadesCronicas">Enfermedades Crónicas:</label>
+					<textarea id="enfermedadesCronicas" class="form-control" name="enfermedadesCronicas" th:text="${caso.enfermedadesCronicas}" cols="30" rows="5"></textarea>
+				</div>
+			</div>
+			
+			<div id="declaracion-caso" class="row">
+				<h5><b>Declaración:</b></h5>
+					<div id="declarada-grupo" class="form-group col-md-2">
+						<label class="control-label" for="declarada">DECLARADA:</label>
+						<select name="declarada" class="form-control" id="declarada"  th:field="${caso.declarada}">
 							<option value="0">NO</option>
 							<option value="1">SI</option>
 						</select>
 					</div>
-					<div id="cuadro-declaración" class="form-group">
-						<div id="fecha-diagnostico-clinico-caso" class="form-group">
-							<label class="control-label span3" for="usuarioDeclara">Usuario Declara:</label>
-							<input id="usuarioDeclara" class="span3" name="usuarioDeclara" type="text"
-								 th:value="${caso.usuarioDeclara}" />
-						</div>
+					<div id="usuario-declara-diagnostico-clinico-caso" class="form-group col-md-5">
+						<label class="control-label" for="usuarioDeclara">Usuario Declara:</label>
+						<input id="usuarioDeclara" class="form-control" name="usuarioDeclara" type="text"
+							 th:value="${caso.usuarioDeclara}" />
 					</div>
-					<div id="fecha-declaracion-caso" class="form-group">
+					<div id="fecha-declaracion-caso" class="form-group col-md-3">
 						<label class="control-label span3" for="fechaDeclara">Fecha de Declaración:</label>
-						<input id="fechaDeclara" class="span3" name="fechaDeclara" type="date"
+						<input id="fechaDeclara" class="form-control" name="fechaDeclara" type="date"
 							 th:value="${caso.fechaDeclara}" />
 					</div>
-				</div>
+			</div>
 
 			
 			<div id="grupo-acciones-bajo" class="row">
-				<div class="form-actions">
+				<div class="form-actions col-md-10">
 				  <button id="btnEnviar" type="submit" class="btn btn-primary">Guardar Cambios</button>
 				  <button id="btnCancelar" type="button" class="btn">Cancel</button>
 				  <button id="btnBorrar" style="float: right" type="submit" class="btn btn-danger">Borrar</button>
 				</div>
 			</div>
 		   </div> <!-- Fin formulario contenido -->
+		   
 		</form>
 	  </div>
 	  </div>
-		
+
 		<!-- Modal de enfermedades -->
-		<div id="modalEnf" class="modal hide fade">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h3>Selección de Enfermedad Rara</h3>
-			</div>
-			<div class="modal-body">
-				<div id="cuadro" style="height: 300px; overflow: scroll">
-					<ul th:each="rara : ${allRaras}">
-						<li class="rclmEnfermedadModal">
-							<a th:onclick="|doAsociaEnfermedadRara('${rara.enfermedadRaraId}')|" th:text="|${rara.enfermedadRaraId} ${rara.literal}|"></a>
-							<a  style="margin-left:5px" class="btn btn-success btn-mini" type="button" th:onclick="|doAsociaEnfermedadRara('${rara.enfermedadRaraId}')|">Asociar a Caso</a> 
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="modal-footer">
-			
-			</div>
-		</div>
-		
+		<div id="modalEnf" class="modal fade"  tabindex="-1"  role="dialog">
+			<div class="modal-dialog" role="document"> 
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h3>Selección de Enfermedad Rara</h3>
+					</div>
+					<div class="modal-body">
+						<div id="cuadro" style="height: 300px; overflow: scroll">
+							<ul th:each="rara : ${allRaras}">
+								<li class="rclmEnfermedadModal">
+									<a th:href="|/${baseModel.baseApp}/enfermedades/enfrara/show/${rara.enfermedadRaraId}|"
+										th:text="|${rara.enfermedadRaraId} ${rara.literal}|">
+									</a> 
+									<a style="margin-left: 5px" class="btn btn-success btn-mini"
+										th:onclick="|doAsociaEnfermedadRara('${rara.enfermedadRaraId}')|">Asociar a Caso
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="modal-footer"></div>
+				</div><!-- modal content -->
+			</div><!-- modal dialog -->
+		</div><!-- Fin Modal -->
+
 	</div> <!-- Fin contenido -->
 </body>
 </html>

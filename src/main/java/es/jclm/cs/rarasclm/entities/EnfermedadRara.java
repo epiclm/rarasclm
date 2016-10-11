@@ -31,6 +31,8 @@ public class EnfermedadRara implements java.io.Serializable {
 	private String url;
 	private Date ultimaActualizacion;
 	private String notas;
+	private String cie9mc;
+	private String cie10;
 	private Set<Caso> casos = new HashSet<Caso>(0);
 	private Set<EnfermedadCie9mc> enfermedadCie9mcs = new HashSet<EnfermedadCie9mc>(0);
 	private Set<EnfermedadCie10> enfermedadCie10s = new HashSet<EnfermedadCie10>(0);
@@ -43,7 +45,7 @@ public class EnfermedadRara implements java.io.Serializable {
 	}
 
 	public EnfermedadRara(String enfermedadRaraId, String literal, String otroCod, String denoOtro, String descripcion,
-			String url, Date ultimaActualizacion, String notas, Set<Caso> casos,
+			String url, Date ultimaActualizacion, String notas, String cie9mc, String cie10, Set<Caso> casos, 
 			Set<EnfermedadCie9mc> enfermedadCie9mcs, Set<EnfermedadCie10> enfermedadCie10s) {
 		this.enfermedadRaraId = enfermedadRaraId;
 		this.literal = literal;
@@ -54,6 +56,8 @@ public class EnfermedadRara implements java.io.Serializable {
 		this.ultimaActualizacion = ultimaActualizacion;
 		this.notas = notas;
 		this.casos = casos;
+		this.cie10 = cie10;
+		this.cie9mc = cie9mc;
 		this.enfermedadCie9mcs = enfermedadCie9mcs;
 		this.enfermedadCie10s = enfermedadCie10s;
 	}
@@ -141,6 +145,24 @@ public class EnfermedadRara implements java.io.Serializable {
 	public void setCasos(Set<Caso> casos) {
 		this.casos = casos;
 	}
+	
+	@Column(name = "cie9mc", length = 6)
+	public String getCie9mc() {
+		return cie9mc;
+	}
+
+	public void setCie9mc(String cie9mc) {
+		this.cie9mc = cie9mc;
+	}
+
+	@Column(name = "cie10", length = 6)
+	public String getCie10() {
+		return cie10;
+	}
+
+	public void setCie10(String cie10) {
+		this.cie10 = cie10;
+	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "enfermedad_rara_enfermedad_cie9mc", joinColumns = {
@@ -153,6 +175,7 @@ public class EnfermedadRara implements java.io.Serializable {
 	public void setEnfermedadCie9mcs(Set<EnfermedadCie9mc> enfermedadCie9mcs) {
 		this.enfermedadCie9mcs = enfermedadCie9mcs;
 	}
+	
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "enfermedad_rara_enfermedad_cie10", joinColumns = {

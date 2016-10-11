@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<title th:text="|${enfermedadRaraModel.literal} -(${enfermedadRaraModel.enfermedadRaraId})|">CIE9MC FICHA XXX</title>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+        var routeBase  = /*[[${route.baseUrl}]]*/'';
+		var contextApp = /*[[${baseModel.baseApp}]]*/'';  
+		
+		var enfermedades;
+		var enfermedadesLiterales;
+		$(document).ready(function() {
+			$('.dropdown-toggle').dropdown();
+			$('.close').on('click' , function() { 
+				  $('#modalEnf').modal('hide');
+				});
+			$.ajax({ //Lista autocomplete de enfermedades raras
+				dataType : "json",
+				url :  routeBase + "json",
+				contentType : "application/json; charset=utf-8",
+				success : function(data) {
+					enfermedades = data;
+					enfermedadesLiterales = $.map(enfermedades, function(v) {
+						return  v.enfermedadRaraId + ' ' +  v.literal;
+					});
+					$("#enfermedadAutocomplete").autocomplete({
+						source : enfermedadesLiterales,
+						search : function(event, ui) {
+							
+						},
+						select : function(event, ui) {
+							//agregaBotonesEnlace(ui.item.value);
+						},
+						minLength : 3
+					});
+					if($("#enfermedadAutocomplete").val()!='')
+					{
+						agregaBotonesEnlace($("#enfermedadAutocomplete").val());
+					}
+				}
+			});
+		});
+ /*]]>*/
+</script>
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+		<h4 th:text="|${enfermedadRaraModel.enfermedadRaraId} - ${enfermedadRaraModel.literal}|"></h4>
+	</div>
+</body>
+</html>

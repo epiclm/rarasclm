@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
+import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.entities.AccionResultado;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
 import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
@@ -37,8 +38,9 @@ import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
  * The Class EnfermedadRaraController.
  */
 @Controller
-@RequestMapping("/enfermedades/enfrara")
-@RarasClmItemMenu(caption="Enfermedad Rara CLM",deno="Enfermedades",modulo="enfermedades",orden=1)
+@RequestMapping("/enfermedades")
+@RarasClmItemModulo(caption="Enfermedad",deno="Enfermedad",modulo="enfermedades",orden=4)
+@RarasClmItemMenu(caption="Enfermedad",deno="Enfermedad",modulo="enfermedades",orden=1)
 @SessionAttributes("enfrara")
 public class EnfermedadRaraController extends BaseController {
 
@@ -117,16 +119,7 @@ public class EnfermedadRaraController extends BaseController {
 		return "enfermedades/forms/enfRaraEdit";
 	}
 
-	
-	@RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
-	public String setupShowForm(@PathVariable String id, Model model) {
-		getRoute().setId(id);
-		EnfermedadRara enfRara = enfermedadService.getEnfermedadRaraById(id);
-		model.addAttribute("enfermedadRaraModel", enfRara);
-		return "enfermedades/shows/enfRaraShow";
-	}
 
-	
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String nuevo(Model model) {
 		EnfermedadRara enfRara = new EnfermedadRara();
@@ -235,13 +228,21 @@ public class EnfermedadRaraController extends BaseController {
 //		return respuesta;
 		return null;
 	}
+	
+	@RequestMapping(value = "/enfrara/show/{id}", method = RequestMethod.GET)
+	public String setupShowForm(@PathVariable String id, Model model) {
+		getRoute().setId(id);
+		EnfermedadRara enfRara = enfermedadService.getEnfermedadRaraById(id);
+		model.addAttribute("enfermedadRaraModel", enfRara);
+		return "enfermedades/shows/enfRara";
+	}
 
-	@RequestMapping(value = "/json", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/enfrara/json", produces = "application/json; charset=UTF-8")
 	public @ResponseBody List<EnfermedadCodigoLiteral> json() {
 		return enfermedadService.getListCodLiteral();
 	}
 	
-	@RequestMapping(value = "/json/{id}", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/enfrara/json/{id}", produces = "application/json; charset=UTF-8")
 	public @ResponseBody EnfermedadRara jsonId(@PathVariable String id) {
 		return enfermedadService.getEnfermedadRaraById(id);
 	}

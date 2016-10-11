@@ -1,37 +1,136 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         	  xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<meta charset="utf-8"/>
-		<title layout:title-pattern="$CONTENT_TITLE - $DECORATOR_TITLE">Registro de Enfermedades Raras CLM</title>
+<head>
+<meta charset="utf-8"/>
+<title layout:title-pattern="$CONTENT_TITLE - $DECORATOR_TITLE">Registro de Enfermedades Raras CLM</title>
+       
+<link type="text/css" th:href="@{/bower_components/normalize-css/normalize.css}" rel="stylesheet" />
+<link type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.css}" rel="stylesheet" />
+<link type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap-theme.css}" rel="stylesheet"/>
+<link type="text/css" th:href="@{/bower_components/jquery-ui/themes/redmond/jquery-ui.min.css}" rel="stylesheet"/>
+   
+<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+
+<!--<link th:href="@{/assets/js/google-code-prettify/prettify.css}" rel="stylesheet"/>-->
+<link type="text/css" th:href="@{/css/raras.css}" rel="stylesheet" />
          
-		<link type="text/css" th:href="@{/bower_components/normalize-css/normalize.css}" rel="stylesheet" />
-		<link type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.css}" rel="stylesheet" />
-		<link type="text/css" th:href="@{/bower_components/bootstrap/dist/css/font-awesome.min.css}" rel="stylesheet" />
-		<link type="text/css" th:href="@{/js/jquery-ui-1.12.0.custom/jquery-ui.structure.min.css}" rel="stylesheet" />
-		<link type="text/css" th:href="@{/js/jquery-ui-1.12.0.custom/jquery-ui.theme.min.css}" rel="stylesheet" />
-         
-		<!--[if IE 7]>
-			<link rel="stylesheet" th:href="@{//bower_components/bootstrap/dist/css/font-awesome-ie7.min.css}">
-		<![endif]-->
-		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-		<!--[if lt IE 9]>
-			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-		<![endif]-->
-		<link th:href="@{/bower_components/bootstrap/dist/css/docs.css}" rel="stylesheet"/>
-		<!--<link th:href="@{/assets/js/google-code-prettify/prettify.css}" rel="stylesheet"/>-->
-		<link type="text/css" th:href="@{/css/raras.css}" rel="stylesheet" />
+<script type="text/javascript" th:src="@{/bower_components/jquery/dist/jquery.min.js}" ></script>
+<script type="text/javascript" th:src="@{/bower_components/jquery-validate/dist/jquery.validate.min.js}" ></script>
+<script type="text/javascript" th:src="@{/bower_components/jquery-ui/jquery-ui.min.js}" ></script>
+<script type="text/javascript" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>  
+<script type="text/javascript" th:src="@{/bower_components/ckeditor/ckeditor.js}"></script>  
+<script type="text/javascript" th:if="${baseModel.mensaje}!=null" th:inline="javascript">
+/*<![CDATA[*/    
+/*
+	Tipo de Mensaje: OK=1,WARNING=0,ERROR=-1
+*/
+var tipoMensaje = /*[[${baseModel.mensaje.tipo}]]*/null;
+var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
+/*]]>*/
+</script>
+
+<script type="text/javascript">
+/*<![CDATA[*/
            
-		<script type="text/javascript" th:src="@{/bower_components/jquery/dist/jquery.min.js}" ></script>
-		<script type="text/javascript" th:src="@{/js/jquery.validate.js}" ></script>
-		<script type="text/javascript" th:src="@{/js/jquery-ui-1.12.0.custom/jquery-ui.min.js}"></script>  
-		<script type="text/javascript" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>  
-		<script type="text/javascript" th:src="@{/bower_components/ckeditor/ckeditor.js}"></script>  
-	</head>
-	<body>
-		<header th:replace="fragment/cabeceraMenu"></header>
-		<div id="contenido"  layout:fragment="content">
-		</div>
-	</body>
+////////////////////////////////
+//Manejo de mensajes de retorno
+////////////////////////////////
+
+function mensajeError(mensaje) {
+	$('#mensaje').parent().addClass('alert-danger');
+	$('#mensaje').parent().removeClass('alert-success');
+	$('#mensaje').parent().removeClass('alert-warning');
+	$('#mensaje').html('<p>'+mensaje+'</p>');
+	$('#mensaje-modal').modal('show');
+}
+
+function mensajeWarning(mensaje) {
+	$('#mensaje').parent().addClass('alert-warning');
+	$('#mensaje').parent().removeClass('alert-success');
+	$('#mensaje').parent().removeClass('alert-error');
+	$('#mensaje').html('<p>'+mensaje+'</p>');
+	$('#mensaje-modal').modal('show');
+}
+
+function mensajeSuccess(mensaje) {
+	$('#mensaje').parent().addClass('alert-success');
+	$('#mensaje').parent().removeClass('alert-warning');
+	$('#mensaje').parent().removeClass('alert-error');
+	$('#mensaje').html('<p>'+mensaje+'</p>');
+	$('#mensaje-modal').modal('show');
+}
+
+
+
+function showMensaje(mensaje) {
+	if(mensaje.tipo>0) {
+		mensajeSuccess(mensaje.mensaje);
+	} else if(mensaje.tipo<0) {
+		mensajeError(mensaje.mensaje)
+	} else if(mensaje.tipo==0) {
+		mensajeWarning(mensaje.mensaje)
+	}
+}
+
+function showRespuesta(mensaje) {
+	if(mensaje.success) {
+		mensajeSuccess(mensaje.mensaje);
+	} else if(mensaje.error) {
+		mensajeError(mensaje.mensaje)
+	} else if(mensaje.warning) {
+		mensajeWarning(mensaje.mensaje)
+	}
+}
+
+function addMensanjesFuncionalidad(configuracion) {
 	
+	//Borra el mensaje de la sesión del usuario para
+	//que no se muestre más cuando se cierra el mensaje
+	//modal
+	$('#mensaje-modal').on('hidden.bs.modal', function () {
+		$.ajax({
+			url: '/'+contextApp+'/resetMensaje',
+			method: 'POST'
+		}).always(function() {
+			if(typeof configuracion !== "undefined" && typeof configuracion.recarga !== "undefined" && configuracion.recarga )
+				location.reload();
+		});
+	});
+	
+	if(typeof tipoMensaje !== "undefined"  && typeof textoMensaje !== "undefined") {
+		if(tipoMensaje>0) {
+			mensajeSuccess(textoMensaje);
+		} else if(tipoMensaje<0) {
+			mensajeError(textoMensaje)
+		} else if(tipoMensaje==0) {
+			mensajeWarning(textoMensaje) 
+		}
+	}
+}
+/*]]>*/
+</script>
+</head>
+<body>
+	<header th:replace="fragment/cabeceraMenu"></header>
+	<!-- Mensajes -->
+	<div id="mensaje-modal" class="modal fade" tabindex="-1" role="dialog">
+		 <div class="modal-dialog" role="document">
+		   <div class="modal-content alert">
+			    <div id="mensaje" class="modal-body">
+			
+				</div>
+				<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+				</div>
+		   </div>
+		</div>
+	</div>
+	<div id="contenido" class="container"  layout:fragment="content">
+	
+	</div>
+</body>
 </html>

@@ -88,14 +88,18 @@ public class BusquedaController extends BaseController {
 		
 		if((int)numCasos>cache.getNumMaxResultadosBusqueda()) {
 			MensajeResultado mensaje = new MensajeResultado();
-			mensaje.setMensaje("La consulta responde con demasiados resultados. limite más la búsqueda");
+			mensaje.setMensaje(String.format("<p>La consulta responde con %s resultados de un máximo de %s registros.<br/>"
+					+ " Restrinja más la búsqueda</p>",
+					numCasos,
+					cache.getNumMaxResultadosBusqueda()));
 			mensaje.setTipo(MensajeTipo.ERROR);
 			request.getSession().setAttribute(OBJETO_MENSAJE_SESION,mensaje);
 			busquedaModel.setCasos(null);
 		} else {
 			busquedaModel.setCasos(busquedaService.buscaCasos(busquedaModel));
 			if(busquedaModel.getMunicipio().length()==5 && busquedaModel.getMunicipio().equals("99999"))
-				model.addAttribute("municipiosProvinciaResidencia",servicioLocalizaciones.getMunicipioDeProvincia(busquedaModel.getMunicipio().substring(0, 2)));
+				model.addAttribute("municipiosProvinciaResidencia",
+						servicioLocalizaciones.getMunicipioDeProvincia(busquedaModel.getMunicipio().substring(0, 2)));
 		}
 		
 		model.addAttribute(OBJETO_BUSQUEDA_SESION, busquedaModel); //??????????
@@ -103,7 +107,6 @@ public class BusquedaController extends BaseController {
 
 		return "redirect:busqueda";
 	}
-	
 	
 	
 	@RequestMapping(value = "/ircaso/{id}", method = RequestMethod.GET)
@@ -117,6 +120,7 @@ public class BusquedaController extends BaseController {
 		}
 		return "redirect:/casos";
 	}
+	
 	
 	@RequestMapping(value="/borrar")
 	public String borrarBusqueda() {

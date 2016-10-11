@@ -33,8 +33,8 @@ import es.jclm.cs.rarasclm.util.MergeEntity;
 
 @Controller
 @RequestMapping("/pacientes")
-@RarasClmItemModulo(caption="Pacientes",deno="Pacientes",modulo="pacientes",orden=2)
-@RarasClmItemMenu(caption="Pacientes",deno="Pacientes",modulo="pacientes",orden=1)
+@RarasClmItemModulo(caption="Paciente",deno="Paciente",modulo="pacientes",orden=2)
+@RarasClmItemMenu(caption="Paciente",deno="Paciente",modulo="pacientes",orden=1)
 public class PacienteController extends BaseController {
 	
 	private static final Logger log = LoggerFactory.getLogger(PacienteController.class);

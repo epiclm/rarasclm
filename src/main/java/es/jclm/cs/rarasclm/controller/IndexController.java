@@ -34,10 +34,6 @@ import es.jclm.cs.rarasclm.service.CasoRevisionService;
 /**
  * The Class IndexController.
  */
-
-
-
-
 @Controller
 @RequestMapping("/")
 @RarasClmItemMenu(caption="Inicio",deno="Inicio",modulo="inicio",orden=1)
@@ -48,7 +44,7 @@ public class IndexController extends BaseController {
 	private static final Logger log = LoggerFactory.getLogger(IndexController.class);
 	
 	private static final String OBJETO_REVISIONES_POR_HACER_SESION = "revisados_porhacer";
-	private static final String REVISADO_CASOS = "revisados_casos";
+	private static final String REVISADO_CASOS_SESION = "revisados_casos";
 	
 	@Autowired
 	private HttpServletRequest request;
@@ -59,26 +55,27 @@ public class IndexController extends BaseController {
 	@Autowired
 	private DatosAuxiliaresCacheados cache;
 	
+		@SuppressWarnings("unchecked")
 		@RequestMapping("/")
 		private String index(Model model)
 		{
 			UserRarasClm user = (UserRarasClm)model.asMap().get("userCLM");
 			String idUsuario = user.getUsername();
-			if(request.getSession().getAttribute(REVISADO_CASOS)==null) {
-				request.getSession().setAttribute(REVISADO_CASOS, new Boolean(true));
+			if(request.getSession().getAttribute(REVISADO_CASOS_SESION)==null) {
+				request.getSession().setAttribute(REVISADO_CASOS_SESION, new Boolean(true));
 			}
 			try {
-				if(request.getSession().getAttribute(REVISADO_CASOS)==null) {
-					request.getSession().setAttribute(REVISADO_CASOS, new Boolean(false));
+				if(request.getSession().getAttribute(REVISADO_CASOS_SESION)==null) {
+					request.getSession().setAttribute(REVISADO_CASOS_SESION, new Boolean(false));
 				}
-				boolean revisadoCasosDesdeLaUltimaVez = ((Boolean) request.getSession().getAttribute(REVISADO_CASOS)).booleanValue();
+				boolean revisadoCasosDesdeLaUltimaVez = ((Boolean) request.getSession().getAttribute(REVISADO_CASOS_SESION)).booleanValue();
 				List<CasoRevisionUsuario> casosRevisados=null;
 				//Si no se ha editado ningún caso entonces buscamos de 
 				//sesión la lista de revisiones
 				if(revisadoCasosDesdeLaUltimaVez || request.getSession().getAttribute(OBJETO_REVISIONES_POR_HACER_SESION)==null ) {
 					casosRevisados = casoRevisionService.getRevisionesPorHacer(idUsuario, cache.getNumMaxRevisiones(), 1);
 					request.getSession().setAttribute(OBJETO_REVISIONES_POR_HACER_SESION,casosRevisados);
-					request.getSession().setAttribute(REVISADO_CASOS, new Boolean(false));
+					request.getSession().setAttribute(REVISADO_CASOS_SESION, new Boolean(false));
 					
 				} else if(request.getSession().getAttribute(OBJETO_REVISIONES_POR_HACER_SESION)!=null) {
 					casosRevisados = (List<CasoRevisionUsuario>)request.getSession().getAttribute(OBJETO_REVISIONES_POR_HACER_SESION);

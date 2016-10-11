@@ -2,21 +2,21 @@
 
 <Context>
 
-<Resource auth="Container"
-	 name="jdbc/rarasclmDS"
-	 type="javax.sql.DataSource" 
-	 driverClassName="com.mysql.jdbc.Driver"  
-	 url="jdbc:mysql://localhost:3306/rarasclmtest"
-	 username="root"
-	 password="alberto01"  
-	 maxAxtive="20" 
-	 maxIdle="10" 
-	 maxWait="5000" 
-	 validationQuery="Select 1"/>
+<!-- <Resource auth="Container" -->
+<!-- 	 name="jdbc/rarasclmDS" -->
+<!-- 	 type="javax.sql.DataSource"  -->
+<!-- 	 driverClassName="com.mysql.jdbc.Driver"   -->
+<!-- 	 url="jdbc:mysql://localhost:3306/rarasclmtest" -->
+<!-- 	 username="root" -->
+<!-- 	 password="alberto01"   -->
+<!-- 	 maxAxtive="20"  -->
+<!-- 	 maxIdle="10"  -->
+<!-- 	 maxWait="5000"  -->
+<!-- 	 validationQuery="Select 1"/> -->
 
-<!-- <ResourceLink -->
-<!--             name="jdbc/rarasclmDS" -->
-<!--             global="jdbc/rarasclmDS" -->
-<!--             type="javax.sql.DataSource" /> -->
+	<ResourceLink
+          	name="jdbc/rarasclmDS"
+            global="jdbc/rarasclmDS"
+            type="javax.sql.DataSource" />
 
 </Context>

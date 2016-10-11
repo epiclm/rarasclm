@@ -3,20 +3,11 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout/rarasClmLayout">
 <head>
-<link rel="stylesheet" href="bower_components/tablesorter/dist/css/jquery.tablesorter.pager.css"/>
-<link rel="stylesheet" href="bower_components/tablesorter/dist/css/theme.blue.min.css"/>
-<script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
-<script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.pager.js"></script>
-
-<script type="text/javascript" th:if="${baseModel.mensaje}!=null" th:inline="javascript">
-/*<![CDATA[*/
-
-var tipoMensaje = /*[[${baseModel.mensaje.tipo}]]*/null;
-var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
-
-/*]]>*/
-</script>
+<link rel="stylesheet" href="bower_components/jquery.tablesorter/dist/css/jquery.tablesorter.pager.min.css"/>
+<link rel="stylesheet" href="bower_components/jquery.tablesorter/dist/css/theme.blue.min.css"/>
+<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
 <script type="text/javascript" th:inline="javascript" >
 /*<![CDATA[*/
 var routeBase  = /*[[${route.baseUrl}]]*/'';
@@ -27,47 +18,10 @@ var enfermedades;
 var enfermedadesLiterales;
 
 
-function mensajeError(mensaje) {
-	$('#mensajes').html('<div class="alert alert-error"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
-	$('#mensajes').modal('show');
-}
-
-function mensajeSuccess(mensaje) {
-	$('#mensajes').html('<div class="alert alert-success"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
-	$('#mensajes').modal('show');
-}
-
-
 $(document)
 .ready(function() {	
 	
-	////////////////////////////////
-	//Manejo de mensajes de retorno
-	////////////////////////////////
-	
-	var showModal = false;
-	
-	$('#mensajes').on('hidden', function () {
-		$.ajax({
-			url: '/'+contextApp+'/resetMensaje',
-			type: 'POST'
-		})
-	});
-	
-	if(typeof tipoMensaje === 'undefined') {
-		showModal = false;
-	} else if(tipoMensaje>0) {
-		mensajeSuccess(textoMensaje);
-		showModal=true;
-	} else if(tipoMensaje<0) {
-		mensajeError(textoMensaje)
-		showModal=true;
-	} 
-	
-	if(showModal) {
-		$('#mensajes').modal('show');
-	}
-	
+	addMensanjesFuncionalidad();
 	
 	///////////////////////////////////
 	//Cambio localidades de Provincia
@@ -96,22 +50,28 @@ $(document)
 		});
 	}
 
-	//////////////////////////
-	// TABLA DE RESULTADOS
-	//////////////////////////
+	///////////////////////////////
+	// LÓGICA TABLA DE RESULTADOS
+	///////////////////////////////
 
 	var pulsadoBotonRevision = false;
 	
 	function addRevisionCaso(idCaso) {
+		//devuelve un es.jclm.cs.rarasclm.entities.AccionResultado
 		$.ajax({
 			dataType : 'json',
 			method : 'POST',
 			url :   '/'+ contextApp + '/usuario/addrevision/' + idCaso,
 			//contentType : "application/json; charset=utf-8" 
 			}).done( function(data) {
-				alert("OK")
+				if(data.success)
+					mensajeSuccess(data.mensaje);
+				else if(data.warning)
+					mensajeWarning(data.mensaje);
+				else if(data.error)
+					mensajeError(data.mensaje);
 			}).fail( function() {
-				alert("Fallo")
+				mensajeError("Error al enviar la petición al servidor");
 			}).always( function() {
 				pulsadoBotonRevision=false;
 			});
@@ -172,7 +132,7 @@ $(document)
 	
 	
 	/////////////////////////////
-	// LóGICA DEL FORMULARIO
+	// LÓGICA DEL FORMULARIO
 	/////////////////////////////
 	
 	
@@ -191,6 +151,32 @@ $(document)
 		    }
 		});
 		
+			
+		//borrar los campos ocultos 
+		$("#autocompleteCie9MC").on('focusout', function(e) {
+			valor = $("#autocompleteCie9MC").val();
+			valor = valor.replace(/\s+/g,'');
+			if(valor==='') {
+				$("#cie9MC").val('');
+			} 
+		});
+		
+		$("#autocompleteEnfermedadRaraCLM").on('focusout', function(e) {
+			valor = $("#autocompleteEnfermedadRaraCLM").val();
+			valor = valor.replace(/\s+/g,'');
+			if(valor==='') {
+				$("#enfermedadRaraCLM").val('');
+			} 
+		});
+		
+		$("#autocompleteCie10").on('focusout', function(e) {
+			valor = $("#autocompleteCie10").val();
+			valor = valor.replace(/\s+/g,'');
+			if(valor==='') {
+				$("#cie10").val('');
+			} 
+		});
+		
 		//evita un submit cuando no se ha validado o hecho
 		//click en el botón de envio
 		$("#form-edit-paciente").on('submit',function(e) {
@@ -203,7 +189,7 @@ $(document)
 			$("#anioNacimiento").val("");
 		}
 		
-		//da el el valor al campo enfRara para envio del código de enfermedad
+		//muestra el valor al campo enfRara para envio del código de enfermedad
 		if(($("#enfermedadRaraCLM").val()!=="") && ($("#enfermedadRaraCLM").val()!=="9999999999")) {
 		   codEnf = $("#enfermedadRaraCLM").val();
 		   $.ajax({
@@ -219,7 +205,7 @@ $(document)
 		   });	   
 		}
 		
-		//da el el valor al campo cie9mc para envio del código de enfermedad
+		//muestra el valor al campo cie9mc para envio del código de enfermedad
 		if(($("#cie9MC").val()!=="")) {
 			  codEnf = $("#cie9MC").val();
 			   $.ajax({
@@ -235,7 +221,7 @@ $(document)
 			   });	   
 		}
 		
-		//da el el valor al campo cie10 para envio del código de enfermedad
+		//muestra el valor al campo cie10 para envio del código de enfermedad
 		if(($("#cie10").val()!=="")) {
 			  codEnf = $("#cie10").val();
 			   $.ajax({
@@ -257,7 +243,6 @@ $(document)
 				$(this).val($(this).val().toUpperCase());
 		  	});
 		
-	
 		$("#img-espera-num-paciente").css('display','none');
 	
 		$("#form-search-paciente").on('submit',function(e) {
@@ -387,25 +372,7 @@ $(document)
 <body>
 	<div id="contenido" layout:fragment="content">
 	
-		<!-- Mensajes -->
-		<div id="mensajes" class="modal fade">
-			<div th:if="${resultado.error}" class="alert alert-error">
-				<p th:if="${resultado.mensaje} != null"
-					th:text="${resultado.mensaje}">
-				</p>
-			</div>
-			<div th:if="${resultado.success}" class="alert alert-success">
-				<p th:if="${resultado.mensaje} != null"
-					th:text="${resultado.mensaje}">
-				</p>
-			</div>
-			<div class="modal-footer">
-					<button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-			</div>
-		</div>
-	
-		<div id="tabBusquedaIndex" class="tab-content row  span12">
-		
+		<div id="tabBusquedaIndex" class="tab-content row ">
 			<ul id="tabs-busqueda-cabecera" class="nav nav-tabs">
 				<li th:attr="class=${busqueda.casos==null ? 'active' : ''}">
 					<a href="#tab-paciente-busqueda" data-toggle="tab">Búsquedas:</a>
@@ -420,105 +387,113 @@ $(document)
 			
 				<!-- BUSQUEDAS -->
 				<div id="tab-paciente-busqueda" class="row" th:attr="class=${busqueda.casos==null ? 'tab-pane fade in active' : 'tab-pane fade'}">
-					<div class="offset1">
+					<div class="col-md-offset-1">
 						<form id="form-edit-paciente" class="form-edit-busqueda" method='POST'>
-							<div class="row span10">
-								<div id="grupo-apellido01-paciente" class="form-group">
-									<label class="control-label span3" for="apellido01">1er Apellido:</label>
-									<input id="apellido01" class="span3" name="apellido01" type="text" maxlength="65" th:value="${busqueda.apellido01}" placeholder="1er Apellido"/>
+							<div class="row">
+								<div id="grupo-apellido01-paciente" class="form-group col-md-3">
+									<label class="control-label" for="apellido01">1er Apellido:</label>
+									<input id="apellido01" class="form-control" name="apellido01" type="text"  th:value="${busqueda.apellido01}" placeholder="1er Apellido"/>
 								</div>
-								<div id="grupo-apellido02-paciente" class="form-group ">	
-									<label class="control-label span3" for="apellido02">2o Apellido:</label>
-									<input id="apellido02" class="span3" name="apellido02" type="text" maxlength="65" th:value="${busqueda.apellido02}" placeholder="2o Apellido"/>
+								<div id="grupo-apellido02-paciente" class="form-group col-md-3">	
+									<label class="control-label" for="apellido02">2o Apellido:</label>
+									<input id="apellido02" class="form-control" name="apellido02" type="text" th:value="${busqueda.apellido02}" placeholder="2o Apellido"/>
 								</div>
-								<div id="grupo-nombre-paciente" class="form-group ">		
-									<label class="control-label span3" for="nombre">Nombre:</label>
-									<input id="nombre" class="span3" name="nombre" type="text" maxlength="65" th:value="${busqueda.nombre}" placeholder="Nombre"/>
+								<div id="grupo-nombre-paciente" class="form-group col-md-3">		
+									<label class="control-label" for="nombre">Nombre:</label>
+									<input id="nombre" class="form-control" name="nombre" type="text"  th:value="${busqueda.nombre}" placeholder="Nombre"/>
 								</div>
 							</div>
-							<div class="row span10">
-								<div  class="form-group">
-									<label class="control-label span3" for="cip">CIP:</label>
-									<input  class="span3" id="cip" name="cip" type="text" maxlength="16" th:value="${busqueda.cip}" placeholder="CIP"/>
+							<div class="row">
+								<div  class="form-group col-md-3">
+									<label class="control-label" for="cip">CIP:</label>
+									<input  class="form-control" id="cip" name="cip" type="text" maxlength="16" th:value="${busqueda.cip}" placeholder="CIP"/>
 								</div>
-								<div id="basedtco-caso" class="form-group">
-									<label class="control-label span5 " for="domTipoVia">Base del Diagnóstico:</label>
-									<select name="baseDiagnostico" class="span5" id="baseDiagnostico"  th:field="${busqueda.baseDiagnostico}" >
+								<div id="basedtco-caso" class="form-group col-md-6">
+									<label class="control-label" for="domTipoVia">Base del Diagnóstico:</label>
+									<select name="baseDiagnostico" class="form-control" id="baseDiagnostico"  th:field="${busqueda.baseDiagnostico}" >
 										<option value=""></option>
 										<option th:each="baseDto : ${baseModel.cache.basesDiagnosticas}" th:value="${baseDto.key}" th:text="${baseDto.value}"></option>
 									</select>
 								</div>	
 							</div>
-							<div class="row span10">
-								<div class="form-group control-group">
-									<label class="control-label span3" for="busquedaProvincia">Provincia Res.:</label>
-									<select name="busquedaProvincia" class="span3" id="busquedaProvincia"  th:field="${busqueda.provincia}" >
+							<div class="row">
+								<div class="form-group col-md-3">
+									<label class="control-label" for="busquedaProvincia">Provincia Res.:</label>
+									<select name="busquedaProvincia" class="form-control col-md-7" id="busquedaProvincia"  th:field="${busqueda.provincia}" >
 										<option th:each="provincia : ${baseModel.cache.provinciasCLM}" th:value="${provincia.provincia}" th:text="${provincia.deno}"></option>
 									</select>
 								</div>
-								<div class="form-group control-group">
-									<label class="control-label span4" for="busquedaMunicipio">Muncipio Res.:</label>
-									<select name="busquedaMunicipio" class="span4" id="busquedaMunicipio"  th:field="${busqueda.municipio}" >
+								<div class="form-group col-md-6">
+									<label class="control-label col-md-7" for="busquedaMunicipio">Muncipio Res.:</label>
+									<select name="busquedaMunicipio" class="form-control" id="busquedaMunicipio"  th:field="${busqueda.municipio}" >
 										<option th:if="${municipiosProvinciaResidencia}!=null" th:each="m : ${municipiosProvinciaResidencia}" th:value="${m.municipio}" th:text="${m.deno}"></option>
 									</select>
 								</div>
 							</div>
-							<div class="row span10">
-								<div class="form-group">
-									<label class="control-label span2" for="anioNacimiento">Año Nacimiento:</label>
-									<input name="anioNacimiento" class="span2" id="anioNacimiento" type="text"  th:value="${busqueda.anioNacimiento}" maxlength="4"/>
+							<div class="row">
+								<div class="form-group form-group col-md-2">
+									<label class="control-label" for="anioNacimiento">Año Nacimiento:</label>
+									<input name="anioNacimiento" class="form-control" id="anioNacimiento" type="text"  th:value="${busqueda.anioNacimiento}" maxlength="4"/>
 								</div>
-								<div class="form-group">
-									<label class="control-label span2" for="sexo">Sexo:</label>
-									<select name="sexo" class="span2" id="sexo"  th:field="${busqueda.sexo}" >
+								<div class="form-group form-group col-md-offset-1 col-md-3">
+									<label class="control-label" for="sexo">Sexo:</label>
+									<select name="sexo" class="form-control" id="sexo"  th:field="${busqueda.sexo}" >
 										<option value="1">VARÓN</option>
 										<option value="6">MUJER</option>
 										<option value="9">DESCONOCIDO</option>
 									</select>
 								</div>
 							</div>
-							<div id="busquedaPorEnfermedad" class="row span10">
-								<input id ="enfermedadRaraCLM" name="enfermedadRaraCLM" type="hidden" th:value="${busqueda.enfermedadRaraCLM}"></input>
-								<input id="cie9MC" name="cie9MC" type="hidden" th:value="${busqueda.cie9MC}"></input>
-								<input id="cie10"  name="cie10"  type="hidden" th:value="${busqueda.cie10}"></input>
-								<div class="form-group">
-									<label class="control-label span10" for="autocompleteEnfermedadRaraCLM">Enfermedad RaraCLM:</label>
-									<input class="span10" id="autocompleteEnfermedadRaraCLM" type="text"></input>
-								</div>
-								<div class="form-group">
-									<label class="control-label span10" for="autocompleteCie9MC">CIE9MC:</label>
-									<input class="span10" id="autocompleteCie9MC" type="text"></input>
-								</div>
-								<div class="form-group">
-									<label class="control-label span10" for="autocompleteCie10">CIE10:</label>
-									<input class="span10" id="autocompleteCie10" type="text"></input>
-								</div>
-							</div>
-							<div id="grupo-acciones-bajo" class="row span10">
-								<div class="form-actions">
-							  		<button id="submitBuscarPacientes" type="submit" class="btn btn-primary"><i class="icon-user icon-white"></i>&nbsp; Buscar Casos</button>
-									<button id="borrarFormulario" class="btn"><i class="icon-trash"></i>&nbsp; Borrar Formulario</button>
-								</div>
-							</div>
-						</form>
-				  	</div>
-				</div><!-- Fin Tab Formuliario de Búsqueda -->
 
-				<!-- PACIENTES -->
+							<input id ="enfermedadRaraCLM" name="enfermedadRaraCLM" type="hidden" th:value="${busqueda.enfermedadRaraCLM}"></input>
+							<input id="cie9MC" name="cie9MC" type="hidden" th:value="${busqueda.cie9MC}"></input>
+							<input id="cie10"  name="cie10"  type="hidden" th:value="${busqueda.cie10}"></input>
+
+							<div class="row">
+								<div class="form-group col-md-11">
+									<label class="control-label span10" for="autocompleteEnfermedadRaraCLM">Enfermedad RaraCLM:</label>
+									<input class="form-control" id="autocompleteEnfermedadRaraCLM" type="text"></input>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="form-group col-md-11">
+									<label class="control-label span10" for="autocompleteCie9MC">CIE9MC:</label>
+									<input class="form-control" id="autocompleteCie9MC" type="text"></input>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="form-group col-md-11">
+									<label class="control-label span10" for="autocompleteCie10">CIE10:</label>
+									<input class="form-control" id="autocompleteCie10" type="text"></input>
+								</div>
+							</div>
+
+							<div class="row">
+								<div id="grupo-acciones-bajo" class="col-md-12">
+									<div class="form-actions">
+								  		<button id="submitBuscarPacientes" type="submit" class="btn btn-primary"><i class="icon-user icon-white"></i>&nbsp; Buscar Casos</button>
+										<button id="borrarFormulario" class="btn"><i class="icon-trash"></i>&nbsp; Borrar Formulario</button>
+									</div>
+								</div>
+							</div>
+						</form>	
+				  	</div>
+				</div><!-- Fin Tab Formulario de Búsqueda -->
+
+				<!-- TAB PACIENTES -->
 				<div id="tab-paciente-resultados" class="row" th:attr="class=${busqueda.casos!=null ? 'tab-pane fade in active' : 'tab-pane fade'}">
 					<div  th:if="${busqueda.casos}==null">
 						<p style="padding: 20px 10px 10px 15px">No hay resultados.</p>
 					</div>
 					<div  th:if="${busqueda.casos}!=null">
-<!-- 						<ul th:each="caso: ${busqueda.casos}"> -->
-<!-- 							<li><a th:href="|/${baseModel.baseApp}/busqueda/ircaso/${caso.idCaso}|" th:text="|${caso.idCaso} ${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre} ${baseModel.cache.getMunipioDeno(caso.paciente.municipioResidencia)} (${baseModel.cache.getProvinciaDeno(caso.paciente.municipioResidencia.substring(0,2))}) ${caso.literal}|"></a></li> -->
-<!-- 						</ul> -->
 							<div id="paginador" class="pager"> 
-						        <button class="first"><i class="icon-fast-backward"></i></button> 
-						        <button class="prev"><i class="icon-chevron-left"></i></button> 
+						        <button class="first"><i class="glyphicon glyphicon-fast-backward"></i></button> 
+						        <button class="prev"><i class="glyphicon glyphicon-step-backward"></i></button> 
 						        <span class="pagedisplay"></span> <!-- this can be any element, including an input --> 
-						        <button class="next"><i class="icon-chevron-right"></i></button> 
-						        <button class="last"><i class="icon-fast-forward"></i></button> 
+						        <button class="next"><i class="glyphicon glyphicon-step-forward"></i></button> 
+						        <button class="last"><i class="glyphicon glyphicon-fast-forward"></i></button> 
 						        <select class="pagesize" title="Select page size"> 
 						            <option selected="selected" value="10" style="width:20px">10</option> 
 						            <option value="20">20</option> 
@@ -542,8 +517,8 @@ $(document)
 								</thead>
 								<tbody>
 									<tr th:each="caso: ${busqueda.casos}" class="clickable">
-										<td class="btn-caso-revision"><button th:attr="data-idCaso=${caso.idCaso}"><i class="icon-plus-sign"></i></button></td>
-										<td><a th:href="|casos/edit/${caso.idCaso}|" th:text="${caso.idCaso}" ></a></td>
+										<td class="btn-caso-revision"><button th:attr="data-idCaso=${caso.idCaso}"><i class="glyphicon glyphicon-plus-sign"></i></button></td>
+										<td><a th:href="|casos/edit/${caso.idCaso}|" th:text="${caso.idCaso}"></a></td>
 										<td th:text="${caso.paciente.apellido01}"></td>
 										<td th:text="${caso.paciente.apellido02}"></td>
 										<td th:text="${caso.paciente.nombre}"></td>

@@ -23,7 +23,7 @@ import es.jclm.cs.rarasclm.entities.EnfermedadCie10;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
 import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
-import es.jclm.cs.rarasclm.entities.IBaseModelView;
+import es.jclm.cs.rarasclm.entities.IBaseModel;
 import es.jclm.cs.rarasclm.entities.Municipio;
 import es.jclm.cs.rarasclm.entities.Provincia;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie10Service;
@@ -62,7 +62,7 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 	HospitalService hospitalService;
 	
 	@Autowired
-	IBaseModelView baseModel;
+	IBaseModel baseModel;
 	
 	public DataContextRarasClmAppListener() {
 		try {

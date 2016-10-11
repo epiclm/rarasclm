@@ -16,7 +16,7 @@ import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.controller.BaseController;
 import es.jclm.cs.rarasclm.util.ClassFinder;
 
-public class BaseModelViewReflex implements IBaseModelView {
+public class BaseModelViewReflex implements IBaseModel {
 
 	/** The log. */
 	static Log log = LogFactory.getLog(BaseModelViewReflex.class.getName());
@@ -146,34 +146,58 @@ public class BaseModelViewReflex implements IBaseModelView {
 		return ret;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.jclm.cs.rarasclm.entities.IBaseModel#getBaseapp()
+	 */
+	@Override
 	public String getBaseapp() {
 		return baseapp;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.jclm.cs.rarasclm.entities.IBaseModel#setBaseapp(java.lang.String)
+	 */
+	@Override
 	public void setBaseapp(String baseapp) {
 		this.baseapp = baseapp;
 	}
 
 
+	/* (non-Javadoc)
+	 * @see es.jclm.cs.rarasclm.entities.IBaseModel#getMenuModel()
+	 */
+	@Override
 	public MenuModel getMenuModel() {
 		return menuModel;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.jclm.cs.rarasclm.entities.IBaseModel#getBaseApp()
+	 */
 	@Override
 	public String getBaseApp() {
 		return this.baseapp;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.jclm.cs.rarasclm.entities.IBaseModel#getCache()
+	 */
 	@Override
 	public DatosAuxiliaresCacheados getCache() {
 		return this.cacheAuxiliares;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.jclm.cs.rarasclm.entities.IBaseModel#getMensaje()
+	 */
 	@Override
 	public MensajeResultado getMensaje() {
 		return this.mensaje;
 	}
 
+	/* (non-Javadoc)
+	 * @see es.jclm.cs.rarasclm.entities.IBaseModel#setMensaje(es.jclm.cs.rarasclm.entities.MensajeResultado)
+	 */
 	@Override
 	public void setMensaje(MensajeResultado mensaje) {
 		this.mensaje = mensaje;

@@ -13,13 +13,17 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "src",
+    "package.json"
   ],
   "dependencies": {
+  	"normalize-css": "4.2.0",
     "jquery": "1.12.4",
-    "ckeditor": "^4.5.10",
-    "bootstrap": "2.3.2",
-    "normalize-strings": "normalize#^1.0.4",
-    "normalize-css": "normalize.css#^4.2.0"
+    "jquery-validate": "1.15.1",
+    "jquery-ui": "1.12.1",
+    "jquery.tablesorter": "2.27.8",
+    "ckeditor": "4.5.10",
+    "bootstrap": "3.3.7"
   }
 }

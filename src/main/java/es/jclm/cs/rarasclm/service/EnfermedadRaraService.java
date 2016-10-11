@@ -78,15 +78,26 @@ public class EnfermedadRaraService {
 
 	
 	public EnfermedadRara getEnfermedadRaraById(String cod) {
-		return dao.getEnfermedadRaraById(cod);
+		try {
+			return dao.buscar(cod);
+		} catch (Exception ex) {
+			
+		}
+		return null;
 	}
 
 	
 	public EnfermedadRara getEnfermedadRaraById(String cod, boolean cache) {
 		if (cache)
 			return datosCache.getEnfRaraById(cod);
-		else
-			return dao.getEnfermedadRaraById(cod);
+		else {
+			try {
+				return dao.buscar(cod);
+			} catch (Exception ex) {
+				log.error(ex.getMessage(),ex);
+			}
+		}
+		return null;
 	}
 	
 	

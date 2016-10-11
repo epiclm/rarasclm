@@ -22,23 +22,23 @@ import es.jclm.cs.rarasclm.entities.EnfermedadRara;
 @Transactional
 public class EnfermedadRaraDao extends BaseEntityDao<EnfermedadRara,String> {
 
-	public EnfermedadRara getEnfermedadRaraById(String enfRaraId) {
-		Session session = getSessionFactory().openSession();
-		try {
-			Query query = session.createQuery("SELECT e FROM EnfermedadRara e WHERE e.enfermedadRaraId = :enfRaraId");
-			List<?> res = query.setParameter("enfRaraId", enfRaraId).list();
-			if (res.size() == 1) {
-				return (EnfermedadRara) res.get(0);
-			}
-		} catch (Exception ex) {
-			return null;
-		} finally {
-			if (session != null && session.isOpen()) {
-				session.close();
-			}
-		}
-		return null;
-	}
+//	public EnfermedadRara getEnfermedadRaraById(String enfRaraId) {
+//		Session session = getSessionFactory().openSession();
+//		try {
+//			Query query = session.createQuery("SELECT e FROM EnfermedadRara e WHERE e.enfermedadRaraId = :enfRaraId");
+//			List<?> res = query.setParameter("enfRaraId", enfRaraId).list();
+//			if (res.size() == 1) {
+//				return (EnfermedadRara) res.get(0);
+//			}
+//		} catch (Exception ex) {
+//			return null;
+//		} finally {
+//			if (session != null && session.isOpen()) {
+//				session.close();
+//			}
+//		}
+//		return null;
+//	}
 
 	public List<EnfermedadRara> getAllEnfermedadesRaras() {
 		Session session = getSessionFactory().openSession();

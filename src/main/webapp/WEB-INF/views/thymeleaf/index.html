@@ -3,78 +3,73 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorator="layout/rarasClmLayout">
 <head>
-<link rel="stylesheet" href="bower_components/tablesorter/dist/css/jquery.tablesorter.pager.css"/>
-<link rel="stylesheet" href="bower_components/tablesorter/dist/css/theme.blue.min.css"/>
-<script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
-<script type="text/javascript" src="bower_components/tablesorter/dist/js/jquery.tablesorter.pager.js"></script>
-<script type="text/javascript" th:if="${baseModel.mensaje}!=null" th:inline="javascript">
-/*<![CDATA[*/
+<link rel="stylesheet" href="bower_components/jquery.tablesorter/dist/css/jquery.tablesorter.pager.min.css"/>
+<link rel="stylesheet" href="bower_components/jquery.tablesorter/dist/css/theme.blue.min.css"/>
+<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
 
-var tipoMensaje = /*[[${baseModel.mensaje.tipo}]]*/null;
-var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
-
-/*]]>*/
-</script>
-<script type="text/javascript" th:inline="javascript">"src/main/webapp/bower_components/tablesorter/dist/css/jquery.tablesorter.pager.css"
+<script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
            
 	var routeBase  = /*[[${route.baseUrl}]]*/'';
 	var contextApp = /*[[${baseModel.baseApp}]]*/'';
 	var enfermedades;
 	var enfermedadesLiterales;
-	
-	function mensajeError(mensaje) {
-		$('#mensajes').html('<div class="alert alert-error"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
-		$('#mensajes').modal('show');
-	}
-
-	function mensajeSuccess(mensaje) {
-		$('#mensajes').html('<div class="alert alert-success"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
-		$('#mensajes').modal('show');
-	}
-	
+		
 	$(document)
 	.ready(function() {	
 		
-		////////////////////////////////
-		//Manejo de mensajes de retorno
-		////////////////////////////////
-		
-		var showModal = false;
-		
-		$('#mensajes').on('hidden', function () {
-			$.ajax({
-				url: '/'+contextApp+'/resetMensaje',
-				type: 'POST'
-			})
+		addMensanjesFuncionalidad({
+			recarga:true
 		});
 		
-		if(typeof tipoMensaje === 'undefined') {
-			showModal = false;
-		} else if(tipoMensaje>0) {
-			mensajeSuccess(textoMensaje);
-			showModal=true;
-		} else if(tipoMensaje<0) {
-			mensajeError(textoMensaje)
-			showModal=true;
-		} 
+		///////////////////////////////
+		// LÓGICA TABLA DE RESULTADOS
+		///////////////////////////////
 		
-		if(showModal) {
-			$('#mensajes').modal('show');
+		var pulsadoBotonRevision = false;
+		
+		function deleteRevisionCaso(idCaso) {
+			//devuelve un es.jclm.cs.rarasclm.entities.AccionResultado
+			$.ajax({
+				dataType : 'json',
+				method : 'POST',
+				url :   '/'+ contextApp + '/usuario/deleterevision/' + idCaso,
+				//contentType : "application/json; charset=utf-8" 
+				}).done( function(data) {
+					if(data.success)
+						mensajeSuccess(data.mensaje);
+					else if(data.warning)
+						mensajeWarning(data.mensaje);
+					else if(data.error)
+						mensajeError(data.mensaje);
+				}).fail( function() {
+					mensajeError("Error al enviar la petición al servidor");
+				}).always( function() {
+					pulsadoBotonRevision=false;
+				});
 		}
 		
-		//////////////////////////
-		// TABS
-		//////////////////////////
-		$
+		$('td.btn-caso-revision button').click(
+				function() {
+					pulsadoBotonRevision = true;
+					deleteRevisionCaso($(this).attr('data-idCaso'));
+				}		
+			);
+		
+		//Manejo de link para la fila entera
+		$('tr.clickable').click( function(event) {
+			if(!pulsadoBotonRevision) {
+				window.location = $(this).find('a').attr('href');
+			} else {
+				pulsadoBotonRevision=false;
+			}
+		}).hover( function() {
+		    $(this).toggleClass('hover');
+		});
 		
 		
-		
-		
-		//////////////////////////
-		// TABLAS DE RESULTADOS
-		//////////////////////////
 		
 		//Adaptacion de un ejemplo http://jsfiddle.net/Mottie/wty134u7/
 		$('#tabla-revisiones').tablesorter({
@@ -88,6 +83,11 @@ var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
 		}).tablesorterPager({
 		    container: $(".pager"),
 		    ajaxUrl: null,
+//	 	    ajaxProcessing: function(ajax) {
+//	 	        if (ajax && ajax.hasOwnProperty('data')) {
+//	 	            return [ajax.data, ajax.total_rows];
+//	 	        }
+//	 	    },
 		    output: 'de {startRow} a {endRow} (TOTAL: {totalRows})',
 		    updateArrows: true,
 		    page: 0,
@@ -104,8 +104,6 @@ var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
 		    cssDisabled: 'disabled'
 
 		});
-
-
 	});
 
 /*]]>*/	
@@ -114,30 +112,53 @@ var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
 </head>
 <body>
 	<div id="contenido"  layout:fragment="content">
+		
 		<div class="offset1">
-		<div id="tabla-revisiones-contenedor">
-			<table id="tabla-revisiones">
-					<thead>
-						<tr>
-							<td>Caso</td>
-							<td>Apellido 1o</td>
-							<td>Apellido 2o</td>
-							<td>Nombre</td>
-							<td>Base DTCO</td>
-							<td>Literal</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="revision : ${revisionesPorHacer}">
-							<td th:text="${revision.caso.idCaso}"></td>
-							<td th:text="${revision.caso.paciente.apellido01}"></td>
-							<td th:text="${revision.caso.paciente.apellido02}"></td>
-							<td th:text="${revision.caso.paciente.nombre}"></td>
-							<td th:text="${revision.caso.baseDiagnostico}"></td>
-							<td th:text="${revision.caso.literal}"></td>
-						</tr>
-					</tbody>
-				</table>	
+		<div th:if="${revisionesPorHacer==null or #lists.isEmpty(revisionesPorHacer)}">
+			<p style="padding: 20px 10px 10px 15px">No hay revisiones de casos.</p>
+		</div>
+		<div th:if="${not #lists.isEmpty(revisionesPorHacer)}">
+			<div id="tabla-revisiones-contenedor">
+				<div id="paginador" class="pager"> 
+			        <button class="first"><i class="glyphicon glyphicon-fast-backward"></i></button> 
+			        <button class="prev"><i class="glyphicon glyphicon-step-backward"></i></button> 
+			        <span class="pagedisplay"></span> <!-- this can be any element, including an input --> 
+			        <button class="next"><i class="glyphicon glyphicon-step-forward"></i></button> 
+			        <button class="last"><i class="glyphicon glyphicon-fast-forward"></i></button> 
+			        <select class="pagesize" title="Select page size"> 
+			            <option selected="selected" value="10" style="width:20px">10</option> 
+			            <option value="20">20</option> 
+			            <option value="30">30</option> 
+			            <option value="40">40</option> 
+			        </select>						  
+				</div>
+				<table id="tabla-revisiones">
+						<thead>
+							<tr>
+								<td></td>
+								<td>Caso</td>
+								<td>Apellido 1o</td>
+								<td>Apellido 2o</td>
+								<td>Nombre</td>
+								<td>Base DTCO</td>
+								<td>Fecha</td>
+								<td>Literal</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="revision : ${revisionesPorHacer}" class="clickable">
+								<td class="btn-caso-revision"><button th:attr="data-idCaso=${revision.caso.idCaso}"><i class="glyphicon glyphicon-minus-sign"></i></button></td>
+								<td><a th:href="|casos/edit/${revision.caso.idCaso}|" th:text="${revision.caso.idCaso}" ></a></td>
+								<td th:text="${revision.caso.paciente.apellido01}"></td>
+								<td th:text="${revision.caso.paciente.apellido02}"></td>
+								<td th:text="${revision.caso.paciente.nombre}"></td>
+								<td th:text="${revision.caso.baseDiagnostico}"></td>
+								<td th:text="${#dates.format(revision.fechaCreacion, 'dd/MM/yyyy')}"></td>
+								<td th:text="${revision.caso.literal}"></td>
+							</tr>
+						</tbody>
+					</table>	
+				</div>
 			</div>
 		</div>
 	 </div>	

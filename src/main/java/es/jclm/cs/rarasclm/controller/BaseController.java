@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import es.jclm.cs.rarasclm.entities.AccionResultado;
-import es.jclm.cs.rarasclm.entities.BaseModelViewReflex;
-import es.jclm.cs.rarasclm.entities.IBaseModelView;
+import es.jclm.cs.rarasclm.entities.IBaseModel;
 import es.jclm.cs.rarasclm.entities.MensajeResultado;
 import es.jclm.cs.rarasclm.entities.RouteParameters;
 import es.jclm.cs.rarasclm.entities.UserRarasClm;
@@ -36,12 +35,13 @@ public class BaseController {
 
 	/** The base. */
 	@Autowired
-	public BaseModelViewReflex base;
+	public IBaseModel base;
 	
 	@Autowired
 	private HttpServletRequest request;
 	
 	@InitBinder
+	//Necasario para analizar las fechas de input date en html5
 	public void initBinder(WebDataBinder binder) {
 	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
@@ -53,7 +53,7 @@ public class BaseController {
 	 * @return the base model
 	 */
 	@ModelAttribute("baseModel")
-	public BaseModelViewReflex getBaseModel(HttpServletRequest request) {
+	public IBaseModel getBaseModel(HttpServletRequest request) {
 		//para enviar la baseApp o contextPath a la vista
 		String baseApp = request.getContextPath().replace("/", "");
 		MensajeResultado mensaje = (MensajeResultado)request.getSession().getAttribute(OBJETO_MENSAJE_SESION);

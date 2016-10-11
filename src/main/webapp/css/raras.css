@@ -2,12 +2,19 @@
 
 
 label {
+	padding-left: 0px !important;
 	padding-right: 5px !important;
+	color:#555 !important;
 }
 
 /* body { */
-/* 	position: relative; */
+/* 	padding-top: 1000px; */
 /* } */
+
+#contenido {
+	padding-top: 60px;
+	margin-bottom: 50px;
+}
 
 select,textarea,input {
 	margin-bottom: 2px !important;
@@ -58,12 +65,7 @@ h5 {
 	margin-left: 40px;
 }
 
-#contenido {
-	margin-left: 20px;
-	margin-right: 20px;
-	position: absolute;
-	top: 70px;
-}
+
 
 #menuPath {
 	padding: 2px 15px !important;
@@ -148,6 +150,20 @@ li.rclmEnfermedadModal p{
    
 }
 
+#paginador {
+	background-color: #f5f5f5;
+}
+
+
+/***************/
+/* OVERLOADS   */
+
+
+.ui-widget {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	font-size: 14px !important;
+}
+
 
 /**************/
 /* BUSQUEDAS  */
@@ -179,6 +195,12 @@ li.rclmEnfermedadModal p{
 	padding-top: 10px;
 }
 
+#tab-paciente-resultados {
+	padding-top: 10px;
+	padding-bottom: 5px;
+}
+
+
 #tabBusquedaIndex {
 	padding-top: 0px;
 }
@@ -192,7 +214,7 @@ li.rclmEnfermedadModal p{
 }
 
 #tabla-resultados-contenedor {
-	overflow: auto;
+	/*overflow: auto;*/
 	padding-left: 10px;
 	margin-right: 10px;
 }
@@ -223,15 +245,20 @@ li.rclmEnfermedadModal p{
 	background-color: #f5f5f5 !important;
 }
 
+#grupo-acciones-bajo {
+	padding-top: 30px;
+	padding-bottom: 10px;
+}
+
 
 
 /**************/
 /* PACIENTE  */
 
+
 #busquedaNumeroPaciente {
 	font-weight: bolder;
 }
-
 #form-edit-paciente .control-label {
     display: block;
     float: none;
@@ -266,7 +293,12 @@ li.rclmEnfermedadModal p{
 
 
 /**************/
-/* CASOS      */
+/* CASO       */
+
+#enfermedad-rara-input-group {
+	padding-bottom: 10px !important;
+	padding-top: 10px !important;
+}
 
 #tabCasosIndex {
 	padding-top: 10px;
@@ -286,6 +318,10 @@ li.rclmEnfermedadModal p{
 	margin-bottom: 5px !important;
 }
 
+#codificaciones-fuentes {
+	padding-bottom: 10px !important;
+	padding-top: 0px !important;
+}
 
 #codificaciones-fuentes input {
 	font-weight:bold; 
@@ -293,15 +329,17 @@ li.rclmEnfermedadModal p{
 	font-size: 15px;
 }
 
-#cuadro-resumen-enfrara {
 
-	
+#cuadro-resumen-paciente {
+	padding-top: 15px;
+	padding-botton: 15px;
+	margin-bottom: 15px;
 }
 
-#cuadro-resumen-paciente,#caja-fuente-informacion {
-	padding: 7px;
-	background-color:#FAFAFA;
 
+#caja-fuente-informacion {
+	padding-top: 0px;
+	padding-bottom: 7px;
 }
 
 #cuadro-resumen-paciente p {
@@ -331,3 +369,15 @@ input[type=date]  {
 	font-weight: bold;
 }
 
+/**************/
+/* PACIENTE  */
+
+#busquedaRara {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-color: #f5f5f5;	
+}
+
+#botonesNavegacion {
+	margin-top: 10px;
+}

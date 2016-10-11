@@ -42,8 +42,8 @@ import es.jclm.cs.rarasclm.util.MergeEntity;
 
 @Controller
 @RequestMapping("/casos")
-@RarasClmItemModulo(caption="Casos",deno="Casos",modulo="casos",orden=3)
-@RarasClmItemMenu(caption="Casos",deno="Casos",modulo="casos",orden=1)
+@RarasClmItemModulo(caption="Caso",deno="Caso",modulo="casos",orden=3)
+@RarasClmItemMenu(caption="Caso",deno="Caso",modulo="casos",orden=1)
 @SessionAttributes("casos")
 public class CasoController extends BaseController {
 	
@@ -67,6 +67,7 @@ public class CasoController extends BaseController {
 	private static final String OBJETO_CASO_SESION = "caso";
 	private static final String OBJETO_PACIENTE_SESION = "paciente";
 	private static final String REVISADO_CASOS = "revisados_casos";
+	private static final String OBJETO_REVISIONES_POR_HACER_SESION = "revisados_porhacer";
 		
 	@Autowired
 	private EnfermedadRaraService enfermedadService;

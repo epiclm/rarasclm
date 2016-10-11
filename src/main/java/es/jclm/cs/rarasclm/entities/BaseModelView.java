@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * The Class BaseModelView.
  */
-public class BaseModelView implements IBaseModelView {
+public class BaseModelView {
 
 	/** The baseapp. */
 	private String baseapp = "rarasclm";
@@ -112,18 +112,30 @@ public class BaseModelView implements IBaseModelView {
 		return menuModel;
 	}
 
-	@Override
+
 	public DatosAuxiliaresCacheados getCache() {
 		return null;
 	}
 
-	@Override
+	
 	public MensajeResultado getMensaje() {
 		return null;
 	}
 
-	@Override
+
 	public void setMensaje(MensajeResultado mensaje) {
+		
+	}
+
+
+	public String getBaseapp() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public void setBaseapp(String baseapp) {
+		// TODO Auto-generated method stub
 		
 	}
 

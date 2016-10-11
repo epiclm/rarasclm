@@ -11,9 +11,9 @@ var enfermedades;
 var enfermedadesLiterales;
 
 function renderBotonesPaciente(num,deno) {
-	var strShow = "<a class='btn btn-primary' style='margin-right:5px' href='"+routeBase+"show/"+num+"'>Ver</a>";
-	var strEdit = "<a class='btn btn-success' style='margin-right:5px' href='"+routeBase+"edit/"+num+"'>Editar</a>";
-	return "<p style='display:inline-block;margin-right:10px;font-weight:bold'>"+deno+"</p>"+strEdit;
+	var strShow = "<a class='btn btn-primary'  href='"+routeBase+"show/"+num+"'>Ver</a>";
+	var strEdit = "<a class='btn btn-success' href='"+routeBase+"edit/"+num+"'>Editar</a>";
+	return "<p>"+deno+"</p>"+strEdit;
 }
 
 $(document)
@@ -38,7 +38,7 @@ $(document)
 			   var deno = data.apellido01.toUpperCase()+" "+data.apellido02.toUpperCase()+", "+data.nombre.toUpperCase();
 			   $("#resultado-busqueda-num-paciente").html(renderBotonesPaciente(val,deno));
 		   }).fail(function(jqXHR, textStatus, errorThrown) {
-			   $("#resultado-busqueda-num-paciente").html("<p class='text-error'>No se encuentra</p>");
+			   $("#resultado-busqueda-num-paciente").html("<p class='text-error'>No se encuentra el paciente</p>");
 		   }).always(function(dataJq,errorOrJqXHR) {
 			   $("#img-espera-num-paciente").css('display','none'); 
 		   });	   
@@ -50,16 +50,19 @@ $(document)
 <body>
 	<div id="contenido" layout:fragment="content">
 		<!-- BUSQUEDAS -->
-		<div class="row span11 offset1">
-			<form id="form-search-paciente" class="form-horizontal" method='POST'>
-				<div id="grupo-busqueda-numero-paciente" class="form-group row-fluid control-group">
-					<label class="control-label span3" for="busquedaNumeroPaciente">Num. Paciente:</label>
-					<div class="input-append" >
-						<input id="busquedaNumeroPaciente" class="span6" name="busquedaNumeroPaciente" type="text" maxlength="7"/>
-						<a id="btnBusquedaNumeroPaciente" class="btn add-on" href="#"><i class="icon-search"></i></a>
-					</div>		
-					<img id="img-espera-num-paciente" style="width:24px;margin-left:10px" alt="Esperando..." th:src="@{/img/espera.gif}"></img>	
-					<div id="resultado-busqueda-num-paciente" style="display:inline-block"></div>
+		<div class="row">
+			<form id="form-search-paciente" class="form" method='POST'>
+				<div id="grupo-busqueda-numero-paciente" class="form-group col-md-3">
+					<label class="control-label" for="busquedaNumeroPaciente">Num. Paciente:</label>
+						<div class="input-group" >
+							<input id="busquedaNumeroPaciente" class="form-control" name="busquedaNumeroPaciente" type="text" maxlength="7"/>
+							<span class="input-group-btn">
+								<a id="btnBusquedaNumeroPaciente" class="btn btn-primary" href="#"><i class="glyphicon glyphicon-search"></i></a>
+							</span>
+						</div>
+				</div>
+				<div class="col-md-6">
+					<div id="resultado-busqueda-num-paciente"></div>
 				</div>
 			</form>
 		</div>
