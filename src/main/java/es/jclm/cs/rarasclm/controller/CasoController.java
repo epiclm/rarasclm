@@ -41,7 +41,7 @@ import es.jclm.cs.rarasclm.service.CasoRevisionService;
 import es.jclm.cs.rarasclm.util.MergeEntity;
 
 @Controller
-@RequestMapping("/casos")
+@RequestMapping("/casos/caso")
 @RarasClmItemModulo(caption="Caso",deno="Caso",modulo="casos",orden=3)
 @RarasClmItemMenu(caption="Caso",deno="Caso",modulo="casos",orden=1)
 @SessionAttributes("casos")
@@ -91,7 +91,7 @@ public class CasoController extends BaseController {
 			return "casos/index-casos";
 		} else {
 			Caso c = (Caso)request.getSession().getAttribute(OBJETO_CASO_SESION);
-			return String.format("redirect:/casos/edit/%s",c.getIdCaso());
+			return String.format("redirect:/casos/caso/edit/%s",c.getIdCaso());
 		}
 	}
 	
@@ -109,11 +109,11 @@ public class CasoController extends BaseController {
 		if(request.getSession().getAttribute(OBJETO_CASO_SESION)!=null) {
 			request.getSession().setAttribute(OBJETO_CASO_SESION, null);
 		}
-		return "redirect:/casos";
+		return "redirect:/casos/caso";
 	}
 
 	///////////////////////////////////
-	//MOSTRAR CASO EN JSON
+	// MOSTRAR CASO EN JSON
 	///////////////////////////////////
 	@RequestMapping(value = "/json/{id}", method = RequestMethod.GET)
 	public  @ResponseBody Caso showJsonCasoPaciente(@PathVariable String id) {
@@ -143,7 +143,7 @@ public class CasoController extends BaseController {
 			log.error(ex.getMessage(),ex);
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
-		return "casos/forms/casoEdit";
+		return "casos/forms/edit-caso";
 	}
 	
 	
@@ -167,12 +167,6 @@ public class CasoController extends BaseController {
 			StringBuilder sb = new StringBuilder();
 			sb.append(String.format("<p><b>ACTUALIZACIÓN CORRECTA</b></p>caso %07d%n (%s)</p>\n",
 					casoSinEditar.getPaciente().getIdPaciente(),casoSinEditar.getNumCaso()));
-
-//			for(FieldChange f : casoMerge.getFieldsChange())
-//				sb.append(String.format("\t<p>Se ha cambiado campo %s valor: %s por %s</p>\n",f.getFieldName(),
-//						f.getSerializeOldValue(),
-//						f.getSerializeNewValue()));
-			
 
 			if(casoRevisionService.isCasoRevisionSet(caso.getIdCaso(), user.getUsername())) {
 				//El caso estaba para revision. Se completa
@@ -209,7 +203,7 @@ public class CasoController extends BaseController {
 			log.error(ex.getMessage(),ex);
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
-		return "redirect:/casos/edit/"+id;
+		return "redirect:/casos/caso/edit/"+id;
 	}
 	
 	

@@ -2,6 +2,8 @@ package es.jclm.cs.rarasclm.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,12 +14,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
+import es.jclm.cs.rarasclm.dao.CasoDao;
 import es.jclm.cs.rarasclm.entities.BusquedaModelView;
 import es.jclm.cs.rarasclm.entities.Caso;
 import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.MensajeResultado;
 import es.jclm.cs.rarasclm.entities.MensajeTipo;
+import es.jclm.cs.rarasclm.entities.UserRarasClm;
 import es.jclm.cs.rarasclm.service.BusquedaService;
+import es.jclm.cs.rarasclm.service.CasoRevisionServiceException;
 import es.jclm.cs.rarasclm.service.CasoService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
 import es.jclm.cs.rarasclm.service.PacienteService;
@@ -29,6 +34,7 @@ import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 @RarasClmItemMenu(caption="Búsqueda",deno="Búsqueda",modulo="busqueda",orden=1)
 public class BusquedaController extends BaseController {
 	
+	private static final Logger log = LoggerFactory.getLogger(BusquedaController.class);
 	
 	@Autowired
 	LocalizacionesService servicioLocalizaciones;
@@ -81,29 +87,45 @@ public class BusquedaController extends BaseController {
 	/////////////////////////////////////
 	@RequestMapping(method = RequestMethod.POST)
 	public String busquedaSubmit(Model model, @ModelAttribute(OBJETO_BUSQUEDA_SESION) BusquedaModelView busquedaModel) {
-				
-		long numCasos = busquedaService.buscaCasosNumResultados(busquedaModel);
+
+		UserRarasClm user = (UserRarasClm)model.asMap().get("userCLM");
 		
-		busquedaModel.setNumResultados(numCasos);
+		busquedaModel.setSeccion(user.getSeccion().getIdSeccion());
 		
-		if((int)numCasos>cache.getNumMaxResultadosBusqueda()) {
+		long numCasos = -1;
+
+		try {
+			numCasos = busquedaService.buscaCasosNumResultados(busquedaModel);
+			busquedaModel.setNumResultados(numCasos);
+
+			if ((int) numCasos > cache.getNumMaxResultadosBusqueda()) {
+				MensajeResultado mensaje = new MensajeResultado();
+				mensaje.setMensaje(
+						String.format(
+								"<p>La consulta responde con %s resultados de un máximo de %s registros.<br/>"
+										+ " Restrinja más la búsqueda</p>",
+								numCasos, cache.getNumMaxResultadosBusqueda()));
+				mensaje.setTipo(MensajeTipo.ERROR);
+				request.getSession().setAttribute(OBJETO_MENSAJE_SESION, mensaje);
+				busquedaModel.setCasos(null);
+			} else {
+				busquedaModel.setCasos(busquedaService.buscaCasos(busquedaModel));
+				if (busquedaModel.getMunicipio().length() == 5 && busquedaModel.getMunicipio().equals("99999"))
+					model.addAttribute("municipiosProvinciaResidencia", servicioLocalizaciones
+							.getMunicipioDeProvincia(busquedaModel.getMunicipio().substring(0, 2)));
+			}
+			model.addAttribute(OBJETO_BUSQUEDA_SESION, busquedaModel);
+			request.getSession().setAttribute(OBJETO_BUSQUEDA_SESION, busquedaModel);
+		} catch (Exception ex) {
+			log.error(ex.getMessage());
 			MensajeResultado mensaje = new MensajeResultado();
-			mensaje.setMensaje(String.format("<p>La consulta responde con %s resultados de un máximo de %s registros.<br/>"
-					+ " Restrinja más la búsqueda</p>",
-					numCasos,
-					cache.getNumMaxResultadosBusqueda()));
+			mensaje.setMensaje(ex.getMessage());
 			mensaje.setTipo(MensajeTipo.ERROR);
-			request.getSession().setAttribute(OBJETO_MENSAJE_SESION,mensaje);
+			request.getSession().setAttribute(OBJETO_MENSAJE_SESION, mensaje);
+			model.addAttribute(OBJETO_BUSQUEDA_SESION, busquedaModel); 
 			busquedaModel.setCasos(null);
-		} else {
-			busquedaModel.setCasos(busquedaService.buscaCasos(busquedaModel));
-			if(busquedaModel.getMunicipio().length()==5 && busquedaModel.getMunicipio().equals("99999"))
-				model.addAttribute("municipiosProvinciaResidencia",
-						servicioLocalizaciones.getMunicipioDeProvincia(busquedaModel.getMunicipio().substring(0, 2)));
+			return "redirect:busqueda";
 		}
-		
-		model.addAttribute(OBJETO_BUSQUEDA_SESION, busquedaModel); //??????????
-		request.getSession().setAttribute(OBJETO_BUSQUEDA_SESION,busquedaModel);
 
 		return "redirect:busqueda";
 	}

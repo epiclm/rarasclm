@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.jclm.cs.rarasclm.dao.BusquedaDAOException;
 import es.jclm.cs.rarasclm.dao.CasoDao;
 import es.jclm.cs.rarasclm.dao.PacienteDao;
 import es.jclm.cs.rarasclm.entities.BusquedaModelView;
@@ -47,7 +48,7 @@ public class BusquedaService {
 				);
 	}
 	
-	public List<Caso> buscaCasos(BusquedaModelView bmv) {
+	public List<Caso> buscaCasos(BusquedaModelView bmv) throws CasoRevisionServiceException {
 		
 		int anioNacimiento=-1;
 		Byte baseDiagnostico=-1;
@@ -60,26 +61,31 @@ public class BusquedaService {
 			baseDiagnostico = Byte.parseByte(bmv.getBaseDiagnostico());
 		} catch(Exception ex) {}
 		
-		return casoDao.busqueda(
-				bmv.getSeccion(),
-				bmv.getCip(),
-				bmv.getNombre(),
-				bmv.getApellido01(),
-				bmv.getApellido02(),
-				bmv.getProvincia(),
-				bmv.getMunicipio(),
-				anioNacimiento,
-				bmv.getSexo(),
-				bmv.getCie9MC(),
-				bmv.getCie10(),
-				bmv.getEnfermedadRaraCLM(),
-				baseDiagnostico,
-				-1,
-				-1
-			);		
+		try {
+			return casoDao.busqueda(
+					bmv.getSeccion(),
+					bmv.getCip(),
+					bmv.getNombre(),
+					bmv.getApellido01(),
+					bmv.getApellido02(),
+					bmv.getProvincia(),
+					bmv.getMunicipio(),
+					anioNacimiento,
+					bmv.getSexo(),
+					bmv.getCie9MC(),
+					bmv.getCie10(),
+					bmv.getEnfermedadRaraCLM(),
+					baseDiagnostico,
+					-1,
+					-1
+				);
+		} catch (BusquedaDAOException ex) {
+			log.error(ex.getMessage());
+			throw new CasoRevisionServiceException(String.format("Error al realizar búsqueda de casos : %s", ex.getMessage()));
+		}		
 	}
 	
-	public long buscaCasosNumResultados(BusquedaModelView bmv) {
+	public long buscaCasosNumResultados(BusquedaModelView bmv) throws CasoRevisionServiceException {
 		
 		int anioNacimiento=-1;
 		Byte baseDiagnostico=-1;
@@ -92,21 +98,26 @@ public class BusquedaService {
 			baseDiagnostico = Byte.parseByte(bmv.getBaseDiagnostico());
 		} catch(Exception ex) {}
 		
-		return casoDao.busquedaNumRegistros(
-				bmv.getSeccion(),
-				bmv.getCip(),
-				bmv.getNombre(),
-				bmv.getApellido01(),
-				bmv.getApellido02(),
-				bmv.getProvincia(),
-				bmv.getMunicipio(),
-				anioNacimiento,
-				bmv.getSexo(),
-				bmv.getCie9MC(),
-				bmv.getCie10(),
-				bmv.getEnfermedadRaraCLM(),
-				baseDiagnostico
-			);		
+		try {
+			return casoDao.busquedaNumRegistros(
+					bmv.getSeccion(),
+					bmv.getCip(),
+					bmv.getNombre(),
+					bmv.getApellido01(),
+					bmv.getApellido02(),
+					bmv.getProvincia(),
+					bmv.getMunicipio(),
+					anioNacimiento,
+					bmv.getSexo(),
+					bmv.getCie9MC(),
+					bmv.getCie10(),
+					bmv.getEnfermedadRaraCLM(),
+					baseDiagnostico
+				);
+		} catch (BusquedaDAOException ex) {
+			log.error(ex.getMessage());
+			throw new CasoRevisionServiceException(String.format("Error al realizar búsqueda de casos : %s", ex.getMessage()));
+		}		
 	}
 	
 }

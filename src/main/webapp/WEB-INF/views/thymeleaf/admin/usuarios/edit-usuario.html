@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<link rel="stylesheet" th:href="@{/bower_components/jquery.tablesorter/dist/css/jquery.tablesorter.pager.min.css}"/>
+<link rel="stylesheet" th:href="@{/bower_components/jquery.tablesorter/dist/css/theme.blue.min.css}"/>
+<link rel="stylesheet" th:href="@{/bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css}"/>
+<script type="text/javascript" th:src="@{/bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.min.js}"></script>
+<script type="text/javascript" th:src="@{/bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.widgets.min.js}"></script>
+<script type="text/javascript" th:src="@{/bower_components/jquery.tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js}"></script>
+<script type="text/javascript" th:src="@{/bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+           
+	$(document).ready(function() {
+		
+		addMensanjesFuncionalidad({'recarga':true});
+		
+		$('#admin').bootstrapSwitch({
+			size:"small"
+		});
+		
+		$('#activo').bootstrapSwitch({
+			size:"small"
+		});
+		
+		$('#generar').bootstrapSwitch({
+			size:"small"
+		});
+		
+		$('#generar').on('switchChange.bootstrapSwitch',function(event,estado) {
+				$('#formulario-usuario-nuevo').submit();
+		});
+		
+		$('#activo').on('switchChange.bootstrapSwitch',function(event,estado) {
+			//El usuario es el contenido de la primera celda de la fila.
+			if(estado) {
+				$.ajax(
+					{
+						url:'/'+contextApp+'/admin/usuarios/activa/' + /*[[${usuario.username}]]*/'',
+						method:'POST',
+					}		
+				).done(function(data, textStatus, jqXHR) {
+					$('#activo').bootstrapSwitch('disabled',true)
+					location.reload();
+				}).fail(function(jqXHR, textStatus, errorThrown) {
+					mensajeError("Error al intentar la activación del usuario " + /*[[${usuario.username}]]*/'');
+				}).always(function(data){
+					
+				});
+			} else {
+				//el nuevo estado es desactivado
+				mensajeWarning("Cambiando el estado del usuario : " + /*[[${usuario.username}]]*/'');
+				$.ajax(
+					{
+						url:'/'+contextApp+'/admin/usuarios/desactiva/' + /*[[${usuario.username}]]*/'',
+						method:'POST',
+					}		
+				).done(function(data, textStatus, jqXHR) {
+					$('#activo').bootstrapSwitch('disabled',true)
+					location.reload();
+				}).fail(function(jqXHR, textStatus, errorThrown) {
+					mensajeError("Error al intentar la desactivación del usuario " + /*[[${usuario.username}]]*/'');
+				}).always(function(data){
+					
+				});	
+			}
+			
+		});
+		
+		$('#admin').on('switchChange.bootstrapSwitch',
+			function(event,estado) { 
+				if(estado) {
+					$.ajax(
+							{
+								url:'/'+contextApp+'/admin/usuarios/hazadmin/' + /*[[${usuario.username}]]*/'',
+								method:'POST',
+							}		
+						).done(function(data, textStatus, jqXHR) {
+							$('#admin').bootstrapSwitch('disabled',true)
+							location.reload();
+						}).fail(function(jqXHR, textStatus, errorThrown) {
+							mensajeError("Error al intentar la desactivación del usuario " + /*[[${usuario.username}]]*/'');
+						}).always(function(data){
+							
+						});	
+				} else {
+					$.ajax(
+							{
+								url:'/'+contextApp+'/admin/usuarios/quitaadmin/' + /*[[${usuario.username}]]*/'',
+								method:'POST',
+							}		
+						).done(function(data, textStatus, jqXHR) {
+							$('#admin').bootstrapSwitch('disabled',true)
+							location.reload();
+						}).fail(function(jqXHR, textStatus, errorThrown) {
+							mensajeError("Error al intentar la desactivación del usuario " + /*[[${usuario.username}]]*/'');
+						}).always(function(data){
+							
+						});
+				}
+		});
+		
+
+	})
+	 
+/*]]>*/	
+</script>
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+
+		<ol th:replace="fragment/adminBarra"></ol>
+		<div class="row barra-admin">
+			<a class="btn btn-warning" th:href="@{/admin/usuarios}"><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Volver</a>
+			<a class="btn btn-primary pull-right" th:href="@{/admin/usuarios/nuevo}">Nuevo Usuario</a>
+		</div>
+		<div class="row">
+			<form id="formulario-usuario-nuevo" class="form" method='POST'>
+				<div class="row">
+					<h3 class="col-md-9 col-sm-10" th:text="${usuario.username}"></h3>
+				</div>
+				<input id="username" name="username" type="hidden" th:value="${usuario.username}"/>
+				<div class="row">
+					<div id="grupo-nombre-usuario" class="form-group col-md-3 col-sm-4">
+						<label class="control-label" for="nombre">Nombre:</label>
+						<input id="nombre" class="form-control" name="nombre" type="text" maxlength="50" th:field="${usuario.nombre}" placeholder="Nombre"/>
+					</div>
+					<div id="grupo-apellido01-usuario" class="form-group col-md-3 col-sm-4">
+						<label class="control-label" for="apellido01">1er Apellido:</label>
+						<input id="apellido01" class="form-control" name="apellido01" type="text" maxlength="50" th:field="${usuario.apellido01}" placeholder="1er Apellido"/>
+					</div>
+					<div id="grupo-apellido02-usuario" class="form-group col-md-3 col-sm-4">
+						<label class="control-label" for="apellido02">2o Apellido:</label>
+						<input id="apellido02" class="form-control" name="apellido02" type="text" maxlength="50" th:field="${usuario.apellido02}" placeholder="2o Apellido"/>
+					</div>
+				</div>
+				<div class="row">
+					<div id="grupo-puesto-usuario" class="form-group col-md-6 col-sm-6">
+						<label class="control-label" for="nombre">Puesto:</label>
+						<input id="" class="form-control" name="puesto" type="text" maxlength="150" th:field="${usuario.puesto}" placeholder="Puesto"/>
+					</div>
+					<div id="grupo-seccion-usuario" class="form-group col-md-3 col-sm-3">
+						<label class="control-label" for="nombre">Seccion:</label>
+						<select class="form-control" th:field="${usuario.seccion.idSeccion}">
+							<option value="0">SSCC</option>
+							<option value="1">ALBACETE</option>
+							<option value="2">CIUDAD REAL</option>
+							<option value="3">CUENCA</option>
+							<option value="4">GUADALAJARA</option>
+							<option value="5">TALAVERA</option>
+							<option value="6">TOLEDO</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div id="grupo-seccion-activado" class="form-group col-md-3 col-sm-4" >
+						<label class="control-label" for="activo">Activado:</label>
+						<input id="activo" name="enabled" type="checkbox" th:field="${usuario.enabled}"></input>
+					</div>
+					<div id="grupo-seccion-administrador" class="form-group col-md-3 col-sm-4" >
+						<label class="control-label" for="admin">Administrador:</label>
+						<input id="admin" name="admin" type="checkbox" th:field="${usuario.admin}"></input>
+					</div>
+					<div id="grupo-seccion-administrador" class="form-group col-md-3 col-sm-4" >
+						<label class="control-label" for="generar">Regenerar Contraseña:</label>
+						<input id="generar" name="admin" type="checkbox" th:field="${usuario.generar}"></input>
+					</div>
+				</div>
+				<div th:if="${usuario.generar}" class="row">
+					<div id="grupo-seccion-activado" class="form-group col-md-7 col-sm-7" >
+						<label class="control-label" for="nombre">Contraseña:</label>
+						<input id="password" class="form-control" name="apellido02" type="text" maxlength="50" th:field="${usuario.password}" placeholder="Contraseña"/>
+					</div>
+				</div>
+				<div class="row">
+					<input class="btn btn-primary pull-right" type="submit" value="Actualizar"></input>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

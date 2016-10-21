@@ -74,18 +74,33 @@ public class BaseModelViewReflex implements IBaseModel {
 						menuModulo.setId(rarasClmItemModulo.modulo());
 						menuModulo.setDeno(rarasClmItemModulo.deno());
 						menuModulo.setOrden(rarasClmItemModulo.orden());
+						menuModulo.setBaseUrl(path[1]);
 						if(!modulos.contains(menuModulo))
 							modulos.add(menuModulo);
+						if(!menus.contains(itemMenu))
+							menus.add(itemMenu);
 					}
 					if(path.length==3) {
 						RarasClmItemMenu rarasClmItemMenu = clase.getAnnotation(RarasClmItemMenu.class);
+						RarasClmItemModulo rarasClmItemModulo = clase.getAnnotation(RarasClmItemModulo.class);
 						MenuItem itemMenu = new MenuItem();
-						itemMenu.setId(path[1]+"/"+path[2]);
-						itemMenu.setDeno(rarasClmItemMenu.caption());
-						itemMenu.setModulo(rarasClmItemMenu.modulo());
-						itemMenu.setOrden(rarasClmItemMenu.orden());
-						if(!menus.contains(itemMenu))
+						MenuModulo menuModulo = new MenuModulo();
+						if(rarasClmItemMenu!=null) {
+							itemMenu.setId(path[1]+"/"+path[2]);
+							itemMenu.setDeno(rarasClmItemMenu.caption());
+							itemMenu.setModulo(rarasClmItemMenu.modulo());
+							itemMenu.setOrden(rarasClmItemMenu.orden());
+						}
+						if(rarasClmItemModulo!=null) {
+							menuModulo.setBaseUrl(path[1]+"/"+path[2]);
+							menuModulo.setId(rarasClmItemModulo.modulo());
+							menuModulo.setDeno(rarasClmItemModulo.deno());
+							menuModulo.setOrden(rarasClmItemModulo.orden());
+						}
+						if(rarasClmItemMenu!=null && !menus.contains(itemMenu))
 							menus.add(itemMenu);
+						if(rarasClmItemModulo!=null && !modulos.contains(menuModulo))
+							modulos.add(menuModulo);
 					}
 					if(path.length==0) {
 						MenuModulo menuModulo = new MenuModulo();
@@ -99,6 +114,7 @@ public class BaseModelViewReflex implements IBaseModel {
 						menuModulo.setId(rarasClmItemModulo.modulo());
 						menuModulo.setDeno(rarasClmItemModulo.deno());
 						menuModulo.setOrden(rarasClmItemModulo.orden());
+						menuModulo.setBaseUrl("");
 						if(!modulos.contains(menuModulo))
 							modulos.add(menuModulo);
 					}

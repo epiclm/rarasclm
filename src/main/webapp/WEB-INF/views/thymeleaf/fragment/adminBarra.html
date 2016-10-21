@@ -1,0 +1,6 @@
+<ol class="submenu-admin row">
+	<li th:each="menu : ${baseModel.menuModel.getModuloMenuById('admin').itemsMenu}">
+		<a th:if="${menu.id}==|admin/${route.modulo}| or (${menu.id}=='admin' and ${route.modulo==null})" class="active" th:text="${menu.deno}" th:href="|/${baseModel.baseApp}/${menu.id}|"></a>
+		<a th:if="${menu.id}!=|admin/${route.modulo}| and not (${menu.id}=='admin' and ${route.modulo==null})" th:text="${menu.deno}" th:href="|/${baseModel.baseApp}/${menu.id}|"></a>
+	</li>
+</ol>

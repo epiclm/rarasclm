@@ -25,9 +25,9 @@
 							{
 								$('#botonesNavegacion').html('');
 								$('#botonesNavegacion').append("<label>&nbsp;</label><input class='btn btn-primary' type='button' value='ir a "
-									+ coincidencias[0] +  "' onclick='location.assign(\"/" + contextApp + "/enfermedades/enfrara/show/" + encodeURIComponent(coincidencias[0]) + "\")'/>");
+									+ coincidencias[0] +  "' onclick='location.assign(\"/" + contextApp + "/enfermedad/enfrara/show/" + encodeURIComponent(coincidencias[0]) + "\")'/>");
 								$('#botonesNavegacion').append("<label>&nbsp;</label><input class='btn btn-success' type='button' value='Editar "
-									+ coincidencias[0] +  "' onclick='location.assign(\"/" + contextApp + "/enfermedades/enfrara/edit/" + encodeURIComponent(coincidencias[0]) + "\")'/>");
+									+ coincidencias[0] +  "' onclick='location.assign(\"/" + contextApp + "/enfermedad/enfrara/edit/" + encodeURIComponent(coincidencias[0]) + "\")'/>");
 							}
 						}
 			
@@ -45,7 +45,7 @@
 						});
 						$.ajax({
 							dataType : "json",
-							url : '/'+contextApp+'/enfermedades/enfrara/json',
+							url : '/'+contextApp+'/enfermedad/enfrara/json',
 							contentType : "application/json; charset=utf-8",
 							success : function(data) {
 								enfermedades = data;

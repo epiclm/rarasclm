@@ -1,5 +1,4 @@
-<nav class="navbar navbar-inverse navbar-static-top navbar-fixed-top" role="navigation">
- <div class="navbar-inner">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <ul  class="nav navbar-nav" th:each="modulo : ${baseModel.menuModel.modulosMenu}">
      <li th:if="${modulo.id=='inicio'}">
@@ -7,19 +6,22 @@
 		<a th:if="${modulo.id}!=${route.modulo}" th:href="@{|/|}" th:text="${modulo.deno}"></a>	
 	  </li>
 	  <li th:if="${modulo.id!='inicio' and modulo.id!='admin'}">
-		<a th:if="${modulo.id}==${route.modulo}" class="active" th:href="@{|/${modulo.id}|}" th:text="${modulo.deno}"></a>
-		<a th:if="${modulo.id}!=${route.modulo}" th:href="@{|/${modulo.id}|}" th:text="${modulo.deno}"></a>	
+		<a th:if="${modulo.id}==${route.modulo}" class="active" th:href="@{|/${modulo.baseUrl}|}" th:text="${modulo.deno}"></a>
+		<a th:if="${modulo.id}!=${route.modulo}" th:href="@{|/${modulo.baseUrl}|}" th:text="${modulo.deno}"></a>	
 	   </li>
 	   <li th:if="${modulo.id!='inicio' and modulo.id=='admin' and userCLM.admin}">
-		<a th:if="${modulo.id}==${route.modulo}" class="active" th:href="@{|/${modulo.id}|}" th:text="${modulo.deno}"></a>
-		<a th:if="${modulo.id}!=${route.modulo}" th:href="@{|/${modulo.id}|}" th:text="${modulo.deno}"></a>	
+		<a th:if="${modulo.id}==${route.visibilidad}" class="active" th:href="@{|/${modulo.baseUrl}|}" th:text="${modulo.deno}"></a>
+		<a th:if="${modulo.id}!=${route.visibilidad}" class="" th:href="@{|/${modulo.baseUrl}|}" th:text="${modulo.deno}"></a>
 	   </li>
 	</ul>
-	<ul class="nav navbar-brand pull-right">
+	<ul class="nav navbar-nav navbar-right">
 	  <li>
-		<a href="#">Usuario</a>
+		<a href="usuario" th:if="${route.modulo}=='usuario'" class="active">Usuario</a>
+		<a href="usuario" th:if="${route.modulo}!='usuario'">Usuario</a>
+	  </li>
+	  <li>
+	  	<a th:href="|/${baseModel.baseApp}/logout|">Salir&nbsp;<i class="glyphicon glyphicon-log-out pull-right"></i></a>
 	  </li>
 	</ul>
    </div>
- </div>
 </nav>

@@ -25,6 +25,7 @@
 <script type="text/javascript" th:src="@{/bower_components/ckeditor/ckeditor.js}"></script>  
 <script type="text/javascript" th:if="${baseModel.mensaje}!=null" th:inline="javascript">
 /*<![CDATA[*/    
+      
 /*
 	Tipo de Mensaje: OK=1,WARNING=0,ERROR=-1
 */
@@ -33,12 +34,16 @@ var textoMensaje = /*[[${baseModel.mensaje.mensaje}]]*/null;
 /*]]>*/
 </script>
 
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
            
 ////////////////////////////////
 //Manejo de mensajes de retorno
 ////////////////////////////////
+
+var routeBase  = /*[[${route.baseUrl}]]*/'';
+var contextApp = /*[[${baseModel.baseApp}]]*/'';     
+
 
 function mensajeError(mensaje) {
 	$('#mensaje').parent().addClass('alert-danger');
@@ -121,7 +126,6 @@ function addMensanjesFuncionalidad(configuracion) {
 		 <div class="modal-dialog" role="document">
 		   <div class="modal-content alert">
 			    <div id="mensaje" class="modal-body">
-			
 				</div>
 				<div class="modal-footer">
 					<button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
@@ -130,7 +134,7 @@ function addMensanjesFuncionalidad(configuracion) {
 		</div>
 	</div>
 	<div id="contenido" class="container"  layout:fragment="content">
-	
+
 	</div>
 </body>
 </html>

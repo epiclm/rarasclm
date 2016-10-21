@@ -47,8 +47,7 @@ public class PacienteController extends BaseController {
 	
 	@Autowired
 	HttpServletRequest request;
-	
-	
+		
 	
 	public static final String OBJETO_PACIENTE_SESION="paciente";
 	public static final String OBJETO_CASO_SESION="caso";

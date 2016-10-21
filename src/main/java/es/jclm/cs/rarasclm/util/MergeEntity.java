@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -34,7 +35,9 @@ public class MergeEntity<T> {
 					valueOld = mg.invoke(oldPersist, (Object[])null);
 					if((mg.getReturnType() == Date.class || mg.getReturnType() == GregorianCalendar.class || valueUpd!=null) 
 							&& (valueUpd==null || !valueUpd.equals(valueOld))
-							&& (valueUpd!=null || valueOld!=null)) {
+							&& (valueUpd!=null || valueOld!=null)
+							&& !(valueUpd instanceof Set)
+							&& !(valueUpd instanceof List)){
 						ms.invoke(oldPersist, valueUpd);
 						FieldChange cambio = new FieldChange();
 						cambio.setCannonicalClassName(mg.getReturnType().getCanonicalName());
@@ -49,13 +52,13 @@ public class MergeEntity<T> {
 						cambio.setSerializeNewValue(valueUpd.toString());
 						result.getFieldsChange().add(cambio);
 					}					
-					result.setMergeObject(oldPersist);
 				} catch(Exception ex) {
 					new MergeEntityException(String.format("error de \"merge\" casuado por %s", ex.getMessage()));
 				}			
 			}
 		}
 	}
+	result.setMergeObject(oldPersist);
 	return result;
 }
 	

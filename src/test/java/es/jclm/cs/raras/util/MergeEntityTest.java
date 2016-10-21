@@ -19,7 +19,6 @@ import es.jclm.cs.rarasclm.util.MergeEntityException;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Order(1)
 public class MergeEntityTest {
-	
 	@Test
 	public void test01() {
 		Paciente p1 = new Paciente();

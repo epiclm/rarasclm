@@ -16,7 +16,7 @@ import es.jclm.cs.rarasclm.entities.Paciente;
 public class PacienteDao extends BaseEntityDao<Paciente,Integer> {
 
 	public List<Paciente> busqueda(
-			String seccion,
+			int seccion,
 			String cip,
 			String nombre,
 			String apellido1,

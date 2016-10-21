@@ -22,8 +22,8 @@ import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie9mcService;
 
 @Controller
-@RequestMapping("/enfermedades/cie9mc")
-@RarasClmItemMenu(caption="CIE9MC",deno="Enfermedades",modulo="enfermedades",orden=2)
+@RequestMapping("/enfermedad/cie9mc")
+@RarasClmItemMenu(caption="CIE9MC",deno="Enfermedades cie9mc",modulo="enfermedad",orden=2)
 @SessionAttributes("enfermedadescie9mc")
 public class EnfermedadCie9MCController extends BaseController {
 

@@ -7,13 +7,33 @@
 </head>
 <body>
 	<div id="contenido"  layout:fragment="content">
-		<div id="info-usuario" class="row offset1 pull-right">
-			<table class="span12 ">
-				<tr><td class="text-right span2"><strong>Usuario:</strong></td><td th:text="${userCLM.username}"></td></tr>
-				<tr><td class="text-right span2"><strong>Nombre:</strong></td><td th:text="|${userCLM.apellido01} ${userCLM.apellido02}, ${userCLM.nombre}|"></td></tr>
-				<tr><td class="text-right span2"><strong>Último acceso:</strong></td><td th:text="${#dates.format(userCLM.ultimoAcceso,'dd/MMM/yyyy')}"></td></tr>
-			</table>
+	<div class="">
+		<div id="info-usuario" class="row">
+		 	<div class="col-md-6">
+				<table class="table table-condensed">
+			  		<thead>
+				  		<tr>
+				  			<td></td>
+				  			<td></td>
+				  			<td></td>
+				  			<td></td>
+				  			<td></td>
+				  		</tr>
+			  		</thead>
+			  		<tbody>
+						<tr><td class="text-right"><strong>Usuario: &nbsp;</strong></td><td th:text="| ${userCLM.username}|"></td></tr>
+						<tr><td class="text-right"><strong>Nombre: &nbsp;</strong></td><td th:text="| ${userCLM.apellido01} ${userCLM.apellido02}, ${userCLM.nombre}|"></td></tr>
+						<tr><td class="text-right"><strong>Último acceso: &nbsp;</strong></td><td th:if="${userCLM.ultimoAcceso}!=null" th:text="| ${#dates.format(userCLM.ultimoAcceso,'dd/MM/yyyy  HH:mm')}|"></td></tr>
+						<tr><td class="text-right"><strong>Puesto: &nbsp;</strong></td><td th:text="| ${userCLM.puesto}|"></td></tr>
+						<tr><td class="text-right"><strong>Sección: &nbsp;</strong></td><td th:text="| ${userCLM.seccion.deno}|"></td></tr>
+			  		</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
+	<div>
+		<button class="btn btn-primary">Últimas Revisiones</button>
 	</div>
+   </div>
 </body>
 </html>

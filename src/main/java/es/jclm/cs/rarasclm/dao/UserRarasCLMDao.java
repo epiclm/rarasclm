@@ -21,20 +21,33 @@ public class UserRarasCLMDao extends BaseEntityDao<UserRarasClm, String>{
 	public UserRarasCLMDao() {
 
 	}
+	
+	public List<UserRarasClm> getAll() {
+		List<UserRarasClm> users = new ArrayList<UserRarasClm>();
+		Session session = getSessionFactory().openSession();
+		try {
+			users = session.createQuery("from UserRarasClm u order by u.seccion, u.apellido01, u.nombre").list();
+			return users; }
+		catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+			return null;
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}
 
 	
 	public UserRarasClm findByUserName(String username) {
-
 		List<UserRarasClm> users = new ArrayList<UserRarasClm>();
 		Session session = getSessionFactory().openSession();
-
 		try {
-			users = session.createQuery("SELECT u from UserRarasClm u where u.username=?").setParameter(0, username)
-					.list();
+			users = session.createQuery("SELECT u from UserRarasClm u where u.username=?").setParameter(0, username).list();
 			if (users.size() > 0) {
 				return users.get(0);
 			} else {
-				log.warn(String.format("El usuario %s no existe"));
+				log.warn(String.format("El usuario %s no existe",username));
 				return null;
 			}
 		} catch (Exception ex) {
@@ -51,14 +64,13 @@ public class UserRarasCLMDao extends BaseEntityDao<UserRarasClm, String>{
 	public boolean isUserEnabled(String user) {
 		List<UserRarasClm> users = new ArrayList<UserRarasClm>();
 		Session session = getSessionFactory().openSession();
-
 		try {
 			users = session.createQuery("SELECT u from UserRarasClm u where u.username=:user and u.enabled>0")
 					.setParameter("user", user).list();
 			if (users.size() > 0) {
 				return true;
 			} else {
-				log.warn(String.format("El usuario %s no existe",user));
+				log.warn(String.format("El usuario %s no está habilitado",user));
 				return false;
 			}
 		} catch (Exception ex) {

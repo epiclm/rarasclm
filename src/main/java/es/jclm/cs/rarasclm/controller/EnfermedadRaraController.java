@@ -38,9 +38,9 @@ import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
  * The Class EnfermedadRaraController.
  */
 @Controller
-@RequestMapping("/enfermedades")
-@RarasClmItemModulo(caption="Enfermedad",deno="Enfermedad",modulo="enfermedades",orden=4)
-@RarasClmItemMenu(caption="Enfermedad",deno="Enfermedad",modulo="enfermedades",orden=1)
+@RequestMapping("/enfermedad")
+@RarasClmItemModulo(caption="Enfermedad",deno="Enfermedad",modulo="enfermedad",orden=4)
+@RarasClmItemMenu(caption="Enfermedad",deno="Enfermedad",modulo="enfermedad",orden=1)
 @SessionAttributes("enfrara")
 public class EnfermedadRaraController extends BaseController {
 
@@ -79,7 +79,7 @@ public class EnfermedadRaraController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String inicio(Model model) {
 		getRoute().setId("");
-		return "enfermedades/enfRara";
+		return "enfermedad/enfRara";
 	}
 
 	
@@ -89,7 +89,7 @@ public class EnfermedadRaraController extends BaseController {
 	public String setupEditForm(@PathVariable String id, Model model) {
 		getRoute().setId(id);
 		model.addAttribute("enfermedadRaraModel", enfermedadService.getEnfermedadRaraById(id));
-		return "enfermedades/forms/enfRaraEdit";
+		return "enfermedad/forms/enfRaraEdit";
 	}
 
 	
@@ -124,7 +124,7 @@ public class EnfermedadRaraController extends BaseController {
 	public String nuevo(Model model) {
 		EnfermedadRara enfRara = new EnfermedadRara();
 		model.addAttribute("enfermedadRaraModel", enfRara);
-		return "enfermedades/forms/enfRaraNuevo";
+		return "enfermedad/forms/enfRaraNuevo";
 	}
 
 	
@@ -132,11 +132,11 @@ public class EnfermedadRaraController extends BaseController {
 	public String submitNuevoForm(@ModelAttribute("enfermedadRara") EnfermedadRara enf, BindingResult result,
 			SessionStatus status) {
 		if (result.hasErrors()) {
-			return "enfermedades/forms/enfRara/Nuevo";
+			return "enfermedad/forms/enfRara/Nuevo";
 		}
 		enfermedadService.save(enf);
 		status.setComplete();
-		return "redirect:/enfermedades/enfrara/show/" + enf.getEnfermedadRaraId();
+		return "redirect:/enfermedad/enfrara/show/" + enf.getEnfermedadRaraId();
 	}
 
 	
@@ -161,7 +161,7 @@ public class EnfermedadRaraController extends BaseController {
 //							enfCie9mc.getCie9Id(), enfCie9mc.getLiteral()));
 			//return "enfermedades/forms/enfRaraEdit";
 		//}
-		return "enfermedades/forms/enfRaraEdit";
+		return "enfermedad/forms/enfRaraEdit";
 	}
 
 	@RequestMapping(value = "/addcie10/{id}/{id2}", method = RequestMethod.GET)
@@ -186,7 +186,7 @@ public class EnfermedadRaraController extends BaseController {
 //							enfCie10.getCie10Id(), enfCie10.getLiteral()));
 		//return "enfermedades/forms/enfRaraEdit";
 		//}
-		return "enfermedades/forms/enfRaraEdit";
+		return "enfermedad/forms/enfRaraEdit";
 	}
 
 	@RequestMapping(value = "/updatecie9mc/{id}/{id2}", method = RequestMethod.POST)
@@ -234,7 +234,7 @@ public class EnfermedadRaraController extends BaseController {
 		getRoute().setId(id);
 		EnfermedadRara enfRara = enfermedadService.getEnfermedadRaraById(id);
 		model.addAttribute("enfermedadRaraModel", enfRara);
-		return "enfermedades/shows/enfRara";
+		return "enfermedad/shows/enfRara";
 	}
 
 	@RequestMapping(value = "/enfrara/json", produces = "application/json; charset=UTF-8")

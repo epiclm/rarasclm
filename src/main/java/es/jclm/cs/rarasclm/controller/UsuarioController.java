@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import es.jclm.cs.rarasclm.entities.AccionResultado;
 import es.jclm.cs.rarasclm.entities.CasoRevisionUsuarioId;
-import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.entities.UserRarasClm;
-import es.jclm.cs.rarasclm.service.RarasCLMUserService;
 import es.jclm.cs.rarasclm.service.CasoRevisionService;
 
 @Controller
@@ -32,7 +30,7 @@ public class UsuarioController extends BaseController {
 	@Autowired
 	HttpServletRequest request;
 	
-	@RequestMapping("/")
+	@RequestMapping(method=RequestMethod.GET)
 	public String  muestraUsuarioActual(Model model) {
 		return "usuario/index-usuario";
 	}

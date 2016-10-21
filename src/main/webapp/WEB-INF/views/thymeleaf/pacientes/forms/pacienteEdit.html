@@ -46,48 +46,48 @@ $(document).ready( function() {
 </head>
 <body>
 	<div id="contenido" layout:fragment="content">
-	  	<div class="row">
-	  	<div class="offset1">
+	  <div class="row">
 		<form id="form-edit-paciente" class="form" method='POST'>
 			<input type="hidden" id="idPaciente" name="idPaciente" th:field="${paciente.idPaciente}"/>
 			<div class="row">	
-				<h4>Edición Paciente <span th:text="${paciente.idPaciente}"></span><a style="float:right" class="btn btn-primary" th:href="|${route.baseUrl}nuevaBusqueda|">Buscar otro paciente</a> </h4>
+				<h4 class="col-md-9 col-sm-9" >Edición Paciente <span th:text="${paciente.idPaciente}"></span></h4>
+				<a class="btn btn-primary pull-right col-md-2 col-sm-3" th:href="|${route.baseUrl}nuevaBusqueda|">Buscar otro paciente</a> 
 			</div>
 			<div id="formulario-contenido">
 			<div class="row">
-				<div id="grupo-apellido01-paciente" class="form-group col-md-3">
+				<div id="grupo-apellido01-paciente" class="form-group col-md-3 col-sm-3">
 					<label class="control-label" for="apellido01">1er Apellido:</label>
 					<input id="apellido01" class="form-control" name="apellido01" type="text" maxlength="65" th:value="${paciente.apellido01}" placeholder="1er apellido"/>
 				</div>
-				<div id="grupo-apellido02-paciente" class="form-group col-md-3">	
+				<div id="grupo-apellido02-paciente" class="form-group col-md-3 col-sm-3">	
 					<label class="control-label" for="apellido02">2o Apellido:</label>
 					<input id="apellido02" class="form-control" name="apellido02" type="text" maxlength="65" th:value="${paciente.apellido02}" placeholder="2o apellido"/>
 				</div>
-				<div id="grupo-nombre-paciente" class="form-group col-md-3">		
+				<div id="grupo-nombre-paciente" class="form-group col-md-3 col-sm-3">		
 					<label class="control-label" for="nombre">Nombre:</label>
 					<input id="nombre" class="form-control" name="nombre" type="text" maxlength="65" th:value="${paciente.nombre}" placeholder="nombre"/>
 				</div>
 			</div>
 			<div class="row">
-				<div  class="form-group col-md-3">
+				<div  class="form-group col-md-3 col-sm-3">
 					<label class="control-label" for="cip">CIP:</label>
 					<input  class="form-control" id="cip" name="cip" type="text" maxlength="16" th:value="${paciente.cip}"/>
 				</div>
-				<div  class="form-group col-md-3">
+				<div  class="form-group col-md-3 col-sm-3">
 					<label class="control-label" for="dni">DNI-NIE:</label>
 					<input  class="form-control" id="dni" name="dni" type="text" maxlength="12" th:value="${paciente.dni}"/>
 				</div>
-				<div  class="form-group col-md-3">
+				<div  class="form-group col-md-3 col-sm-3">
 					<label class="control-label" for="numeroSegSocial">NSS:</label>
 					<input  class="form-control" id="numeroSegSocial" name="numeroSegSocial" type="text" maxlength="12" th:value="${paciente.numeroSegSocial}"/>
 				</div>
 			</div>
 			<div class="row">
-				<div class="form-group col-md-3">
+				<div class="form-group col-md-3 col-sm-3">
 					<label class="control-label" for="fechaNacimiento">Fecha Nac.: <span id="pacienteEdad" th:text="|(${paciente.fechaNacimiento!=null ? baseModel.cache.getEdad(paciente.fechaNacimiento) : ''} años)|"></span></label>
 					<input name="fechaNacimiento" class="form-control" id="fechaNacimiento" type="date"  th:value="${paciente.fechaNacimiento!=null ? #dates.format(paciente.fechaNacimiento, 'yyyy-MM-dd') : ''}" />
 				</div>
-				<div class="form-group col-md-2">
+				<div class="form-group col-md-2 col-sm-2">
 					<label class="control-label" for="sexo">Sexo:</label>
 					<select name="sexo" class="form-control" id="sexo"  th:field="${paciente.sexo}" >
 						<option value="1">VARÓN</option>
@@ -98,47 +98,47 @@ $(document).ready( function() {
 			</div>
 			<div class="row">
 				<p style="margin-top:5px">DOMICILIO:</p>
-				<div class="form-group col-md-2">
+				<div class="form-group col-md-2 col-sm-2">
 					<label class="control-label" for="domTipoVia">Tipo Vía:</label>
 					<input name="domTipoVia" class="form-control" id="domTipoVia" type="text" maxlength="5" th:value="${paciente.domTipoVia}" />
 				</div>
-				<div class="form-group col-md-4">
+				<div class="form-group col-md-4 col-sm-4">
 					<label class="control-label" for="domNombreVia">Nombre de la Vía:</label>
 					<input name="domNombreVia" class="form-control" id="domNombreVia" type="text"  th:value="${paciente.domNombreVia}" />
 				</div>
-				<div class="form-group col-md-1">
+				<div class="form-group col-md-1 col-sm-1">
 					<label class="control-label" for="domNumero">Número:</label>
 					<input name="domNumero" class="form-control" id="domNumero" type="text" maxlength="4" th:value="${paciente.domNumero}" />
 				</div>
-				<div class="form-group col-md-2">
+				<div class="form-group col-md-2 col-sm-2">
 					<label class="control-label" for="domPisopuerta">Piso:</label>
 					<input name="domPisopuerta" class="form-control" id="domPisopuerta" type="text" maxlength="4"  th:value="${paciente.domPisopuerta}" />
 				</div>
-				<div class="form-group col-md-2">
+				<div class="form-group col-md-2 col-sm-2">
 					<label class="control-label" for="domOtros">Otros:</label>
 					<input name="domOtros" class="form-control" id="domOtros" type="text"  th:value="${paciente.domOtros}" />
 				</div>
 			</div>
 			<div class="row">
-				<div class="form-group col-md-2">
+				<div class="form-group col-md-2 col-sm-3">
 					<label class="control-label " for="domTipoVia">Provincia Res.:</label>
 					<select name="provinciaResidencia" class="form-control" id="provinciaResidencia"  th:field="${paciente.provinciaResidencia}" >
 						<option th:each="provincia : ${baseModel.cache.provinciasCLM}" th:value="${provincia.provincia}" th:text="${provincia.deno}"></option>
 					</select>
 				</div>
-				<div class="form-group col-md-4">
+				<div class="form-group col-md-4 col-sm-4">
 					<label class="control-label" for="domTipoVia">Muncipio Res.:</label>
 					<select name="municipioResidencia" class="form-control" id="municipioResidencia"  th:field="${paciente.municipioResidencia}" >
 						<option th:if="${municipiosProvinciaResidencia} !=null " th:each="municipio : ${municipiosProvinciaResidencia}" th:value="${municipio.municipio}" th:text="${municipio.deno}"></option>
 					</select>
 				</div>
-				<div class="form-group col-md-2">
+				<div class="form-group col-md-2 col-sm-2">
 					<label class="control-label" for="domCp">CP:</label>
 					<input name="domCp" class="form-control" id="domCp" type="text"  th:value="${paciente.domCp}" maxlength="5" />
 				</div>
 			</div>
 			<div class="row">
-				<div class="form-group col-md-2">
+				<div class="form-group col-md-2 col-sm-2">
 					<label class="control-label" for="domTipoVia">Fallecido:</label>
 					<select name="fallecido" class="form-control" id="fallecido"  th:field="${paciente.fallecido}" >
 						<option value="0">NO</option>
@@ -146,17 +146,17 @@ $(document).ready( function() {
 						<option value="9">NC</option>
 					</select>
 				</div>
-				<div class="form-group col-md-3">
+				<div class="form-group col-md-3 col-sm-3">
 					<label class="control-label " for="fechaNacimiento">Fecha Fallecimiento:</label>
 					<input name="fallecidoFecha" class="form-control" id="fallecidoFecha" type="date"  th:value="${paciente.fallecidoFecha!=null ? #dates.format(paciente.fallecidoFecha, 'yyyy-MM-dd') : ''}" />
 				</div>		
 			</div>
 			<div class="row">
-				<div class="form-group col-md-3">
+				<div class="form-group col-md-3 col-sm-3">
 					<label class="control-label" for="telefono">Teléfono:</label>
 					<input name="telefono" class="form-control" id="telefono" type="text"  th:field="${paciente.telefono}" maxlength="12" />
 				</div>
-				<div class="form-group col-md-4">
+				<div class="form-group col-md-4 col-sm-4">
 					<label class="control-label" for="email">Correo Electrónico:</label>
 					<input name="email" class="form-control" id="email" type="text"  th:field="${paciente.email}" maxlength="80" />
 				</div>
@@ -175,7 +175,6 @@ $(document).ready( function() {
 			</div>
 		   </div> <!-- Fin de formulario contenido -->
 		</form>
-	  </div>
 	 </div>
 	</div> <!-- Fin contenido -->
 </body>

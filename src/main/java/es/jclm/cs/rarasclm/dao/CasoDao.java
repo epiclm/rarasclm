@@ -28,7 +28,8 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 	
 	private static final Logger log = LoggerFactory.getLogger(CasoDao.class);
 
-	public  List<Caso> busqueda(String seccion, 
+	public  List<Caso> busqueda(
+			int seccion, 
 			String cip, 
 			String nombre, 
 			String apellido1, 
@@ -42,7 +43,7 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 			String enfraraCLM, 
 			Byte baseDiagnostico, 
 			int numPagina, 
-			int numResultadosPagina) {
+			int numResultadosPagina) throws BusquedaDAOException {
 		
 		Session session = this.sf.openSession();
 		
@@ -67,8 +68,8 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 			if (addCip)
 				q.setString("cip", cip + "%");
 
-			if (addSeccion)
-				q.setString("seccion", seccion);
+//			if (addSeccion)
+//				q.setInteger("seccion", seccion);
 
 			if (addMunicipio)
 				q.setString("municipio", municipioResidencia);
@@ -120,7 +121,7 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 	}
 	
 	@SuppressWarnings("null") // eclipse crazy??
-	public  long busquedaNumRegistros(String seccion, 
+	public  long busquedaNumRegistros (int seccion, 
 			String cip, 
 			String nombre, 
 			String apellido1, 
@@ -132,7 +133,7 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 			String cie9MC,
 			String cie10, 
 			String enfraraCLM, 
-			Byte baseDiagnostico) {
+			Byte baseDiagnostico) throws BusquedaDAOException {
 
 		Session session = this.sf.openSession();
 		try {
@@ -159,8 +160,8 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 			if (addCip)
 				q.setString("cip", cip + "%");
 
-			if (addSeccion)
-				q.setString("seccion", seccion);
+//			if (addSeccion)
+//				q.setInteger("seccion", seccion);
 
 			if (addMunicipio)
 				q.setString("municipio", municipioResidencia);
@@ -201,16 +202,18 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
-			return -1;
+			throw new BusquedaDAOException(String.format("Error al realizar la busqueda %s",ex.getMessage()));
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
 			}
 		}
-
 	}
 
-	private String createBodyQuery(String seccion, 
+	
+	
+	
+	private String createBodyQuery(int seccion, 
 			String cip, 
 			String nombre, 
 			String apellido1, 
@@ -228,7 +231,7 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 		// por lo tanto se conserva el estado entre peticiones. Por lo
 		// que hay que iniciar los atributos del objeto en cada busqueda
 		try {
-			addSeccion = true;
+			addSeccion = false;
 			addMunicipio = true;
 			addProvincia = true;
 			addSexo = true;
@@ -239,7 +242,7 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 			addCie10 = true;
 			addEnfRaraClm = true;
 
-			if (seccion == null || seccion.equals(""))
+			if (seccion==0)
 				addSeccion = false;
 
 			if (municipioResidencia == null || municipioResidencia.length() != 5 || municipioResidencia.equals("99999"))
@@ -324,9 +327,7 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 			
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
-			
 			return null;
-	
 		} finally {
 
 		}

@@ -13,7 +13,7 @@ import es.jclm.cs.rarasclm.entities.BusquedaModelView;
 @Controller
 @RequestMapping("/admin")
 @RarasClmItemModulo(caption="Administración",deno="Administración",modulo="admin",orden=5)
-@RarasClmItemMenu(caption="Administración",deno="Administración",modulo="admin",orden=1)
+@RarasClmItemMenu(caption="Inicio",deno="Inicio",modulo="admin",orden=1)
 public class AdminController extends BaseController {
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -21,7 +21,4 @@ public class AdminController extends BaseController {
 		
 		return "admin/index-admin";
 	}
-	 
-	
-	
 }

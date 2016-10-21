@@ -52,7 +52,7 @@ public class BaseEntityDao<Entity, K extends Serializable> {
 //		return session;
 //	}
 
-	public Entity buscar(K id) throws Exception {
+	public Entity buscar(K id) throws NotFoundException {
 		Session s = sf.openSession();
 		try {
 			Transaction tx = s.beginTransaction();

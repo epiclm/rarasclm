@@ -2,9 +2,20 @@
 
 
 label {
-	padding-left: 0px !important;
-	padding-right: 5px !important;
-	color:#555 !important;
+
+}
+
+ .control-label {
+	font-family: sans-serif;
+	font-size: 11px;
+	font-style: italic;
+	font-weight: bolder;
+	line-height: 10px;
+	padding-top: 10px;
+	padding-bottom: 4px;
+	padding-left: 0px ;
+	padding-right: 5px;
+	color:#666 !important;
 }
 
 /* body { */
@@ -75,14 +86,28 @@ h5 {
 	margin-bottom:10px;
 }
 
+
 a.active {
-	background-color:#FFF !important;
-	color:#000 !important;
+	text-decoration: none;
+	color: #FFF !important;
+	background-color: #337ab7;
 } 
 
-a.active:HOVER {
-	color:#F44 !important;
+nav a:hover {
+	text-decoration: none;
+	color: #FFF !important;
+	background-color: #555 !important;
 } 
+
+nav a.active:hover {
+	text-decoration: none;
+	color: #FFF !important;
+	background-color: #556 !important;
+} 
+
+/* a.active:hover { */
+/* 	color:#F44 !important; */
+/* }  */
 
 li.rclmEnfermedadModal p{
 	display: inline-block !important;
@@ -168,20 +193,11 @@ li.rclmEnfermedadModal p{
 /**************/
 /* BUSQUEDAS  */
 
-#form-search-paciente .control-label {
-	font-family: sans-serif;
-	font-size: 11px;
-	font-style: italic;
-	font-weight: bolder;
-	line-height: 10px;
-	padding-top: 10px;
-	text-align: right;
-}
 
 
-#form-edit-paciente {
-	padding-top: 12px;
-}
+/* #form-edit-paciente { */
+/* 	padding-top: 12px; */
+/* } */
 
 #form-edit-busqueda .control-label {
     display: block;
@@ -381,3 +397,52 @@ input[type=date]  {
 #botonesNavegacion {
 	margin-top: 10px;
 }
+
+
+/**************/
+/* ADMIN      */
+
+
+.submenu-admin li{
+	display: inline-block;
+}
+
+.submenu-admin li a {
+	text-decoration: none;
+	padding: 7px;
+	color: #555;
+	background-color: #DDD;
+}
+
+.submenu-admin li a.active {
+	text-decoration: none;
+	color: #FFF;
+	background-color: #337ab7;
+}
+
+.submenu-admin li a.active:hover {
+	background-color: #556 !important;
+}
+
+
+.submenu-admin li a:hover {
+	background-color: #555 !important;
+	color: #FFF;
+}
+
+/**********************/
+/* ADMIN  USUARIOS    */
+
+#formulario-usuario-nuevo div{
+	background-color: #f5f5f5;
+}
+
+#formulario-usuario-nuevo div.row:last-child {
+	padding: 10px;
+}
+
+.barra-admin {
+	padding: 10px;
+}
+
+

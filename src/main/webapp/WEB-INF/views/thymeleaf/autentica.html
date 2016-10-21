@@ -3,68 +3,61 @@
 <head>
 	<meta charset="utf-8" /> 
 <style>
-.error {
-	padding: 15px;
-	margin-bottom: 20px;
-	border: 1px solid transparent;
-	border-radius: 4px;
-	color: #a94442;
-	background-color: #f2dede;
-	border-color: #ebccd1;
-}
-
-.msg {
-	padding: 15px;
-	margin-bottom: 20px;
-	border: 1px solid transparent;
-	border-radius: 4px;
-	color: #31708f;
-	background-color: #d9edf7;
-	border-color: #bce8f1;
-}
-
-#login-box {
-	width: 300px;
-	padding: 20px;
-	margin: 100px auto;
-	background: #fff;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border: 1px solid #000;
-}
+	#zona-mensajes {
+		padding-top:20px;
+		padding-left:10px;
+		padding-right:10px;
+		height: 80px;
+	}
+	
+	.error {
+		color: #F00;
+	}
+	
+	.msg {
+		text-align: center;
+	}
+	
+	#titulo {
+		padding-top: 10px;
+	}
+	
 </style>
+<link type="text/css" href="bower_components/normalize-css/normalize.css" rel="stylesheet" />
+<link type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script> 
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js" ></script>
 </head>
 <body onload='document.loginForm.username.focus();'>
 
-	<h1>Login</h1>
-
-	<div id="login-box">
-
-		<h3>Registro de Enfermedades Raras de Castilla-La Mancha</h3>
-
-
-	   <div class="error" th:if="${error != null}">${error}</div>
-	   <div class="msg" th:if="${msg != null}">${msg}</div>
-
-
-		<form name='loginForm'
-		  action="j_spring_security_check" method='POST'>
-		  <table>
-			<tr>
-				<td>User:</td>
-				<td><input type='text' name='username'></input></td>
-			</tr>
-			<tr>
-				<td>Password:</td>
-				<td><input type='password' name='password'></input></td>
-			</tr>
-			<tr>
-				<td colspan='2'><input name="submit" type="submit"
-					value="submit" /></td>
-			</tr>
-		  </table>
-
-		</form>
+	<div id="login-box" class="container">
+		<div class="row">
+			<img width="80px" class="col-md-2" src="img/logoclm.png" alt="logo de la junta de Castilla-La Mancha"></img>
+			<h3 id="titulo" class="col-md-10 text-center">Registro de Enfermedades Raras de Castilla-La Mancha</h3>
+		</div>	
+		<div id="zona-mensajes" class="row">
+			<div class="error" th:if="${autentica.error}">
+				<div class="msg" th:if="${autentica}!=null" th:text="${autentica.mensaje}"></div>
+			</div>
+		</div>
+		<div class="row">
+			
+			<form name='loginForm' class="col-md-offset-4 col-md-4" action="j_spring_security_check" method='POST'>
+			  <table class="table">
+				<tr>
+					<td>User:</td>
+					<td><input class="form-control" type='text' name='username'></input></td>
+				</tr>
+				<tr>
+					<td>Password:</td>
+					<td><input class="form-control" type='password' name='password'></input></td>
+				</tr>
+				<tr>
+					<td colspan='2'><input class="btn btn-primary pull-right" name="submit" type="submit" value="Entrar" /></td>
+				</tr>
+			  </table>
+			</form>
+		</div>
 	</div>
 
 </body>

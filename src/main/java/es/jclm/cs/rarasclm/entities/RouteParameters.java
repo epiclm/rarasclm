@@ -10,6 +10,12 @@ package es.jclm.cs.rarasclm.entities;
  */
 public class RouteParameters {
 	
+	private static String VISIBILIDAD_ADMINISTRADOR = "admin";
+	private static String VISIBILIDAD_USUARIO = "usuario";
+	
+	//** Introduzco la visibilidad para distiguir entre la parte general y la de administración"
+	private String visibilidad;
+	
 	/** The modulo. */
 	private String modulo;
 	
@@ -22,9 +28,14 @@ public class RouteParameters {
 	/** The id. */
 	private String id;
 	
+	/** The id2. */
+	private String id2;
+	
 	/** The base url. */
 	private String baseUrl;
 	
+
+
 	
 	/**
 	 * Gets the base url.
@@ -102,6 +113,14 @@ public class RouteParameters {
 		this.id = id;
 	}
 	
+	public String getId2() {
+		return id2;
+	}
+
+	public void setId2(String id2) {
+		this.id2 = id2;
+	}
+
 	/**
 	 * Gets the accion.
 	 *
@@ -121,5 +140,18 @@ public class RouteParameters {
 		this.accion = accion;
 	}
 
-	
+	public String getVisibilidad() {
+		return visibilidad;
+	}
+
+	public void setVisibilidad(String visibilidad) {
+		this.visibilidad = visibilidad;
+	}
+
+	public boolean isAdmin() {
+		if(this.visibilidad.equals(VISIBILIDAD_ADMINISTRADOR))
+			return true;
+		else
+			return false;
+	}
 }

@@ -20,7 +20,7 @@ public class BusquedaModelView {
 	private String  cie10;
 	private String  baseDiagnostico;
 	private String  fuenteInformacion;
-	private String  seccion;
+	private int  seccion;
 	
 	private long numResultados = -1;
 
@@ -144,11 +144,11 @@ public class BusquedaModelView {
 		this.anioNacimiento = anioNacimiento;
 	}
 
-	public String getSeccion() {
+	public int getSeccion() {
 		return seccion;
 	}
 
-	public void setSeccion(String seccion) {
+	public void setSeccion(int seccion) {
 		this.seccion = seccion;
 	}
 

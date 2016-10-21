@@ -15,10 +15,20 @@
 
 	<context:component-scan base-package="es.jclm.cs.rarasclm" />
 	
-	<bean id="rarasClmListener" class="es.jclm.cs.rarasclm.listeners.DataContextRarasClmAppListener"></bean>
-	<bean id="datosAuxiliares"  class="es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados"></bean>
-	<bean id="baseModelView"    class="es.jclm.cs.rarasclm.entities.BaseModelViewReflex"></bean>
-	
+	<bean id="rarasClmListener"
+		class="es.jclm.cs.rarasclm.listeners.DataContextRarasClmAppListener"></bean>
+	<bean id="datosAuxiliares"  
+		class="es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados"></bean>
+	<bean id="baseModelView"    
+		class="es.jclm.cs.rarasclm.entities.BaseModelViewReflex"></bean>
+	<bean id="mySuccessAuthenticationHandler" 
+		class="es.jclm.cs.rarasclm.listeners.RarasCLMAuthHandler"></bean>	
+	<bean id="myFailureAuthenticationHandler" 
+		class="es.jclm.cs.rarasclm.listeners.RarasCLMLoginFailureHandler"></bean>	  
+	<bean id="myLogoutSuccessHandler" 
+		class="es.jclm.cs.rarasclm.listeners.RarasCLMLogoutHandler"	/>
+	<bean id="rarasClmAuthenticationService" 
+		  class="es.jclm.cs.rarasclm.service.RarasCLMUserService" />
 
 <!-- <tx:annotation-driven transaction-manager="txManager" /> -->
 
@@ -81,22 +91,27 @@
 			login-page="/autentica" 
 			username-parameter="username" 
 			password-parameter="password" 
-			authentication-success-handler-ref="mySuccessAuthenticationHandler"/>
+			authentication-success-handler-ref="mySuccessAuthenticationHandler"
+			authentication-failure-handler-ref="myFailureAuthenticationHandler"/>
+			
+		<security:logout 
+			success-handler-ref="myLogoutSuccessHandler" />
+			
+		<security:session-management>
+			<security:concurrency-control
+			 expired-url="/autentica"
+			/>
+		</security:session-management>
 			
 	</security:http>
-
+	
 
 	<!-- Select users and user_roles from database authentication-success-handler-ref="rarasCLMAuthSuccess"-->
 	<security:authentication-manager>
 	  <security:authentication-provider user-service-ref="rarasClmAuthenticationService">
-		<security:password-encoder hash="plaintext" /> 
+		<security:password-encoder hash="bcrypt" /> 
 	  </security:authentication-provider>
 	</security:authentication-manager>
-
-
-	<bean id="mySuccessAuthenticationHandler"
-		  class="es.jclm.cs.rarasclm.listeners.RarasCLMAuthHandler" />
-	<bean id="rarasClmAuthenticationService" 
-		  class="es.jclm.cs.rarasclm.service.RarasCLMUserService" />
+	
 
 </beans>

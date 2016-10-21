@@ -22,6 +22,7 @@ public class Municipio implements java.io.Serializable {
 	private Provincia provincia;
 	private String deno;
 	private String ccaa;
+	private int seccion;
 
 	public Municipio() {
 	}
@@ -30,11 +31,12 @@ public class Municipio implements java.io.Serializable {
 		this.municipio = municipio;
 	}
 
-	public Municipio(String municipio, Provincia provincia, String deno, String ccaa) {
+	public Municipio(String municipio, Provincia provincia, String deno, String ccaa, int seccion) {
 		this.municipio = municipio;
 		this.provincia = provincia;
 		this.deno = deno;
 		this.ccaa = ccaa;
+		this.seccion = seccion;
 	}
 
 	@Id
@@ -76,4 +78,13 @@ public class Municipio implements java.io.Serializable {
 		this.ccaa = ccaa;
 	}
 
+	@Column(name = "seccion")
+	public int getSeccion() {
+		return seccion;
+	}
+
+	public void setSeccion(int seccion) {
+		this.seccion = seccion;
+	}
+	
 }
