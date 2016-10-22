@@ -43,6 +43,7 @@ public class RarasCLMUserService implements UserDetailsService {
 			if(userCLM==null) {
 				throw new UsernameNotFoundException(String.format("El usuario con nombre %s no existe",username));
 			}
+			//Encriptamos la constraseña plana en el estado de generar nueva password
 			if(userCLM.getGenerar()) {
 				String hash = BCrypt.hashpw(userCLM.getPassword(), BCrypt.gensalt());
 				userCLM.setPassword(hash);
@@ -60,7 +61,7 @@ public class RarasCLMUserService implements UserDetailsService {
 	}
 
 	private User buildUserForAuthentication(UserRarasClm user, List<GrantedAuthority> authorities) {
-		if (user.getNumIntentos() <= 1) {
+		if (user.getNumIntentos() <= 1 && !user.getGenerar()) {
 			user.setEnabled(false);
 			user.setNumIntentos(0);
 			try {

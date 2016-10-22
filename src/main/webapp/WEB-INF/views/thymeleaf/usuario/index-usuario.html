@@ -9,7 +9,7 @@
 	<div id="contenido"  layout:fragment="content">
 	<div class="">
 		<div id="info-usuario" class="row">
-		 	<div class="col-md-6">
+		 	<div class="col-md-8">
 				<table class="table table-condensed">
 			  		<thead>
 				  		<tr>
@@ -21,7 +21,7 @@
 				  		</tr>
 			  		</thead>
 			  		<tbody>
-						<tr><td class="text-right"><strong>Usuario: &nbsp;</strong></td><td th:text="| ${userCLM.username}|"></td></tr>
+						<tr><td class="text-right"><strong>Usuario: &nbsp;</strong></td><td th:text="| ${userCLM.username}|"></td><td><a href='regenerapass'>Cambiar Contraseña</a></td></tr>
 						<tr><td class="text-right"><strong>Nombre: &nbsp;</strong></td><td th:text="| ${userCLM.apellido01} ${userCLM.apellido02}, ${userCLM.nombre}|"></td></tr>
 						<tr><td class="text-right"><strong>Último acceso: &nbsp;</strong></td><td th:if="${userCLM.ultimoAcceso}!=null" th:text="| ${#dates.format(userCLM.ultimoAcceso,'dd/MM/yyyy  HH:mm')}|"></td></tr>
 						<tr><td class="text-right"><strong>Puesto: &nbsp;</strong></td><td th:text="| ${userCLM.puesto}|"></td></tr>

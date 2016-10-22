@@ -58,7 +58,8 @@ public class RarasCLMAuthHandler extends SimpleUrlAuthenticationSuccessHandler {
 	        userClm.setEnabled(true);
 	        userClm.setNumIntentos(3);
 	        try {
-				userService.Actualizar(userClm);
+	        	if(!userClm.getGenerar()) //Si el usuario está en estado generar no se guarda
+	        		userService.Actualizar(userClm);
 			} catch (ServiceRarasCLMException ex) {
 				log.error(ex.getMessage(),ex);
 			}
@@ -79,10 +80,14 @@ public class RarasCLMAuthHandler extends SimpleUrlAuthenticationSuccessHandler {
 	        }
 
 	        clearAuthenticationAttributes(request);
+	        
+	        String targetUrl = null;
 
 	        // Use the DefaultSavedRequest URL
-	        String targetUrl = savedRequest.getRedirectUrl();
-	        logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
+	        if(savedRequest!=null) {
+	        	targetUrl = savedRequest.getRedirectUrl();
+	        	logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
+	        }
 
 	        
         

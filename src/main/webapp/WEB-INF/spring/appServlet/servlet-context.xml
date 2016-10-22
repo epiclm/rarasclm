@@ -74,5 +74,13 @@
 
 	<bean class="es.jclm.cs.rarasclm.config.DotNotTruncateMyUrls" />
 	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/autentica"/>
+			<mvc:exclude-mapping path="/regenerapass"/>
+			<bean class="es.jclm.cs.rarasclm.listeners.InterceptorGenera" />
+		</mvc:interceptor>
+	</mvc:interceptors>
 
 </beans>

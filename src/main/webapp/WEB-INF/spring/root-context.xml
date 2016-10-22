@@ -81,6 +81,7 @@
 	<security:http>
 	
 		<security:intercept-url pattern="/" access="ROLE_USER" />
+		<security:intercept-url pattern="/regenerapass" access="ROLE_USER" />
 		<security:intercept-url pattern="/enfermedades/**" access="ROLE_USER" />
 		<security:intercept-url pattern="/casos/**" access="ROLE_USER" />
 		<security:intercept-url pattern="/pacientes/**" access="ROLE_USER" />
@@ -105,13 +106,12 @@
 			
 	</security:http>
 	
-
 	<!-- Select users and user_roles from database authentication-success-handler-ref="rarasCLMAuthSuccess"-->
 	<security:authentication-manager>
 	  <security:authentication-provider user-service-ref="rarasClmAuthenticationService">
 		<security:password-encoder hash="bcrypt" /> 
 	  </security:authentication-provider>
 	</security:authentication-manager>
-	
 
 </beans>
+

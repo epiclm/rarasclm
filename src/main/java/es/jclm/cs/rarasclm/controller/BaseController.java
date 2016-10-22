@@ -189,7 +189,8 @@ public class BaseController {
 		UserRarasClm userClm = getUserCLM();
 		userClm.setUltimoAcceso(new Date());
 		try {
-			usuarioService.Actualizar(userClm);
+			if(!userClm.getGenerar())
+				usuarioService.Actualizar(userClm);
 		} catch (ServiceRarasCLMException ex) {
 			log.error(ex.getMessage(),ex);
 		}

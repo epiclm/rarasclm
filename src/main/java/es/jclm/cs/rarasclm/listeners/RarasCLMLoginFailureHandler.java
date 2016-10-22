@@ -44,18 +44,25 @@ public class RarasCLMLoginFailureHandler extends SimpleUrlAuthenticationFailureH
 		if (defaultFailureUrl == null) {
 			logger.debug("No failure URL set, sending 401 Unauthorized error");
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication Failed: " + exception.getMessage());
+			
 		} else {
 			saveException(request, exception);
 			if(exception instanceof BadCredentialsException) {
 				UserRarasClm userClm = (UserRarasClm)request.getSession().getAttribute("userCLM");
 				if(userClm!=null) {
-					userClm.setNumIntentos(userClm.getNumIntentos()-1);
 					try {
-						usuarioService.Actualizar(userClm);
+						if(!userClm.getGenerar()) {
+							userClm.setNumIntentos(userClm.getNumIntentos()-1);
+							usuarioService.Actualizar(userClm);
+						}
 					} catch (ServiceRarasCLMException ex) {
 						log.error(ex.getMessage(),ex);
 					}
-					autenticaModel.setMensaje(String.format("Credenciales erróneas. Al usuario %s le quedan %d intentos",userClm.getUsername(),userClm.getNumIntentos()));
+					if(!userClm.getGenerar()) {
+						autenticaModel.setMensaje(String.format("Credenciales erróneas. Al usuario %s le quedan %d intentos",userClm.getUsername(),userClm.getNumIntentos()));
+					} else {
+						autenticaModel.setMensaje(String.format("Credenciales erróneas"));
+					}
 				}	else {
 					autenticaModel.setMensaje("Credenciales erróneas. El usuario no existe");
 				}
