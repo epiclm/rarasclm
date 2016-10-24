@@ -109,6 +109,7 @@
 						<td>Nombre</td>
 						<td>1er Apellido</td>
 						<td>2o Apellido</td>
+						<td>Sección</td>
 						<td>Estado</td>
 					</tr>
 				</thead>
@@ -120,7 +121,8 @@
 						<td th:text="${usuario.nombre}"></td>
 						<td th:text="${usuario.apellido01}"></td>
 						<td th:text="${usuario.apellido02}"></td>
-						<td><input class="estado-usuario" type="checkbox" th:checked="${usuario.numIntentos}>0" ></input></td>
+						<td th:text="${usuario.seccion.deno}"></td>
+						<td><input class="estado-usuario" type="checkbox" th:checked="${usuario.numIntentos}!=null and  ${usuario.numIntentos}>0" ></input></td>
 					</tr>
 				</tbody>
 			</table>

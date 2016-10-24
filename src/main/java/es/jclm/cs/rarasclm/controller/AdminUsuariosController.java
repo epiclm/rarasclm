@@ -45,9 +45,16 @@ public class AdminUsuariosController extends BaseController {
 		return usuarios;
 	}
 	
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public String busqueda(Model model) {	
 		return "admin/usuarios/index-usuario";
+	}
+	
+	
+	@RequestMapping(value="/existe/{usuario}")
+	public @ResponseBody boolean existe(@PathVariable String usuario) {
+		return usuarioService.userExists(usuario);
 	}
 	
 	@RequestMapping(value="/activa/{usuario}", method = RequestMethod.POST)
@@ -123,7 +130,11 @@ public class AdminUsuariosController extends BaseController {
 	public String editUsuarioGet(@PathVariable String username, Model model) {
 		try {
 			UserRarasClm usuario = usuarioService.Buscar(username);
-			model.addAttribute("usuario",usuario);
+			if(usuario!=null) {
+				model.addAttribute("usuario",usuario);
+			} else {
+				return "redirect:/admin/usuarios";
+			}
 		} catch (Exception ex) {
 			log.error(ex.getMessage(),ex);
 		}
@@ -153,5 +164,36 @@ public class AdminUsuariosController extends BaseController {
 		}
 		return "redirect:/admin/usuarios/edit/"+username;
 	}
+	
+	@RequestMapping(value="/nuevo", method = RequestMethod.GET)
+	public String nuevoUsuarioGet(Model model) {
+		UserRarasClm user = new UserRarasClm();
+		user.setGenerar(true);
+		model.addAttribute("usuario", user);
+		return "/admin/usuarios/nuevo-usuario";
+	}
+	
+	
+	@RequestMapping(value="/nuevo", method = RequestMethod.POST)
+	public String nuevoUsuarioPost(@ModelAttribute("usuario") UserRarasClm usuario, Model model) {
+		try {
+			usuarioService.creaUsuario(usuario);
+			MensajeResultado mensaje = new MensajeResultado();
+			mensaje.setTipo(MensajeTipo.OK);
+			mensaje.setMensaje(String.format("El usuario %s se ha creado correctamente",usuario.getUsername()));
+			request.getSession().setAttribute("mensaje",mensaje);
+		} catch(Exception ex) {
+			log.error(ex.getMessage(),ex);
+			MensajeResultado mensaje = new MensajeResultado();
+			mensaje.setTipo(MensajeTipo.ERROR);
+			mensaje.setMensaje(ex.getMessage());
+			request.getSession().setAttribute("mensaje",mensaje);
+		}
+		return "redirect:/admin/usuarios/edit/"+usuario.getUsername();
+	}
+	
+	
+	
+	
 	
 }

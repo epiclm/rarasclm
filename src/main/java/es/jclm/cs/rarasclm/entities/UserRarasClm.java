@@ -37,9 +37,9 @@ public class UserRarasClm implements java.io.Serializable {
 	private Date ultimoAcceso;
 	private Integer numIntentos;
 	private String puesto;
-	private String userRarasClmcol;
 	private Boolean generar;
 	private String uid;
+	private String email;
 	private Set<RolRarasClm> rolRarasClms = new HashSet<RolRarasClm>(0);
 	private Set<CasoRevisionUsuario> casoRevisionUsuarios = new HashSet<CasoRevisionUsuario>(0);
 
@@ -53,7 +53,7 @@ public class UserRarasClm implements java.io.Serializable {
 
 	public UserRarasClm(String username, Seccion seccion, String password, Boolean enabled, String nombre,
 			String apellido01, String apellido02, Date ultimoAcceso, Integer numIntentos, String puesto,
-			String userRarasClmcol, Boolean generar, String uid, Set<RolRarasClm> rolRarasClms,
+			Boolean generar, String uid, String email, Set<RolRarasClm> rolRarasClms,
 			Set<CasoRevisionUsuario> casoRevisionUsuarios) {
 		this.username = username;
 		this.seccion = seccion;
@@ -65,9 +65,9 @@ public class UserRarasClm implements java.io.Serializable {
 		this.ultimoAcceso = ultimoAcceso;
 		this.numIntentos = numIntentos;
 		this.puesto = puesto;
-		this.userRarasClmcol = userRarasClmcol;
 		this.generar = generar;
 		this.uid = uid;
+		this.email = email;
 		this.rolRarasClms = rolRarasClms;
 		this.casoRevisionUsuarios = casoRevisionUsuarios;
 	}
@@ -166,15 +166,6 @@ public class UserRarasClm implements java.io.Serializable {
 		this.puesto = puesto;
 	}
 
-	@Column(name = "user_raras_clmcol", length = 45)
-	public String getUserRarasClmcol() {
-		return this.userRarasClmcol;
-	}
-
-	public void setUserRarasClmcol(String userRarasClmcol) {
-		this.userRarasClmcol = userRarasClmcol;
-	}
-
 	@Column(name = "generar")
 	public Boolean getGenerar() {
 		return this.generar;
@@ -191,6 +182,15 @@ public class UserRarasClm implements java.io.Serializable {
 
 	public void setUid(String uid) {
 		this.uid = uid;
+	}
+	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	@ManyToMany(fetch = FetchType.EAGER)

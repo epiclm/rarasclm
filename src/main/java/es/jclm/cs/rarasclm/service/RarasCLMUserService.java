@@ -61,7 +61,7 @@ public class RarasCLMUserService implements UserDetailsService {
 	}
 
 	private User buildUserForAuthentication(UserRarasClm user, List<GrantedAuthority> authorities) {
-		if (user.getNumIntentos() <= 1 && !user.getGenerar()) {
+		if (user.getNumIntentos()!=null && user.getNumIntentos() <= 1 && !user.getGenerar()) {
 			user.setEnabled(false);
 			user.setNumIntentos(0);
 			try {

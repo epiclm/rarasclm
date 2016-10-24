@@ -35,6 +35,41 @@ public class UsuarioService extends BaseCRUDService<UserRarasClm,String>{
 	}
 	
 	
+	public boolean userExists(String username) {
+		UserRarasClm user=null;
+		try {
+			user = userDao.buscar(username);
+		} catch (NotFoundException ex) {
+			log.error(ex.getMessage());
+		}
+		return user!=null;
+	}
+	
+	
+	public void creaUsuario(UserRarasClm user) throws ServiceRarasCLMException {
+		try {
+			RolRarasClm rolUser = new RolRarasClm();
+			rolUser.setId(1);
+			rolUser.setDeno("ROL_USER");
+			user.getRolRarasClms().add(rolUser);
+			if(user.getEnabled()) {
+				user.setNumIntentos(3);
+			} else {
+				user.setNumIntentos(0);
+			}
+			userDao.guardar(user);
+			if (user.isAdmin()) {
+				hazAdmin(user.getUsername());
+			}
+		} catch (UnableToSaveException ex) {
+			log.error(ex.getMessage());
+			String mensaje = String.format("El usuario %s no se puede crear debido a %s", user.getUsername(),
+					ex.getMessage());
+			throw new ServiceRarasCLMException(mensaje);
+		}
+	}
+	
+	
 	public UserRarasClm hazAdmin(String username) throws ServiceRarasCLMException {
 		UserRarasClm usuario=null;
 		try {
@@ -56,9 +91,9 @@ public class UsuarioService extends BaseCRUDService<UserRarasClm,String>{
 				usuario.getRolRarasClms().add(rolAdmin);
 			}
 			if(rolUser==null) {
-				rolAdmin = new RolRarasClm();
-				rolAdmin.setId(1);
-				rolAdmin.setDeno("ROL_USER");
+				rolUser = new RolRarasClm();
+				rolUser.setId(1);
+				rolUser.setDeno("ROL_USER");
 				usuario.getRolRarasClms().add(rolUser);
 			}
 			userDao.actualizar(usuario);

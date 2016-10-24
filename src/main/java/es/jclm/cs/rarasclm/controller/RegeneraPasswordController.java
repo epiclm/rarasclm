@@ -41,7 +41,7 @@ public class RegeneraPasswordController extends BaseController{
 		MensajeResultado mensaje = new MensajeResultado();
 		UserRarasClm userClm = (UserRarasClm)request.getSession().getAttribute("userCLM");
 		if(userClm.getGenerar()) {
-			mensaje.setMensaje("Tiene que cambiar su contraseña personal para rehabilitar la cuenta.");
+			mensaje.setMensaje("Tiene que cambiar su contraseña personal para habilitar la cuenta.");
 			mensaje.setTipo(MensajeTipo.WARNING);
 			IBaseModel baseModel = (IBaseModel)model.asMap().get("baseModel");
 			baseModel.setMensaje(mensaje);
