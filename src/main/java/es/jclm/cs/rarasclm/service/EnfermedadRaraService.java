@@ -16,6 +16,7 @@ import es.jclm.cs.rarasclm.dao.EnfermedadRaraDao;
 import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
+import es.jclm.cs.rarasclm.entities.Hospital;
 
 
 // TODO: Auto-generated Javadoc
@@ -23,7 +24,7 @@ import es.jclm.cs.rarasclm.entities.EnfermedadRara;
  * The Class EnfermedadRaraService.
  */
 @Service
-public class EnfermedadRaraService {
+public class EnfermedadRaraService extends BaseCRUDService<EnfermedadRara,String>{
 
 	@Autowired
 	private DatosAuxiliaresCacheados datosAuxiliares;
@@ -36,8 +37,10 @@ public class EnfermedadRaraService {
 
 	static Log log = LogFactory.getLog(EnfermedadRaraService.class.getName());
 
-	public EnfermedadRaraService() {
-
+	@Autowired
+	public EnfermedadRaraService(EnfermedadRaraDao dao) {
+		this.baseDao = dao;
+		this.dao = dao;
 	}
 
 	private void actualizaCache(String id) {

@@ -3,7 +3,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout/rarasClmLayout">
 <head>
-<title th:text="|CASO ${caso.idCaso} ${caso.paciente.apellido01} ${caso.paciente.apellido02}|"></title>
+<title th:text="|NUEVO CASO - ${caso.paciente.apellido01} ${caso.paciente.apellido02}|"></title>
 
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
@@ -42,27 +42,53 @@ $(document).ready( function() {
 	
 	addMensanjesFuncionalidad();
 	
+	$("#form-edit-caso").validate({
+		rules: {
+			literal: {
+				required:true
+			},
+			fechaDeteccion:{
+				required:true
+			}			
+		},
+		messages: {
+			literal: {
+				required:"El campo literal de la enfermedad es necesario."
+			},
+			fechaDeteccion:{
+				required:"La fecha de detección es obligatoria."
+			}
+		},
+		submitHandler: function(form) {
+			form.preventDefault();
+		},
+		highlight: function(element) {
+		        $(element).closest('.form-group').addClass('has-error');
+		  },
+	 	unhighlight: function(element) {
+		        $(element).closest('.form-group').removeClass('has-error');
+		}
+	});
+	
+// 	$.validator.addMethod('unaFuenteNecesaria',function(value,element,params){
+// 		var 
+// 	})
+	
 	
 	//Manejo del submit (evitamos un submit que no sea
 	//realizado mediante un click al botón correcto
+	//SE EJECUTA DESPUES DEL EVENTO submitHandler del plugin
+	//validate
 	$('#form-edit-caso').on('submit',function(e) {
 		if(!submitOkModificar && !submitOkBorrar)	{
-			e.preventDefault();
+			//e.preventDefault();
 		}
 	});
 	
 	$('#btnEnviar').on('click',function() {
 		submitOkModificar=true;
 	});
-	
-	//Cambiamos el action del formulario para que haga la acción borrar
-	$('#btnBorrar').on('click',function() {
-		submitOkBorrar=true;
-		$('#form-edit-caso').attr('action',routeBase+'/'+'delete'+'/'+idCaso);
-		$('#form-edit-caso').submit();
-
-	});
-	
+		
 	//fin manejo del submit
 
 	//Autocompletado de la enfermedad rara CLM
@@ -88,26 +114,15 @@ $(document).ready( function() {
 					},
 					minLength : 3
 				});
-	});
+	}).fail(function() {
+			mensajeError("Error al recibir datos del servidor")
+		});
+	}
 	
 	$("input,select,textarea").change(function(objEvent) {
 		$(this).addClass("modificado");
 	});
 	
-	$("#btn-revision").on('click',function() {
-		$.ajax({
-			dataType : "json",
-			method: 'POST',
-			url : "/" + contextApp + "/usuario/addrevision/"+idCaso,
-			contentType : "application/json; charset=utf-8"
-			}).fail(function(jqXHR,status,error) {
-				mensajeError("<p><b>ERROR:</b></p> " + jqXHR.responseText)
-			}).done(function (data) {
-				showRespuesta(data);
-			});
-		});
-	
-	});//Fin ready event
 
 /*]]>*/
 </script>
@@ -119,15 +134,14 @@ $(document).ready( function() {
 		<form id="form-edit-caso" class="form" method='POST'>
 			<input id="idCaso" name="idCaso" type="hidden" th:value="${caso.idCaso}"/>
 			<div class="row">
-				<h4 class="col-md-8 col-sm-8">Edición Caso <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span></h4>
-				<button class="col-md-2 col-sm-2 btn btn-success pull-right" id="btn-revision">Añadir a Revisión</button>				
+				<h4 class="col-md-8 col-sm-8 error">NUEVO CASO <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span></h4>
 			</div>
 			<div id="formulario-contenido" class="row">
-			
+			<input type="hidden" id="numCaso" name="numCaso" th:value="${caso.numCaso}"></input>
 			<!-- CUADRO RESUMEN PACIENTE -->
 			<div id="cuadro-resumen-paciente" class="row col-md-12 col-sm-12">
 				<div id="grupo-nombre-paciente" class="form-group col-md-4 col-sm-4">
-					<label class="control-label" for="l">Apellidos y Nombre:</label>
+					<label class="control-label" for="">Apellidos y Nombre:</label>
 					<p id="pac-nombre" class=""  th:text="|${caso.paciente.apellido01} ${caso.paciente.apellido02}, ${caso.paciente.nombre}|"></p>
 				</div>
 				<div id="grupo-nombre-paciente" class="form-group col-md-1 col-sm-1">
@@ -307,17 +321,17 @@ $(document).ready( function() {
 				<div id="fecha-deteccion-caso" class="form-group col-md-3 col-sm-3">
 					<label class="control-label" for="fechaDeteccion">Fecha de Detección:</label>
 					<input id="fechaDeteccion" class="form-control" name="fechaDeteccion" type="date"
-						 th:value="${caso.fechaDeteccion}" />
+						 th:field="${caso.fechaDeteccion}" />
 				</div>
 				<div id="inicio-sintomas-clinico-caso" class="form-group col-md-3 col-sm-3">
 					<label class="control-label" for="fechaInicioSintomas">Fecha Inicio sintomas:</label>
 					<input id="fechaInicioSintomas" class="form-control" name="fechaInicioSintomas" type="date"
-						 th:value="${caso.fechaInicioSintomas}" />
+						 th:field="${caso.fechaInicioSintomas}" />
 				</div>
 				<div id="fecha-diagnostico-clinico-caso" class="form-group col-md-3 col-sm-3">
 					<label class="control-label" for="fechaDiagnostico">Fecha Diagnostico:</label>
 					<input id="fechaDiagnostico" class="form-control" name="fechaDiagnostico" type="date"
-						 th:value="${caso.fechaDiagnostico}" />
+						 th:field="${caso.fechaDiagnostico}" />
 				</div>
 			</div>
 			
@@ -373,7 +387,6 @@ $(document).ready( function() {
 				<div class="form-actions col-md-10">
 				  <button id="btnEnviar" type="submit" class="btn btn-primary">Guardar Cambios</button>
 				  <button id="btnCancelar" type="button" class="btn">Cancel</button>
-				  <button id="btnBorrar" style="float: right" type="submit" class="btn btn-danger">Borrar</button>
 				</div>
 			</div>
 			
@@ -389,16 +402,20 @@ $(document).ready( function() {
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<h3>Selección de Enfermedad Rara</h3>
 					</div>
-					<div class="modal-body">
-						<div id="cuadro" style="height: 300px; overflow: scroll">
-							<ul th:each="rara : ${allRaras}">
-								<li class="rclmEnfermedadModal">
-									<a th:href="|/${baseModel.baseApp}/enfermedad/enfrara/show/${rara.enfermedadRaraId}|" th:text="|${rara.enfermedadRaraId} ${rara.literal}|"></a> 
-									<a style="margin-left: 5px" class="btn btn-success btn-mini" th:onclick="|doAsociaEnfermedadRara('${rara.enfermedadRaraId}')|">Asociar a Caso</a>
-								</li>
-							</ul>
+						<div class="modal-body">
+							<div id="cuadro" style="height: 300px; overflow: scroll">
+								<ul th:each="rara : ${allRaras}">
+									<li class="rclmEnfermedadModal">
+										<a style="font-size:12px" target="_blank" th:href="|/${baseModel.baseApp}/enfermedad/enfrara/show/${rara.enfermedadRaraId}|"
+										   th:text="|${rara.enfermedadRaraId} ${rara.literal}|">
+										</a> 
+										<a style="margin-left: 5px" class="btn btn-success btn-xs" 
+											th:onclick="|doAsociaEnfermedadRara('${rara.enfermedadRaraId}')|">Asociar a Caso
+										</a>
+									</li>
+								</ul>
+							</div>
 						</div>
-					</div>
 					<div class="modal-footer"></div>
 				</div><!-- modal content -->
 			</div><!-- modal dialog -->

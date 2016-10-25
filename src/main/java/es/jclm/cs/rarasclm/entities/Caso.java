@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -36,6 +38,7 @@ public class Caso implements java.io.Serializable {
 	private Short numCaso;
 	private Short declarada;
 	private String usuarioDeclara;
+	@DateTimeFormat (pattern="YYYY-MM-dd")
 	private Date fechaDeclara;
 	private String literal;
 	private String jucioClinico;
@@ -60,8 +63,11 @@ public class Caso implements java.io.Serializable {
 	private Boolean fuenteHcPrimariaMasivaP;
 	private Boolean fuenteHcEspecializadaMasivaQ;
 	private Boolean fuenteOtrosO;
+	@DateTimeFormat (pattern="YYYY-MM-dd")
 	private Date fechaInicioSintomas;
+	@DateTimeFormat (pattern="YYYY-MM-dd")
 	private Date fechaDeteccion;
+	@DateTimeFormat (pattern="YYYY-MM-dd")
 	private Date fechaDiagnostico;
 	private String codCie9mc;
 	private String codCie10;
@@ -74,8 +80,10 @@ public class Caso implements java.io.Serializable {
 	private Byte familiaresEnfermedadesRaras;
 	private Short otrasEnfermedadesCronicas;
 	private String enfermedadesCronicas;
+	@DateTimeFormat (pattern="YYYY-MM-dd")
 	private Date fechahoraCreacion;
 	private String usuarioCreacion;
+	@DateTimeFormat (pattern="YYYY-MM-dd")
 	private Date fechahoraModificacion;
 	private String usuarioModificacion;
 	private Boolean borradoLogico;

@@ -15,7 +15,7 @@ label {
 	padding-bottom: 4px;
 	padding-left: 0px ;
 	padding-right: 5px;
-	color:#666 !important;
+	color:#666;
 }
 
 /* body { */
@@ -41,6 +41,10 @@ legend {
 
 h5 {
 	margin: 5px 0px;
+}
+
+.error {
+	color: #C94442
 }
 
 /* .nav { */
@@ -444,5 +448,3 @@ input[type=date]  {
 .barra-admin {
 	padding: 10px;
 }
-
-

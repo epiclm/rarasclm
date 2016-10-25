@@ -33,6 +33,7 @@ public class CasoService extends BaseCRUDService<Caso, String>{
 	}
 	
 	
+	
 	public void saveHistoria(Caso caso) {
 		try {
 			saveHistoria(caso, -1);

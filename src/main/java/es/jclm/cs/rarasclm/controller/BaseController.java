@@ -51,8 +51,9 @@ public class BaseController {
 	@InitBinder
 	//Necasario para analizar las fechas de input date en html5
 	public void initBinder(WebDataBinder binder) {
-	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
-	    binder.registerCustomEditor(Date.class, editor);
+		 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		    dateFormat.setLenient(false);
+		    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 	}
 		
 	/**

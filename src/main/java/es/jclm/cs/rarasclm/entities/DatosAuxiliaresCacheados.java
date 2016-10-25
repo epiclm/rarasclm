@@ -224,15 +224,15 @@ public class DatosAuxiliaresCacheados {
 	}
 	
 	
-	public String getSexoLiteral(int codSexo) {
+	public String getSexoLiteral(char codSexo) {
 		switch(codSexo) {
-			case 1:
+			case '1':
 				return "VARÓN";
-			case 6:
+			case '6':
 				return "MUJER";
-			case 8:
+			case '8':
 				return "INDETERMINADO";
-			case 9:
+			case '9':
 				return "DESCONOCIDO";
 			default:
 				return "";

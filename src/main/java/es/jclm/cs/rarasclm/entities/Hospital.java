@@ -56,7 +56,7 @@ public class Hospital implements java.io.Serializable {
 		this.literal = literal;
 	}
 	
-	@Column(name = "secccion")
+	@Column(name = "seccion")
 	public int getSeccion() {
 		return seccion;
 	}

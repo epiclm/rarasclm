@@ -32,7 +32,7 @@ import es.jclm.cs.rarasclm.util.MergeEntity;
 
 
 @Controller
-@RequestMapping("/pacientes")
+@RequestMapping("/pacientes/paciente")
 @RarasClmItemModulo(caption="Paciente",deno="Paciente",modulo="pacientes",orden=2)
 @RarasClmItemMenu(caption="Paciente",deno="Paciente",modulo="pacientes",orden=1)
 public class PacienteController extends BaseController {
@@ -59,7 +59,7 @@ public class PacienteController extends BaseController {
 			return "pacientes/index-pacientes";
 		} else {
 			Paciente p = (Paciente)request.getSession().getAttribute(OBJETO_PACIENTE_SESION);
-			return String.format("redirect:/pacientes/edit/%d",p.getIdPaciente());
+			return String.format("redirect:/pacientes/paciente/edit/%d",p.getIdPaciente());
 		}
 	}
 	
@@ -76,7 +76,7 @@ public class PacienteController extends BaseController {
 		if(request.getSession().getAttribute(OBJETO_CASO_SESION)!=null) {
 			request.getSession().setAttribute(OBJETO_CASO_SESION, null);
 		}
-		return "redirect:/pacientes";
+		return "redirect:/pacientes/paciente";
 	}
 	
 	
@@ -85,12 +85,12 @@ public class PacienteController extends BaseController {
 	///////////////////////////////////
 	@RequestMapping(value = "/json/{id}", method = RequestMethod.GET)
 	public  @ResponseBody Paciente showJsonPaciente(@PathVariable String id) {
-		Integer clave = Integer.valueOf(id);
 		try {
+			Integer clave = Integer.valueOf(id);
 			Paciente ret = servicio.Buscar(clave);
 			return ret;
 		} catch (ServiceRarasCLMException ex) {
-			ex.printStackTrace();
+			log.error(ex.getMessage());
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
 	}
@@ -132,7 +132,7 @@ public class PacienteController extends BaseController {
 			ex.printStackTrace();
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
-		return "pacientes/forms/pacienteEdit";
+		return "pacientes/forms/edit-paciente";
 	}
 	
 	
@@ -165,7 +165,7 @@ public class PacienteController extends BaseController {
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
 		
-		return "redirect:/pacientes/edit/{id}";
+		return "redirect:/pacientes/paciente/edit/{id}";
 	}
 	
 	

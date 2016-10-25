@@ -1,13 +1,17 @@
 package es.jclm.cs.rarasclm.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.jclm.cs.rarasclm.dao.NotFoundException;
 import es.jclm.cs.rarasclm.dao.PacienteDao;
 import es.jclm.cs.rarasclm.dao.PacienteHistoriaDao;
 import es.jclm.cs.rarasclm.dao.UnableToSaveException;
+import es.jclm.cs.rarasclm.entities.Caso;
 import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.entities.PacienteHistoria;
 import es.jclm.cs.rarasclm.entities.PacienteHistoriaId;
@@ -32,6 +36,28 @@ public class PacienteService extends BaseCRUDService<Paciente, Integer> {
 		this.dao = dao;
 	}
 	
+	//Proporciona el número de caso consecutivo para
+	//un paciente en concreto
+	public short getNumNuevoCaso(int pacienteId) throws ServiceRarasCLMException {
+		try {
+			Paciente paciente = dao.buscar(pacienteId);
+			List<Caso> casos = paciente.getCasos();
+			//Quiero linq para java!!!
+			short ret=0;
+			if(casos!=null) {
+				for(Caso c : casos) {
+					if(ret<c.getNumCaso())
+						ret=c.getNumCaso();
+				}
+				return (short) (ret+1);
+			} else {
+				return -1;
+			}
+		} catch (Exception ex) {
+			log.error(ex.getMessage());
+			throw new ServiceRarasCLMException(ex.getMessage());
+		}
+	}
 	
 	public void saveHistoria(Paciente paciente) throws ServiceRarasCLMException {
 		PacienteHistoriaId id = new PacienteHistoriaId();
@@ -72,7 +98,7 @@ public class PacienteService extends BaseCRUDService<Paciente, Integer> {
 		}
 	}
 
-
+	
 	
 	
 }

@@ -51,7 +51,7 @@ $(document).ready( function() {
 			<input type="hidden" id="idPaciente" name="idPaciente" th:field="${paciente.idPaciente}"/>
 			<div class="row">	
 				<h4 class="col-md-9 col-sm-9" >Edición Paciente <span th:text="${paciente.idPaciente}"></span></h4>
-				<a class="btn btn-primary pull-right col-md-2 col-sm-3" th:href="|${route.baseUrl}nuevaBusqueda|">Buscar otro paciente</a> 
+				<a class="btn btn-primary pull-right col-md-2 col-sm-3" th:href="|/${baseModel.baseApp}/pacientes/paciente/nuevaBusqueda|">Buscar otro paciente</a> 
 			</div>
 			<div id="formulario-contenido">
 			<div class="row">
@@ -164,8 +164,9 @@ $(document).ready( function() {
 			<div class="row">
 				<p><b>CASOS:</b></p>
 				<ul th:each="caso : ${paciente.casos}">
-					<li> <a  th:href="|/${baseModel.baseApp}/casos/edit/${caso.idCaso}|" th:text="|CASO ${caso.numCaso} - ${caso.codCie9mc} ${caso.codCie10} ${caso.literal}|"></a></li>
+					<li> <a  th:href="|/${baseModel.baseApp}/casos/caso/edit/${caso.idCaso}|" th:text="|CASO ${caso.numCaso} - ${caso.codCie9mc} ${caso.codCie10} ${caso.literal}|"></a></li>
 				</ul>
+				<a class="btn btn-success" th:href="|/${baseModel.baseApp}/casos/caso/nuevo/${paciente.idPaciente}|">Nuevo Caso</a>
 			</div>
 			<div id="grupo-acciones-bajo" class="row">
 				<div class="form-actions">

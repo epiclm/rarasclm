@@ -28,9 +28,11 @@ import es.jclm.cs.rarasclm.entities.Caso;
 import es.jclm.cs.rarasclm.entities.CasoRevisionUsuario;
 import es.jclm.cs.rarasclm.entities.CasoRevisionUsuarioId;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
+import es.jclm.cs.rarasclm.entities.IBaseModel;
 import es.jclm.cs.rarasclm.entities.MensajeResultado;
 import es.jclm.cs.rarasclm.entities.MensajeTipo;
 import es.jclm.cs.rarasclm.entities.MergeResult;
+import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.entities.UserRarasClm;
 import es.jclm.cs.rarasclm.service.CasoService;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
@@ -60,6 +62,10 @@ public class CasoController extends BaseController {
 	
 	@Autowired
 	private CasoRevisionService casoRevisionService;
+	
+
+	@Autowired
+	public IBaseModel base;
 	
 	@Autowired
 	HttpServletRequest request;
@@ -126,7 +132,85 @@ public class CasoController extends BaseController {
 		}
 	}
 
+	///////////////////////////////////
+	//NUEVO CASO SEND GET
+	///////////////////////////////////
+	@RequestMapping(value = "/nuevo/{idPaciente}", method = RequestMethod.GET)
+	public String nuevoPacienteGet(@PathVariable String idPaciente, Model model) {
+		try {
+			int id = Integer.parseInt(idPaciente);
+			Paciente paciente = pacienteServicio.Buscar(id);
+			Caso caso = new Caso();
+			short numCaso = pacienteServicio.getNumNuevoCaso(id);
+			caso.setBaseDiagnostico((byte)9);
+			caso.setHospital("999999");
+			caso.setNumCaso(numCaso);
+			caso.setFamiliaresEnfermedadesRaras((byte)9);
+			caso.setOtrasEnfermedadesCronicas((short)9);
+			EnfermedadRara enfDesconocida = enfermedadService.Buscar("9999999999");
+			caso.setEnfermedadRara(enfDesconocida);
+			caso.setPaciente(paciente);
+			model.addAttribute("caso",caso);
+		} catch(Exception ex) {
+			log.error(ex.getMessage());
+			return "redirect:/casos/caso";
+		}
+		return "casos/forms/nuevo-caso";
+	}
 	
+	///////////////////////////////////
+	//NUEVO CASO SEND POST
+	///////////////////////////////////
+	@RequestMapping(value = "/nuevo/{idPaciente}", method = RequestMethod.POST)
+	public String nuevoPacientePost(@PathVariable String idPaciente, @ModelAttribute("caso") Caso caso, Model model) {
+
+		MensajeResultado mensaje = new MensajeResultado();
+		//Validaciones de varios campos
+		if(caso.getEnfermedadRara().getEnfermedadRaraId().equals("9999999999")
+				&& ( caso.getCodCie10().equals("") && caso.getCodCie9mc().equals("")) ) {
+			try {
+				int id = Integer.parseInt(idPaciente);
+				Paciente paciente = pacienteServicio.Buscar(id);
+				caso.setPaciente(paciente);
+			} catch (ServiceRarasCLMException ex) {
+				log.error(ex.getMessage());
+				mensaje.setTipo(MensajeTipo.ERROR);
+				mensaje.setMensaje(String.format("ERROR: %s",ex.getMessage()));
+				request.getSession().setAttribute("mensaje", mensaje);
+			}
+			mensaje.setTipo(MensajeTipo.ERROR);
+			mensaje.setMensaje("ERROR: Debe indicar un código de Enfermedad Rara o un código CIE9MC o CIE10");
+			//no cargamos mensaje en session porque no vamos a realizar redirect
+			//request.getSession().setAttribute("mensaje", mensaje);
+			base.setMensaje(mensaje);
+			model.addAttribute("caso", caso);
+			return "casos/forms/nuevo-caso"; 
+		} else {
+			try {
+				int id = Integer.parseInt(idPaciente);
+				Paciente paciente = pacienteServicio.Buscar(id);
+				caso.setIdCaso(String.format("%07d-%02d",id,caso.getNumCaso()));
+				caso.setPaciente(paciente);
+				servicio.Guardar(caso);
+				mensaje.setTipo(MensajeTipo.OK);
+				mensaje.setMensaje(String.format("El caso %s se ha guardado correctamente",caso.getIdCaso()));
+				request.getSession().setAttribute("mensaje", mensaje);
+			} catch (ServiceRarasCLMException ex) {
+				log.error(ex.getMessage());
+				mensaje.setTipo(MensajeTipo.ERROR);
+				mensaje.setMensaje(String.format("ERROR: %s",ex.getMessage()));
+				request.getSession().setAttribute("mensaje", mensaje);
+			}
+		}
+		return "redirect:/casos/caso/edit/" + caso.getIdCaso();
+	}
+	
+	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
+	public String nuevoPacienteBaseGet(@ModelAttribute("caso") Caso caso, Model model) {
+		return "redirect:/casos/caso/";
+	}
+
+
 	///////////////////////////////////
 	//EDICIÓN DE UN CASO SEND GET
 	///////////////////////////////////
