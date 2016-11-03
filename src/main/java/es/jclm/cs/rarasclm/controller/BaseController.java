@@ -48,14 +48,14 @@ public class BaseController {
 	@Autowired 
 	private UsuarioService usuarioService;
 	
-	@InitBinder
-	//Necasario para analizar las fechas de input date en html5
-	public void initBinder(WebDataBinder binder) {
-		 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		    dateFormat.setLenient(false);
-		    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
-	}
-		
+//	@InitBinder
+//	//Necasario para analizar las fechas de input date en html5
+//	public void initBinder(WebDataBinder binder) {
+//		 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//		    dateFormat.setLenient(false);
+//		    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+//	}
+//		
 	/**
 	 * Gets the base model.
 	 *
@@ -144,45 +144,6 @@ public class BaseController {
 		
 		return ret;
 					
-		
-//		RouteParameters ret = new RouteParameters();
-//		Annotation[] anotaciones = this.getClass().getDeclaredAnnotations();
-//		for(Annotation a : anotaciones)
-//		{
-//			if(a.annotationType()==RequestMapping.class)
-//			{
-//				//obtengo el path de la url mediante el valor de la anotación RequestMapping del
-//				//contralador que gestiona la petición (Alternativa inyectar el request)
-//				String[] path =((org.springframework.web.bind.annotation.RequestMapping)a).value();
-//				String[] route = path[0].split("/");
-//				if(route.length==0 )
-//					ret.setModulo("inicio");
-//				if(route.length>1 && route[1]!=null)
-//					ret.setModulo(route[1]);
-//				if(route.length>2 && route[2]!=null)
-//					ret.setEntidad(route[2]);
-//				if(route.length>3 && route[3]!=null)
-//					ret.setAccion(route[3]);
-//				if(route.length>4 && route[4]!=null)
-//					ret.setId(route[4]);
-//			}
-//		} 
-//		StringBuilder sb = new StringBuilder();
-//		if(ret.getModulo()!=null)
-//		{
-//			sb.append("/");
-//			sb.append(ret.getModulo());
-//		}
-//		if(ret.getEntidad()!=null)
-//		{
-//			sb.append("/");
-//			sb.append(ret.getEntidad());
-//		}
-//		sb.append("/");
-//		String baseApp = request.getContextPath().replace("/", "");
-//		base.setBaseapp(baseApp);
-//		ret.setBaseUrl(String.format("/%s%s",base.getBaseApp(),sb.toString()));
-//		return ret;
 	}
 	
 	@RequestMapping(value = "/logout")

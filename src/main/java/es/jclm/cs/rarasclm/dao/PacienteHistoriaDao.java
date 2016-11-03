@@ -29,4 +29,5 @@ public class PacienteHistoriaDao extends BaseEntityDao<PacienteHistoria,Paciente
 		}
 	}
 	
+	
 }

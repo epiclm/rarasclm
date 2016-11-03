@@ -80,7 +80,10 @@ h5 {
 	margin-left: 40px;
 }
 
-
+.cip {
+	font-family: monospace;
+	font-weight: bold;
+}
 
 #menuPath {
 	padding: 2px 15px !important;
@@ -434,6 +437,15 @@ input[type=date]  {
 	color: #FFF;
 }
 
+
+/**********************/
+/* NUEVO PACIENTE     */
+
+
+#posiblesPacientes tbody td {
+	font-size: 12px;
+}
+
 /**********************/
 /* ADMIN  USUARIOS    */
 
@@ -446,5 +458,9 @@ input[type=date]  {
 }
 
 .barra-admin {
+	padding: 10px;
+}
+
+#formulario-contenido div.row:last-child{
 	padding: 10px;
 }

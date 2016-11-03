@@ -4,7 +4,6 @@
 	layout:decorator="layout/rarasClmLayout">
 <head>
 <title th:text="|NUEVO CASO - ${caso.paciente.apellido01} ${caso.paciente.apellido02}|"></title>
-
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
            
@@ -39,8 +38,37 @@ function doAsociaEnfermedadRara(cod) {
 
 $(document).ready( function() {
 	
+	var modificado="";
 	
 	addMensanjesFuncionalidad();
+	
+	//Evitamos salir con modificaciones sin guardar
+	$( window ).on('beforeunload',function(event) {
+		var numElem = $('input.modificado, select.modificado, textarea.modificado').size();
+		if(numElem>0)
+			return false;
+	} )
+	
+	//Cuando toma el foco el campo guarda su valor 
+	$("input").focusin( 
+			function(event) {
+				modificado=$(this).val();
+		  	});
+		
+	
+	//Cuando pierde el foco pasar a mayúsculas
+	$("input").focusout( 
+		function(event) {
+			if(modificado.trim()!==($(this).val().trim())) {
+				$(this).addClass("modificado");
+			}
+			$(this).val($(this).val().toUpperCase().trim());
+	  	});
+	
+	
+	$("input, select, textarea").change(function(objEvent) {
+		$(this).addClass("modificado");
+	});
 	
 	$("#form-edit-caso").validate({
 		rules: {
@@ -60,7 +88,10 @@ $(document).ready( function() {
 			}
 		},
 		submitHandler: function(form) {
-			form.preventDefault();
+				$("input,textarea,checkbox").each(function() {
+					$(this).removeClass('modificado');
+				});
+				form.submit();
 		},
 		highlight: function(element) {
 		        $(element).closest('.form-group').addClass('has-error');
@@ -114,15 +145,15 @@ $(document).ready( function() {
 					},
 					minLength : 3
 				});
-	}).fail(function() {
-			mensajeError("Error al recibir datos del servidor")
+	}).fail( function() {
+				mensajeError("Error al recibir datos del servidor");
 		});
-	}
 	
 	$("input,select,textarea").change(function(objEvent) {
 		$(this).addClass("modificado");
 	});
 	
+});	
 
 /*]]>*/
 </script>
@@ -384,9 +415,8 @@ $(document).ready( function() {
 
 			
 			<div id="grupo-acciones-bajo" class="row">
-				<div class="form-actions col-md-10">
-				  <button id="btnEnviar" type="submit" class="btn btn-primary">Guardar Cambios</button>
-				  <button id="btnCancelar" type="button" class="btn">Cancel</button>
+				<div class="form-actions col-md-12">
+				  <button id="btnEnviar" type="submit" class="btn btn-primary pull-right">GUARDAR CAMBIOS</button>
 				</div>
 			</div>
 			

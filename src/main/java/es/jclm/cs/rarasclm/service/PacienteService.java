@@ -7,11 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.jclm.cs.rarasclm.dao.BusquedaDAOException;
 import es.jclm.cs.rarasclm.dao.NotFoundException;
 import es.jclm.cs.rarasclm.dao.PacienteDao;
 import es.jclm.cs.rarasclm.dao.PacienteHistoriaDao;
 import es.jclm.cs.rarasclm.dao.UnableToSaveException;
 import es.jclm.cs.rarasclm.entities.Caso;
+import es.jclm.cs.rarasclm.entities.NuevoPacienteModelView;
 import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.entities.PacienteHistoria;
 import es.jclm.cs.rarasclm.entities.PacienteHistoriaId;
@@ -36,6 +38,41 @@ public class PacienteService extends BaseCRUDService<Paciente, Integer> {
 		this.dao = dao;
 	}
 	
+	private int getIdPacienteNuevo() throws ServiceRarasCLMException{
+		try {
+			return  dao.getIdNuevoPaciente();
+		} catch (NotFoundException ex) {
+			throw new ServiceRarasCLMException(ex.getMessage());
+		}
+	}
+	
+	public NuevoPacienteModelView busquedaBusquedaPre(NuevoPacienteModelView model) throws ServiceRarasCLMException{
+		
+	   try {
+			int anio = -1;
+
+			if (model.getFechaNacimiento() != null) {
+				anio = model.getFechaNacimiento().getYear();
+			}
+			model.setPacientes(dao.busquedaCipOrNombreApellidos(0, 
+					model.getCip(), 
+					model.getNombre(), 
+					model.getApellido01(),
+					model.getApellido02(), 
+					null, 
+					null, 
+					anio, 
+					model.getSexo()));
+		} catch (BusquedaDAOException ex) {
+			log.error(ex.getMessage());
+			throw new ServiceRarasCLMException(String.format("%s %s", "Error servicio de paciente",ex.getMessage()));
+		}
+		
+		return model;
+		
+	}
+	
+	
 	//Proporciona el número de caso consecutivo para
 	//un paciente en concreto
 	public short getNumNuevoCaso(int pacienteId) throws ServiceRarasCLMException {
@@ -57,6 +94,17 @@ public class PacienteService extends BaseCRUDService<Paciente, Integer> {
 			log.error(ex.getMessage());
 			throw new ServiceRarasCLMException(ex.getMessage());
 		}
+	}
+	
+	public Paciente saveNuevoPaciente(Paciente paciente) throws ServiceRarasCLMException {
+		int id = getIdPacienteNuevo();
+		paciente.setIdPaciente(id);
+		try {
+			dao.guardar(paciente);
+		} catch (UnableToSaveException ex) {
+			throw new ServiceRarasCLMException(ex.getMessage());
+		}
+		return paciente;
 	}
 	
 	public void saveHistoria(Paciente paciente) throws ServiceRarasCLMException {

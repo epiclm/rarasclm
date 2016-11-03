@@ -240,6 +240,20 @@ public class DatosAuxiliaresCacheados {
 	}
 	
 	
+	public String getSiNoLiteral(short cod) {
+		switch(cod) {
+			case 1:
+				return "SI";
+			case 0:
+				return "NO";
+			case 9:
+				return "NC";
+			default:
+				return "";
+		}
+	}
+	
+	
 	public int getEdad(Date fecNac) {
 		Calendar fechaActual = Calendar.getInstance();
 		Calendar fechaNac = new GregorianCalendar();

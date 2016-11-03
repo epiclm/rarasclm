@@ -1,6 +1,8 @@
 package es.jclm.cs.rarasclm.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,9 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +27,7 @@ import es.jclm.cs.rarasclm.entities.MensajeResultado;
 import es.jclm.cs.rarasclm.entities.MensajeTipo;
 import es.jclm.cs.rarasclm.entities.MergeResult;
 import es.jclm.cs.rarasclm.entities.Municipio;
+import es.jclm.cs.rarasclm.entities.NuevoPacienteModelView;
 import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.entities.UserRarasClm;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
@@ -50,7 +55,16 @@ public class PacienteController extends BaseController {
 		
 	
 	public static final String OBJETO_PACIENTE_SESION="paciente";
+	public static final String OBJETO_PACIENTE_PRE_SESSION="paciente-pre";
+	public static final String OBJETO_PACIENTE_NUEVO_SESSION="paciente-nuevo";
 	public static final String OBJETO_CASO_SESION="caso";
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+	    binder.registerCustomEditor(Date.class, editor);
+	}
+	
 	
 	// Página inicial del módulo
 	@RequestMapping(method = RequestMethod.GET)
@@ -141,34 +155,116 @@ public class PacienteController extends BaseController {
 	///////////////////////////////////
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String  submitPaciente(@PathVariable String id, @ModelAttribute("paciente") Paciente paciente, Model model) {
-		try {
-			
+		MensajeResultado mensaje = new MensajeResultado();
+		try {		
 			int pacienteId = Integer.parseInt(id);
 			Paciente pacienteSinEditar = servicio.Buscar(pacienteId);
-			UserRarasClm user = (UserRarasClm)model.asMap().get("userCLM");
 			MergeResult<Paciente> pacienteMerge = new MergeEntity<Paciente>().merge(pacienteSinEditar,paciente);
 			servicio.Actualizar(pacienteMerge.getMergeObject());
-			
 			StringBuilder sb = new StringBuilder();
 			sb.append(String.format("<p><b>ACTUALIZACIÓN CORRECTA</b></p>paciente %07d%n</p>\n",pacienteSinEditar.getIdPaciente()));
-
-			MensajeResultado mensaje = new MensajeResultado();
 			mensaje.setTipo(MensajeTipo.OK);
 			mensaje.setMensaje(sb.toString());
-			request.getSession().setAttribute("mensaje",mensaje);
-			
+			request.getSession().setAttribute(OBJETO_MENSAJE_SESION,mensaje);
 			paciente = servicio.Buscar(pacienteId);
-			request.getSession().setAttribute(OBJETO_PACIENTE_SESION,paciente);
-			
+			request.getSession().setAttribute(OBJETO_PACIENTE_SESION,paciente);		
 		} catch(Exception ex) {
-			ex.printStackTrace();
-			return null; //TO DO Mandar mensaje de error a la vista
+			mensaje.setTipo(MensajeTipo.ERROR);
+			mensaje.setMensaje(ex.getMessage());
+			log.error(ex.getMessage(),ex);
 		}
-		
 		return "redirect:/pacientes/paciente/edit/{id}";
 	}
 	
+	///////////////////////////////////
+	//NUEVO PACIENTE SEND GET
+	///////////////////////////////////
+	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
+	public String  nuevoPacienteGet(Model model) {
+		NuevoPacienteModelView nuevoPaciente = null;
+		if(request.getSession().getAttribute(OBJETO_PACIENTE_PRE_SESSION)!=null) {
+			nuevoPaciente = (NuevoPacienteModelView)request.getSession().getAttribute(OBJETO_PACIENTE_PRE_SESSION);
+		} else {
+			nuevoPaciente = new NuevoPacienteModelView();
+			nuevoPaciente.setSexo('9');
+		}
+		model.addAttribute("nuevo", nuevoPaciente);
+		return "pacientes/forms/nuevo-paciente-pre";
+	}
 	
+	///////////////////////////////////
+	//NUEVO PACIENTE SEND POST
+	///////////////////////////////////
+	@RequestMapping(value = "/nuevo", method = RequestMethod.POST)
+	public String  nuevoPacientePost(Model model,  @ModelAttribute("nuevo") NuevoPacienteModelView nuevoPaciente) {
+		MensajeResultado mensaje = new MensajeResultado();
+		try {
+			nuevoPaciente = servicio.busquedaBusquedaPre(nuevoPaciente);
+			request.getSession().setAttribute(OBJETO_PACIENTE_PRE_SESSION,nuevoPaciente);
+		} catch (ServiceRarasCLMException ex) {
+			log.error(ex.getMessage());
+			mensaje.setMensaje(ex.getMessage());
+			mensaje.setTipo(MensajeTipo.ERROR);
+			request.getSession().setAttribute(OBJETO_MENSAJE_SESION,mensaje);
+		}
+		
+		return "pacientes/forms/nuevo-paciente-pre";
+	}
+	
+	
+	///////////////////////////////////
+	//NUEVO POSTERIOR PACIENTE SEND GET
+	///////////////////////////////////
+	@RequestMapping(value = "/nuevo/posterior", method = RequestMethod.GET)
+	public String  nuevoPacientePosteriorGet(Model model) {
+		NuevoPacienteModelView nuevoPaciente = null;
+		Paciente paciente = null;
+		//Sigue el mismo patrón con la diferencia de que a esta url solamente se
+		//continua si se ha completado el paso previo
+		if(request.getSession().getAttribute(OBJETO_PACIENTE_NUEVO_SESSION)!=null) {
+			paciente = (Paciente)request.getSession().getAttribute(OBJETO_PACIENTE_NUEVO_SESSION);
+			return "pacientes/forms/nuevo-paciente";
+		}
+		else if(request.getSession().getAttribute(OBJETO_PACIENTE_PRE_SESSION)!=null) {
+			nuevoPaciente = (NuevoPacienteModelView)request.getSession().getAttribute(OBJETO_PACIENTE_PRE_SESSION);
+			paciente = new Paciente();
+			paciente.setApellido01(nuevoPaciente.getApellido01());
+			paciente.setApellido02(nuevoPaciente.getApellido02());
+			paciente.setNombre(nuevoPaciente.getNombre());
+			paciente.setFechaNacimiento(nuevoPaciente.getFechaNacimiento());
+			paciente.setSexo(nuevoPaciente.getSexo());
+			paciente.setCip(nuevoPaciente.getCip());
+			model.addAttribute("paciente",paciente);
+			return "pacientes/forms/nuevo-paciente";
+		} else {
+			return "redirect:/pacientes/paciente";
+		}
+	}
+	
+	////////////////////////////////////
+	//NUEVO POSTERIOR PACIENTE SEND POST
+	////////////////////////////////////
+	@RequestMapping(value = "/nuevo/posterior", method = RequestMethod.POST)
+	public String  nuevoPacientePosteriorPost(Model model, @ModelAttribute("paciente") Paciente paciente) {
+		MensajeResultado mensaje = new MensajeResultado();
+		try {
+			request.getSession().setAttribute(OBJETO_PACIENTE_SESION, mensaje);
+			paciente = servicio.saveNuevoPaciente(paciente);
+			mensaje.setTipo(MensajeTipo.OK);
+			mensaje.setMensaje("El paciente se ha guardado correctamente");
+			request.getSession().setAttribute(OBJETO_PACIENTE_SESION, paciente);
+			request.getSession().setAttribute(OBJETO_MENSAJE_SESION, mensaje);
+			//Borramos la referencia a paciente nuevo para que no vuelva a aparecer.
+			request.getSession().setAttribute(OBJETO_PACIENTE_NUEVO_SESSION,null);
+			return "redirect:/pacientes/paciente/";
+
+		} catch (Exception ex) {
+			mensaje.setTipo(MensajeTipo.ERROR);
+			mensaje.setMensaje(ex.getMessage());
+			request.getSession().setAttribute(OBJETO_MENSAJE_SESION, mensaje);
+			return "pacientes/forms/nuevo-paciente";
+		}
+	}
 	
 
 }

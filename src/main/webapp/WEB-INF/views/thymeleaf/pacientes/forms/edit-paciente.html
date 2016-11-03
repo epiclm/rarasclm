@@ -16,16 +16,105 @@ $(document).ready( function() {
 
 	addMensanjesFuncionalidad();
 	
+	var modificado;
+	
+	//Evitamos salir con modificaciones sin guardar
+	$( window ).on('beforeunload',function(event) {
+		numElem = $('input.modificado, select.modificado, textarea.modificado, checkbox.modificado').size();
+		if(numElem>0)
+			return false;
+	});
+	
+	$.validator.addMethod("notNC",function(value,element) {
+		return value!=9 && value!='' && value!=null ;
+	});
+	
+	$("input").focusin( 
+			function(event) {
+				modificado=$(this).val();
+		  	});
+	
+	//Cuando pierde el foco pasar a mayúsculas
+	$("input").focusout( 
+		function(event) {
+			if(modificado.trim()!==($(this).val().trim())) {
+				$(this).addClass("modificado");
+			}
+			$(this).val($(this).val().toUpperCase().trim());
+	  	});
+	
+
+$("#form-edit-paciente").validate({
+	rules: {
+		cip : {
+			required:true
+		},
+		apellido01: {
+			required:true
+		},
+		nombre:{
+			required:true
+		},
+		fechaNacimiento:{
+			required:true
+		},
+		sexo: {
+			notNC:true
+		}
+	},
+	messages: {
+		cip: {
+			required: "El CIP es obligatorio"
+		},
+		apellido01: {
+			required: "El campo 1er apellido es obligatorio"	
+			},
+		nombre: {
+			required: "El campo nombre es obligatorio"	
+			},
+		fechaNacimiento: {
+			required:"La fecha de nacimiento es obligatoria"
+		},
+		sexo: {
+			notNC:"El sexo es obligatorio"
+		}
+	},
+	submitHandler: function(form) {
+		numElem = $('input.modificado, select.modificado, textarea.modificado').size();
+		if(numElem===0) {
+			mensajeWarning("No hay ningún campo modificado");
+		} else  {
+			$("input,textarea,checkbox").each(function() {
+				$(this).removeClass('modificado');
+			});
+			form.submit();
+		}
+	},
+	highlight: function(element) {
+	        $(element).closest('.form-group').addClass('has-error');
+	},
+ 	unhighlight: function(element) {
+	        $(element).closest('.form-group').removeClass('has-error');
+	}
+	});
+	
 	$("input").focusout( 
 			function() {
 				$(this).val($(this).val().toUpperCase());
 		  	});
 	
+	if($("#fallecido").val()==0)
+		$("#fallecidoFecha").attr("readonly",true);
+	
+	$("#fallecido").change(function() {
+		if($(this).val()==1)
+			$("#fallecidoFecha").attr("readonly",false);
+			$("#fallecidoFecha").focus()
+	});
 		
 	$("#provinciaResidencia").change(function() {
 		var provincia = $(this).val();
-		var strHtml='<option value="99" select>DESCONOCIDO</option>\n'
-		$('#municipioResidencia').html("<p>CARGANDO...</p>");
+		var strHtml='<option value="99999" select>DESCONOCIDO</option>\n'
 		$.ajax({
 			url:'/'+ contextApp + '/localizaciones/municipios/deprovincia/'+provincia,
 			dataType:'json',
@@ -33,7 +122,7 @@ $(document).ready( function() {
 	
 		}).done(function(data, textStatus, jqXHR)   {
 			for(i=0;i<data.length;i++) {
-				strHtml += '<option value="' + data[i].idMunicipio +'">'+ data[i].deno + '</option>\n'
+				strHtml += '<option value="' + data[i].municipio +'">'+ data[i].deno + '</option>\n'
 			}
 		}).always(function() {
 			$('#municipioResidencia').html(strHtml);
@@ -50,8 +139,10 @@ $(document).ready( function() {
 		<form id="form-edit-paciente" class="form" method='POST'>
 			<input type="hidden" id="idPaciente" name="idPaciente" th:field="${paciente.idPaciente}"/>
 			<div class="row">	
-				<h4 class="col-md-9 col-sm-9" >Edición Paciente <span th:text="${paciente.idPaciente}"></span></h4>
-				<a class="btn btn-primary pull-right col-md-2 col-sm-3" th:href="|/${baseModel.baseApp}/pacientes/paciente/nuevaBusqueda|">Buscar otro paciente</a> 
+				<h4 class="col-md-6 col-sm-6" >Edición Paciente <span th:text="${paciente.idPaciente}"></span></h4>
+				<a class="btn btn-success pull-right col-md-2 col-sm-3" th:href="|/${baseModel.baseApp}/pacientes/paciente/nuevo|">Paciente Nuevo</a> 
+				<a style="margin-right:10px" class="btn btn-primary pull-right col-md-2 col-sm-3" th:href="|/${baseModel.baseApp}/pacientes/paciente/nuevaBusqueda|">Buscar otro paciente</a> 
+				
 			</div>
 			<div id="formulario-contenido">
 			<div class="row">
@@ -100,11 +191,11 @@ $(document).ready( function() {
 				<p style="margin-top:5px">DOMICILIO:</p>
 				<div class="form-group col-md-2 col-sm-2">
 					<label class="control-label" for="domTipoVia">Tipo Vía:</label>
-					<input name="domTipoVia" class="form-control" id="domTipoVia" type="text" maxlength="5" th:value="${paciente.domTipoVia}" />
+					<input name="domTipoVia" class="form-control capitaliza" id="domTipoVia" type="text" maxlength="5" th:value="${paciente.domTipoVia}" />
 				</div>
 				<div class="form-group col-md-4 col-sm-4">
 					<label class="control-label" for="domNombreVia">Nombre de la Vía:</label>
-					<input name="domNombreVia" class="form-control" id="domNombreVia" type="text"  th:value="${paciente.domNombreVia}" />
+					<input name="domNombreVia" class="form-control capitaliza" id="domNombreVia" type="text"  th:value="${paciente.domNombreVia}" />
 				</div>
 				<div class="form-group col-md-1 col-sm-1">
 					<label class="control-label" for="domNumero">Número:</label>
@@ -112,11 +203,11 @@ $(document).ready( function() {
 				</div>
 				<div class="form-group col-md-2 col-sm-2">
 					<label class="control-label" for="domPisopuerta">Piso:</label>
-					<input name="domPisopuerta" class="form-control" id="domPisopuerta" type="text" maxlength="4"  th:value="${paciente.domPisopuerta}" />
+					<input name="domPisopuerta" class="form-control capitaliza" id="domPisopuerta" type="text" maxlength="4"  th:value="${paciente.domPisopuerta}" />
 				</div>
 				<div class="form-group col-md-2 col-sm-2">
 					<label class="control-label" for="domOtros">Otros:</label>
-					<input name="domOtros" class="form-control" id="domOtros" type="text"  th:value="${paciente.domOtros}" />
+					<input name="domOtros" class="form-control capitaliza" id="domOtros" type="text"  th:value="${paciente.domOtros}" />
 				</div>
 			</div>
 			<div class="row">
@@ -166,12 +257,12 @@ $(document).ready( function() {
 				<ul th:each="caso : ${paciente.casos}">
 					<li> <a  th:href="|/${baseModel.baseApp}/casos/caso/edit/${caso.idCaso}|" th:text="|CASO ${caso.numCaso} - ${caso.codCie9mc} ${caso.codCie10} ${caso.literal}|"></a></li>
 				</ul>
-				<a class="btn btn-success" th:href="|/${baseModel.baseApp}/casos/caso/nuevo/${paciente.idPaciente}|">Nuevo Caso</a>
+				<a class="btn btn-success" th:href="|/${baseModel.baseApp}/casos/caso/nuevo/${paciente.idPaciente}|">AÑADIR NUEVO CASO</a>
 			</div>
 			<div id="grupo-acciones-bajo" class="row">
 				<div class="form-actions">
-				  <button type="submit" class="btn btn-primary">Actualiza</button>
-				  <button type="button" class="btn">Cancel</button>
+				  <button type="submit" class="btn btn-primary pull-right">GUARDAR CAMBIOS</button>
+				  <!-- <button type="button" class="btn">Cancel</button> -->
 				</div>
 			</div>
 		   </div> <!-- Fin de formulario contenido -->

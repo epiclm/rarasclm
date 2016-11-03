@@ -38,10 +38,9 @@ import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
  * The Class EnfermedadRaraController.
  */
 @Controller
-@RequestMapping("/enfermedad")
+@RequestMapping("/enfermedad/enfrara")
 @RarasClmItemModulo(caption="Enfermedad",deno="Enfermedad",modulo="enfermedad",orden=4)
 @RarasClmItemMenu(caption="Enfermedad",deno="Enfermedad",modulo="enfermedad",orden=1)
-@SessionAttributes("enfrara")
 public class EnfermedadRaraController extends BaseController {
 
 	@Autowired
@@ -78,7 +77,6 @@ public class EnfermedadRaraController extends BaseController {
 	// Página inicial del módulo
 	@RequestMapping(method = RequestMethod.GET)
 	public String inicio(Model model) {
-		getRoute().setId("");
 		return "enfermedad/enfRara";
 	}
 
@@ -87,7 +85,6 @@ public class EnfermedadRaraController extends BaseController {
 	/*Carga el formulario*/
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public String setupEditForm(@PathVariable String id, Model model) {
-		getRoute().setId(id);
 		model.addAttribute("enfermedadRaraModel", enfermedadService.getEnfermedadRaraById(id));
 		return "enfermedad/forms/enfRaraEdit";
 	}
@@ -97,7 +94,7 @@ public class EnfermedadRaraController extends BaseController {
 	/* Procesa el formulario */
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String submitForm(@ModelAttribute("enfermedadRaraModel") EnfermedadRara enf,
-			@ModelAttribute("resultado") AccionResultado resultado, SessionStatus status) {
+		@ModelAttribute("resultado") AccionResultado resultado, SessionStatus status) {
 		try {
 			enfermedadService.update(enf);
 			//Se actualiza para que carge las entidades relacionadas a la vista
@@ -229,7 +226,7 @@ public class EnfermedadRaraController extends BaseController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/enfrara/show/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
 	public String setupShowForm(@PathVariable String id, Model model) {
 		getRoute().setId(id);
 		EnfermedadRara enfRara = enfermedadService.getEnfermedadRaraById(id);
@@ -237,12 +234,12 @@ public class EnfermedadRaraController extends BaseController {
 		return "enfermedad/shows/enfRara";
 	}
 
-	@RequestMapping(value = "/enfrara/json", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/json", produces = "application/json; charset=UTF-8")
 	public @ResponseBody List<EnfermedadCodigoLiteral> json() {
 		return enfermedadService.getListCodLiteral();
 	}
 	
-	@RequestMapping(value = "/enfrara/json/{id}", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/json/{id}", produces = "application/json; charset=UTF-8")
 	public @ResponseBody EnfermedadRara jsonId(@PathVariable String id) {
 		return enfermedadService.getEnfermedadRaraById(id);
 	}

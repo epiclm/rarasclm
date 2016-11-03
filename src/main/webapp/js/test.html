@@ -1,0 +1,48 @@
+<!DOCTYPE html5>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+        <script src="rarasclm-fauxiliares.js"></script>
+        <script>
+            $(document).ready(function() {
+                
+                $("#teston").on("click", function() {
+                    cipTest = new CIP($("#cip").val(),$("#apellido1").val(),$("#apellido2").val(),$("#fechaNac").val(),$("#sexo").val());
+                    alert("!!");
+                });
+    
+            });
+        </script>
+    </head>
+    <body>
+        <div>
+            <label for="cip">CIP</label>
+            <input type="text" id="cip" name="cip" maxlength="16"></input>
+        </div>
+        <div>
+            <label for="apellido1">1er Apellido</label>
+            <input type="text" id="apellido1" name="apellido1" maxlength="30"></input>
+        </div>
+        <div>
+            <label for="apellido2">2o Apellido</label>
+            <input type="text" id="apellido2" name="apellido2" maxlength="30"></input>
+        </div>
+        <div>
+            <label for="fechaNac">Fecha Nacimiento</label>
+            <input type="date" id="fechaNac" name="fechaNac"></input>
+        </div>
+        <div>
+            <label for="sexo">Fecha Nacimiento</label>
+            <select id="sexo" name="sexo">
+                <option value="1">VARON</option>
+                <option value="6">MUJER</option>
+            </select>
+        </div>
+        <button id="teston">TEST</button>
+    </body>
+</html>

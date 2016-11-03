@@ -27,7 +27,7 @@ public class BusquedaService {
 	
 	private static final Logger log = LoggerFactory.getLogger(BusquedaService.class);
 
-	public List<Paciente> buscaPacientes(BusquedaModelView bmv) {
+	public List<Paciente> buscaPacientes(BusquedaModelView bmv) throws ServiceRarasCLMException {
 		
 		int anioNacimiento=-1;
 		
@@ -35,17 +35,22 @@ public class BusquedaService {
 			anioNacimiento = Integer.parseInt(bmv.getAnioNacimiento());
 		} catch(Exception ex) {}
 			
-		return pacienteDao.busqueda(
-				bmv.getSeccion(),
-				bmv.getCip(),
-				bmv.getNombre(),
-				bmv.getApellido01(),
-				bmv.getApellido02(),
-				bmv.getProvincia(),
-				bmv.getMunicipio(),
-				anioNacimiento,
-				bmv.getSexo()
-				);
+		try {
+			return pacienteDao.busquedaCipOrNombreApellidos(
+					bmv.getSeccion(),
+					bmv.getCip(),
+					bmv.getNombre(),
+					bmv.getApellido01(),
+					bmv.getApellido02(),
+					bmv.getProvincia(),
+					bmv.getMunicipio(),
+					anioNacimiento,
+					bmv.getSexo()
+					);
+		} catch (BusquedaDAOException ex) {
+			log.error(ex.getMessage());
+			throw new ServiceRarasCLMException(ex.getMessage());
+		}
 	}
 	
 	public List<Caso> buscaCasos(BusquedaModelView bmv) throws CasoRevisionServiceException {
@@ -71,7 +76,7 @@ public class BusquedaService {
 					bmv.getProvincia(),
 					bmv.getMunicipio(),
 					anioNacimiento,
-					bmv.getSexo(),
+					String.valueOf(bmv.getSexo()),
 					bmv.getCie9MC(),
 					bmv.getCie10(),
 					bmv.getEnfermedadRaraCLM(),
@@ -108,7 +113,7 @@ public class BusquedaService {
 					bmv.getProvincia(),
 					bmv.getMunicipio(),
 					anioNacimiento,
-					bmv.getSexo(),
+					String.valueOf(bmv.getSexo()),
 					bmv.getCie9MC(),
 					bmv.getCie10(),
 					bmv.getEnfermedadRaraCLM(),

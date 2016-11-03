@@ -219,6 +219,8 @@ public class CasoController extends BaseController {
 		Caso caso;
 		try {	
 			caso = servicio.Buscar(id);
+			if(caso==null)
+				return "redirect:/casos/caso/";
 			request.getSession().setAttribute(OBJETO_CASO_SESION,caso);
 			request.getSession().setAttribute(OBJETO_PACIENTE_SESION, caso.getPaciente());
 			caso = (Caso)request.getSession().getAttribute(OBJETO_CASO_SESION);
@@ -308,16 +310,21 @@ public class CasoController extends BaseController {
 
 			servicio.Borrar(caso);
 			
+			//Guardamos de nuevo el paciente en sesión para que refleje el cambio.
+			Paciente paciente = pacienteServicio.Buscar(caso.getPaciente().getIdPaciente());
+			request.getSession().setAttribute(OBJETO_PACIENTE_SESION,paciente);
+			request.getSession().setAttribute(OBJETO_CASO_SESION,null);	
+			
 			MensajeResultado mensaje = new MensajeResultado();
 			mensaje.setTipo(MensajeTipo.OK);
 			mensaje.setMensaje(sb.toString());
 			request.getSession().setAttribute("mensaje",mensaje);
-			request.getSession().setAttribute(OBJETO_CASO_SESION,null);		
+				
 		} catch (Exception ex) {
 			log.error(ex.getMessage(),ex);
 			return null; //TO DO Mandar mensaje de error a la vista
 		}
-		return "redirect:/pacientes/edit/"+ String.valueOf(idPaciente);
+		return "redirect:/pacientes/paciente/edit/"+ String.valueOf(idPaciente);
 	}
 	
 	

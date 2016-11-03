@@ -39,9 +39,37 @@ function doAsociaEnfermedadRara(cod) {
 
 $(document).ready( function() {
 	
+	var modificado="";
 	
 	addMensanjesFuncionalidad();
 	
+	//Evitamos salir con modificaciones sin guardar
+	$( window ).on('beforeunload',function(event) {
+		numElem = $('input.modificado, select.modificado, textarea.modificado, checkbox.modificado').size();
+		if(numElem>0)
+			return false;
+	} );
+	
+	//Cuando toma el foco el campo guarda su valor 
+	$("input").focusin( 
+			function(event) {
+				modificado=$(this).val();
+		  	});
+		
+	
+	//Cuando pierde el foco pasar a mayúsculas
+	$("input").focusout( 
+		function(event) {
+			if(modificado.trim()!==($(this).val().trim())) {
+				$(this).addClass("modificado");
+			}
+			$(this).val($(this).val().toUpperCase().trim());
+	  	});
+	
+	
+	$("input, select, textarea, select").change(function(objEvent) {
+		$(this).addClass("modificado");
+	});
 	
 	//Manejo del submit (evitamos un submit que no sea
 	//realizado mediante un click al botón correcto
@@ -58,7 +86,7 @@ $(document).ready( function() {
 	//Cambiamos el action del formulario para que haga la acción borrar
 	$('#btnBorrar').on('click',function() {
 		submitOkBorrar=true;
-		$('#form-edit-caso').attr('action',routeBase+'/'+'delete'+'/'+idCaso);
+		$('#form-edit-caso').attr('action','/'+contextApp+'/casos/caso/delete'+'/'+idCaso);
 		$('#form-edit-caso').submit();
 
 	});
@@ -90,9 +118,6 @@ $(document).ready( function() {
 				});
 	});
 	
-	$("input,select,textarea").change(function(objEvent) {
-		$(this).addClass("modificado");
-	});
 	
 	$("#btn-revision").on('click',function() {
 		$.ajax({
@@ -101,13 +126,61 @@ $(document).ready( function() {
 			url : "/" + contextApp + "/usuario/addrevision/"+idCaso,
 			contentType : "application/json; charset=utf-8"
 			}).fail(function(jqXHR,status,error) {
-				mensajeError("<p><b>ERROR:</b></p> " + jqXHR.responseText)
+				mensajeError("<p><b>ERROR:</b></p> " + jqXHR.responseText);
 			}).done(function (data) {
 				showRespuesta(data);
 			});
 		});
 	
-	});//Fin ready event
+	
+	/////////////////////////
+	//Validaciones
+	/////////////////////////
+	
+	$("#form-edit-caso").validate({
+		rules: {
+			literal: {
+				required:true
+			},
+			fechaDeteccion:{
+				required:true
+			}			
+		},
+		messages: {
+			literal: {
+				required:"El campo literal de la enfermedad es necesario."
+			},
+			fechaDeteccion:{
+				required:"La fecha de detección es obligatoria."
+			}
+		},
+		submitHandler: function(form) {
+			numElem = $('input.modificado, select.modificado, textarea.modificado').size();
+			if(numElem===0 && !submitOkBorrar) {
+				mensajeWarning("No hay ningún campo modificado");
+			} else if(submitOkBorrar) {
+				$("input,textarea,checkbox").each(function() {
+					$(this).removeClass('modificado');
+				});
+				if(confirm("¿Esta seguro que quiere eliminar el caso?"))
+					form.submit();
+			} else {
+					//form.submit();
+			}
+			
+		},
+		highlight: function(element) {
+		        $(element).closest('.form-group').addClass('has-error');
+		  },
+	 	unhighlight: function(element) {
+		        $(element).closest('.form-group').removeClass('has-error');
+		}
+	});
+	
+});//Fin ready event
+	
+	
+	
 
 /*]]>*/
 </script>
@@ -370,10 +443,9 @@ $(document).ready( function() {
 
 			
 			<div id="grupo-acciones-bajo" class="row">
-				<div class="form-actions col-md-10">
-				  <button id="btnEnviar" type="submit" class="btn btn-primary">Guardar Cambios</button>
-				  <button id="btnCancelar" type="button" class="btn">Cancel</button>
-				  <button id="btnBorrar" style="float: right" type="submit" class="btn btn-danger">Borrar</button>
+				<div class="form-actions col-md-12">
+					<button id="btnEnviar" type="submit" class="btn btn-primary pull-right">GUARDAR CAMBIOS</button>
+				  	<button id="btnBorrar" style="margin-right:20px" type="submit" class="btn btn-danger pull-right">BORRAR</button>
 				</div>
 			</div>
 			
@@ -403,6 +475,24 @@ $(document).ready( function() {
 				</div><!-- modal content -->
 			</div><!-- modal dialog -->
 		</div><!-- Fin Modal -->
+		
+<!-- 		<div id="modalSalir" class="modal fade" tabindex="-1" role="dialog"> -->
+<!-- 		  <div class="modal-dialog" role="document"> -->
+<!-- 		    <div class="modal-content"> -->
+<!-- 		      <div class="modal-header"> -->
+<!-- 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+<!-- 		        <h4 class="modal-title">CAMBIOS SIN GUARDAR</h4> -->
+<!-- 		      </div> -->
+<!-- 		      <div class="modal-body"> -->
+<!-- 		        <p>Si sale del formulario los datos no se guardarán. ¿Quiere salir de la página y perder los cambios?</p> -->
+<!-- 		      </div> -->
+<!-- 		      <div class="modal-footer"> -->
+<!-- 		        <button id="btn-salir" type="button" class="btn btn-default" data-dismiss="modal">Salir sin Guardar</button> -->
+<!-- 		        <button id="btn-cancelar" type="button" class="btn btn-primary">Cancelar</button> -->
+<!-- 		      </div> -->
+<!-- 		    </div>/.modal-content -->
+<!-- 		  </div>/.modal-dialog -->
+<!-- 		</div>/.modal -->
 
 	</div> <!-- Fin contenido -->
 </body>

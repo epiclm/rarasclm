@@ -11,7 +11,7 @@ public class BusquedaModelView {
 	private String  apellido01;
 	private String  apellido02;
 	private String  cip;
-	private String  sexo="9";
+	private char 	sexo='9';
 	private String  provincia="99";
 	private String  municipio="99999";
 	private String 	anioNacimiento;
@@ -76,11 +76,11 @@ public class BusquedaModelView {
 		return provincia;
 	}
 
-	public String getSexo() {
+	public char getSexo() {
 		return sexo;
 	}
 
-	public void setSexo(String sexo) {
+	public void setSexo(char sexo) {
 		this.sexo = sexo;
 	}
 
