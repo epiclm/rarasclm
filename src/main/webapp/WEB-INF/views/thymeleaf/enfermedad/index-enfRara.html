@@ -23,11 +23,11 @@
 							var coincidencias = enfermedad.match(regEnfRara);
 							if(coincidencias!=null)
 							{
+								var urlVer =  "/" +contextApp + "/enfermedad/enfrara/show/" + encodeURIComponent(coincidencias[0]);
+								var urlEditar = "/" + contextApp + "/enfermedad/enfrara/edit/" + encodeURIComponent(coincidencias[0]);
 								$('#botonesNavegacion').html('');
-								$('#botonesNavegacion').append("<label>&nbsp;</label><input class='btn btn-primary' type='button' value='ir a "
-									+ coincidencias[0] +  "' onclick='location.assign(\"/" + contextApp + "/enfermedad/enfrara/show/" + encodeURIComponent(coincidencias[0]) + "\")'/>");
-								$('#botonesNavegacion').append("<label>&nbsp;</label><input class='btn btn-success' type='button' value='Editar "
-									+ coincidencias[0] +  "' onclick='location.assign(\"/" + contextApp + "/enfermedad/enfrara/edit/" + encodeURIComponent(coincidencias[0]) + "\")'/>");
+								$('#botonesNavegacion').append('<a href="'+ urlVer+ '" target="_blank" class="btn btn-primary">VER '+ coincidencias[0] +'</a>');
+								$('#botonesNavegacion').append('<a style="margin-left:10px" href="'+ urlEditar+ '"class="btn btn-success">EDITAR '+ coincidencias[0] +'</a>');
 							}
 						}
 			
@@ -81,10 +81,10 @@
 		</div>
 		
 		<div id="busquedaRara" class="row">
-			<form class="form col-md-offset-1">
+			<form class="form col-md-offset-1 col-sm-offset-1">
 			<input id="routeUrl" name="routeUrl" type="hidden" th:value="${route.baseUrl}"></input>
 				<div class="row">
-					<div id="colBusqueda" class="form-group col-md-9">
+					<div id="colBusqueda" class="form-group col-md-9 col-sm-11">
 						<label for="enfermedad"><strong>Búsqueda:</strong></label>
 						
 						<!-- AUTOCOMPLETE BUSCAR ENF RARAS -->					

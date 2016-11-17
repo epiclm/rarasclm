@@ -80,6 +80,7 @@
 	
 	<security:http>
 	
+		<security:intercept-url pattern="/**" requires-channel="https"/>
 		<security:intercept-url pattern="/" access="ROLE_USER" />
 		<security:intercept-url pattern="/regenerapass" access="ROLE_USER" />
 		<security:intercept-url pattern="/enfermedades/**" access="ROLE_USER" />

@@ -41,6 +41,7 @@ import es.jclm.cs.rarasclm.service.PacienteService;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 import es.jclm.cs.rarasclm.service.CasoRevisionService;
 import es.jclm.cs.rarasclm.util.MergeEntity;
+import es.jclm.cs.rarasclm.util.RarasClmConstantes;
 
 @Controller
 @RequestMapping("/casos/caso")
@@ -63,17 +64,12 @@ public class CasoController extends BaseController {
 	@Autowired
 	private CasoRevisionService casoRevisionService;
 	
-
 	@Autowired
 	public IBaseModel base;
 	
 	@Autowired
 	HttpServletRequest request;
 	
-	private static final String OBJETO_CASO_SESION = "caso";
-	private static final String OBJETO_PACIENTE_SESION = "paciente";
-	private static final String REVISADO_CASOS = "revisados_casos";
-	private static final String OBJETO_REVISIONES_POR_HACER_SESION = "revisados_porhacer";
 		
 	@Autowired
 	private EnfermedadRaraService enfermedadService;
@@ -93,10 +89,10 @@ public class CasoController extends BaseController {
 	// Página inicial del módulo
 	@RequestMapping(method = RequestMethod.GET)
 	public String inicioEnvio(Model model) {
-		if(request.getSession().getAttribute(OBJETO_CASO_SESION)==null) {
+		if(request.getSession().getAttribute(RarasClmConstantes.OBJETO_CASO_SESION)==null) {
 			return "casos/index-casos";
 		} else {
-			Caso c = (Caso)request.getSession().getAttribute(OBJETO_CASO_SESION);
+			Caso c = (Caso)request.getSession().getAttribute(RarasClmConstantes.OBJETO_CASO_SESION);
 			return String.format("redirect:/casos/caso/edit/%s",c.getIdCaso());
 		}
 	}
@@ -112,8 +108,8 @@ public class CasoController extends BaseController {
 	
 	@RequestMapping(value = "/nuevaBusqueda", method = RequestMethod.GET) 
 	public String nuevoPaciente() {
-		if(request.getSession().getAttribute(OBJETO_CASO_SESION)!=null) {
-			request.getSession().setAttribute(OBJETO_CASO_SESION, null);
+		if(request.getSession().getAttribute(RarasClmConstantes.OBJETO_CASO_SESION)!=null) {
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_CASO_SESION, null);
 		}
 		return "redirect:/casos/caso";
 	}
@@ -176,7 +172,7 @@ public class CasoController extends BaseController {
 				log.error(ex.getMessage());
 				mensaje.setTipo(MensajeTipo.ERROR);
 				mensaje.setMensaje(String.format("ERROR: %s",ex.getMessage()));
-				request.getSession().setAttribute("mensaje", mensaje);
+				request.getSession().setAttribute(RarasClmConstantes.OBJETO_MENSAJE_SESION, mensaje);
 			}
 			mensaje.setTipo(MensajeTipo.ERROR);
 			mensaje.setMensaje("ERROR: Debe indicar un código de Enfermedad Rara o un código CIE9MC o CIE10");
@@ -194,7 +190,7 @@ public class CasoController extends BaseController {
 				servicio.Guardar(caso);
 				mensaje.setTipo(MensajeTipo.OK);
 				mensaje.setMensaje(String.format("El caso %s se ha guardado correctamente",caso.getIdCaso()));
-				request.getSession().setAttribute("mensaje", mensaje);
+				request.getSession().setAttribute(RarasClmConstantes.OBJETO_MENSAJE_SESION,mensaje);
 			} catch (ServiceRarasCLMException ex) {
 				log.error(ex.getMessage());
 				mensaje.setTipo(MensajeTipo.ERROR);
@@ -221,9 +217,9 @@ public class CasoController extends BaseController {
 			caso = servicio.Buscar(id);
 			if(caso==null)
 				return "redirect:/casos/caso/";
-			request.getSession().setAttribute(OBJETO_CASO_SESION,caso);
-			request.getSession().setAttribute(OBJETO_PACIENTE_SESION, caso.getPaciente());
-			caso = (Caso)request.getSession().getAttribute(OBJETO_CASO_SESION);
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_CASO_SESION,caso);
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_PACIENTE_SESION, caso.getPaciente());
+			caso = (Caso)request.getSession().getAttribute(RarasClmConstantes.OBJETO_CASO_SESION);
 			model.addAttribute("caso", caso);
 		} catch (ServiceRarasCLMException ex) {
 			log.error(ex.getMessage(),ex);
@@ -275,7 +271,7 @@ public class CasoController extends BaseController {
 				casoRevisionService.Guardar(casoRevision);
 			}
 			
-			request.getSession().setAttribute(REVISADO_CASOS, true);
+			request.getSession().setAttribute(RarasClmConstantes.REVISADO_CASOS, true);
 				
 			//Esta acción genera un mensaje al usuario
 			MensajeResultado mensaje = new MensajeResultado();
@@ -283,7 +279,7 @@ public class CasoController extends BaseController {
 			mensaje.setMensaje(sb.toString());
 			request.getSession().setAttribute("mensaje",mensaje);
 			caso = servicio.Buscar(id);
-			request.getSession().setAttribute(OBJETO_CASO_SESION,caso);
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_CASO_SESION,caso);
 			
 		} catch (Exception ex) {
 			log.error(ex.getMessage(),ex);
@@ -312,17 +308,20 @@ public class CasoController extends BaseController {
 			
 			//Guardamos de nuevo el paciente en sesión para que refleje el cambio.
 			Paciente paciente = pacienteServicio.Buscar(caso.getPaciente().getIdPaciente());
-			request.getSession().setAttribute(OBJETO_PACIENTE_SESION,paciente);
-			request.getSession().setAttribute(OBJETO_CASO_SESION,null);	
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_PACIENTE_SESION,paciente);
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_CASO_SESION,null);	
 			
 			MensajeResultado mensaje = new MensajeResultado();
 			mensaje.setTipo(MensajeTipo.OK);
 			mensaje.setMensaje(sb.toString());
-			request.getSession().setAttribute("mensaje",mensaje);
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_MENSAJE_SESION,mensaje);
 				
 		} catch (Exception ex) {
 			log.error(ex.getMessage(),ex);
-			return null; //TO DO Mandar mensaje de error a la vista
+			MensajeResultado mensaje = new MensajeResultado();
+			mensaje.setTipo(MensajeTipo.ERROR);
+			mensaje.setMensaje(ex.getMessage());
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_MENSAJE_SESION,mensaje);
 		}
 		return "redirect:/pacientes/paciente/edit/"+ String.valueOf(idPaciente);
 	}

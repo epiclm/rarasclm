@@ -67,29 +67,39 @@ $(document).ready( function() {
 	  	});
 	
 	
-	$("input, select, textarea, select").change(function(objEvent) {
+	$("input, select, textarea, select, checkbox").change(function(objEvent) {
 		$(this).addClass("modificado");
 	});
 	
-	//Manejo del submit (evitamos un submit que no sea
-	//realizado mediante un click al botón correcto
+
 	$('#form-edit-caso').on('submit',function(e) {
 		if(!submitOkModificar && !submitOkBorrar)	{
 			e.preventDefault();
 		}
 	});
 	
-	$('#btnEnviar').on('click',function() {
-		submitOkModificar=true;
-	});
-	
+	//Evitamos submit por pulsar enter
+	$('#form-edit-caso').bind("keypress", function(e) {
+		  if (e.keyCode == 13) {               
+		    e.preventDefault();
+		    return false;
+		  }
+		});
+
 	//Cambiamos el action del formulario para que haga la acción borrar
 	$('#btnBorrar').on('click',function() {
 		submitOkBorrar=true;
+		submitOkModificar=false;
 		$('#form-edit-caso').attr('action','/'+contextApp+'/casos/caso/delete'+'/'+idCaso);
-		$('#form-edit-caso').submit();
-
 	});
+	
+	
+	//Cambiamos el action del formulario para que haga la acción borrar
+	$('#btnEnviar').on('click',function() {
+		submitOkModificar=true;
+		submitOkBorrar=false;
+		$('#form-edit-caso').attr('action','/'+contextApp+'/casos/caso/edit'+'/'+idCaso);
+	})
 	
 	//fin manejo del submit
 
@@ -155,22 +165,31 @@ $(document).ready( function() {
 			}
 		},
 		submitHandler: function(form) {
-			numElem = $('input.modificado, select.modificado, textarea.modificado').size();
-			if(numElem===0 && !submitOkBorrar) {
-				mensajeWarning("No hay ningún campo modificado");
-			} else if(submitOkBorrar) {
-				$("input,textarea,checkbox").each(function() {
-					$(this).removeClass('modificado');
-				});
-				if(confirm("¿Esta seguro que quiere eliminar el caso?"))
+			if(submitOkModificar) {
+				numElem = $('input.modificado, select.modificado, textarea.modificado, checkbox.modificado').size();
+				if(numElem==0) {
+					mensajeWarning("No hay ningún campo modificado");
+				} else {
+					//Si no se quitan las clase modificado no se envía el formulario
+					$("input,textarea,checkbox,select").each(function() {
+						$(this).removeClass('modificado');
+					});
 					form.submit();
-			} else {
-					//form.submit();
+				}
+			} else if(submitOkBorrar) {
+				//Previamente se ha cambiado la url de submit con el evento 
+				//on click de boton de borrar
+// 				$("input,textarea,checkbox").each(function() {
+// 					$(this).removeClass('modificado');
+// 				});
+// 				if(confirm("¿Esta seguro que quiere eliminar el caso?"))
+// 					form.submit();
+				mensajeWarning("Esta funcionalidad no está implementada al estar pendiente los requisitos.");
+				submitOkBorrar=false;
 			}
-			
 		},
 		highlight: function(element) {
-		        $(element).closest('.form-group').addClass('has-error');
+	        $(element).closest('.form-group').addClass('has-error');
 		  },
 	 	unhighlight: function(element) {
 		        $(element).closest('.form-group').removeClass('has-error');
@@ -191,13 +210,13 @@ $(document).ready( function() {
 	<div class="row">
 		<form id="form-edit-caso" class="form" method='POST'>
 			<input id="idCaso" name="idCaso" type="hidden" th:value="${caso.idCaso}"/>
+			<!--<div id="formulario-contenido" class="row">-->
 			<div class="row">
 				<h4 class="col-md-8 col-sm-8">Edición Caso <span th:text="|${caso.paciente.idPaciente} (${caso.numCaso})|"></span></h4>
 				<button class="col-md-2 col-sm-2 btn btn-success pull-right" id="btn-revision">Añadir a Revisión</button>				
 			</div>
-			<div id="formulario-contenido" class="row">
-			
 			<!-- CUADRO RESUMEN PACIENTE -->
+			<div id="formulario-contenido">
 			<div id="cuadro-resumen-paciente" class="row col-md-12 col-sm-12">
 				<div id="grupo-nombre-paciente" class="form-group col-md-4 col-sm-4">
 					<label class="control-label" for="l">Apellidos y Nombre:</label>
@@ -448,8 +467,7 @@ $(document).ready( function() {
 				  	<button id="btnBorrar" style="margin-right:20px" type="submit" class="btn btn-danger pull-right">BORRAR</button>
 				</div>
 			</div>
-			
-		   </div> <!-- Fin div formulario contenido -->
+		   </div><!-- Fin div formulario contenido -->
 		</form>
 	  </div>
 

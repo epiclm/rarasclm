@@ -12,255 +12,37 @@
 var routeBase  = /*[[${route.baseUrl}]]*/'';
 var contextApp = /*[[${baseModel.baseApp}]]*/'';  
 
-var showErrorModalOnStart = /*[[${resultado.error}]]*/'';
-var showSuccessModalOnStart = /*[[${resultado.success}]]*/'';
-
-var modificadosFormulariosEnfAsociadas = false;
-
-function mensajeError(mensaje) {
-	$('#mensajes').html('<div class="alert alert-error"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
-	$('#mensajes').modal('show');
-}
-
-function mensajeSuccess(mensaje) {
-	$('#mensajes').html('<div class="alert alert-success"><p>'+mensaje+'</p></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button></div>');
-	$('#mensajes').modal('show');
-}
-
-// function coloreaAsociacionesEnfermedades()
-// {
-// 	$(".selectTipoAsociacion").each(function() {
-// 			switch($(this).val())
-// 			{
-// 				case "0":
-// 					$(this).css("backgroundColor","#EEA");
-// 					break;
-// 				case "1":
-// 					$(this).css("backgroundColor","#CCF");
-// 					break;
-// 				default:
-// 					$(this).css("backgroundColor","#FFF");
-// 					break;
-// 			}
-// 	});
-// }
-	
-function borraEnfermedadAsociadaCIE9MC(accionUrl) {		
-	$.ajax({
-		method: "POST",
-		dataType : "json",
-		url : accionUrl,
-		}).done(function(respuesta,textStatus,jqXHR) {
-			if(respuesta.success)
-			{
-				id='#asociada-cie9mc-'+respuesta.id.replace('.','\\.');
-				el=$(id);
-				el.fadeOut( 1000, function() {
-				    $( this ).remove();
-				  });
-				mensajeSuccess(respuesta.mensaje);
-			}
-			if(respuesta.error)
-			{
-				mensajeError(respuesta.mensaje);
-			}
-		}).fail(function(jqXHR,textStatus,error) {
-			mensajeError("ERROR! respuesta HTTP: "+jqXHR.status+" "+jqXHR.statusText);
-	});
- }
-
 $(document)
 .ready(
 function() {
-
-	coloreaAsociacionesEnfermedades();
-	$(".selectTipoAsociacion").change(function(){
-		coloreaAsociacionesEnfermedades();
-	})
 	
-	var actualizar = false;
-	var showModal = showErrorModalOnStart | showSuccessModalOnStart;
-	
-	if(showModal) {
-		$('#mensajes').modal('show');
-	}
+	addMensanjesFuncionalidad();
 
 	if (CKEDITOR.env.ie && CKEDITOR.env.version < 9)
 		CKEDITOR.tools.enableHtml5Elements(document);
 
-	var editorElement = CKEDITOR.document.getById('notas');
-	CKEDITOR.replace(editorElement);
+	CKEDITOR.replace(editorEnfRara);
 	CKEDITOR.config.height = 250;
 	CKEDITOR.config.width = 'auto';
-	
-	
-	$(".formAsociaCIE9MC")
-	.on('submit', function(ev)
-		{
-		    ev.preventDefault();
-			$.ajax({
-				method: "POST",
-				dataType : "json",
-				url  : $(this).attr("action"),
-				data : $(this).serialize()
-				}).done(function(respuesta,textStatus,jqXHR) {
-					if(respuesta.success)
-					{
-						mensajeSuccess(respuesta.mensaje);
-					}
-					if(respuesta.error)
-					{
-						mensajeError(respuesta.mensaje);
-					}
-				}).fail(function(jqXHR,textStatus,error) {
-					mensajeError("ERROR! respuesta HTTP: "+jqXHR.status+" "+jqXHR.statusText);
-			});
-		});
-	var validator = $('#edit-enfrara')
-			.validate(
-					  {
-					   rules : {
-							literal : {
-								required : true,
-								minlength : 3
-							}
-						},
-						messages : {
-							literal : {
-								required :  "El literal de la enfermedad es necesario",
-								minlength : "El literal de la enfermedad no supera el tamaño mínimo"
-							}
-						},
-						highlight : function(element) {
-							$(element).closest(
-									'.control-group').addClass('error');
-						},
-						success : function(element) {
-							$(element).closest('.control-group').removeClass('error');
-							valor = $(element).parent().find('input').val();
-							if ($(element).parent().find('input').attr("id") != 'url') {
-								$(element).parent().find('input').val(valor.toUpperCase());
-							} else if (valor.trim().length > 0) {
-								if ((/^https?:\/\/[\S]*/.test(valor.trim()))) {
-									valor = $(element).parent().find('input').val();
-								} else {
-									$(element).parent().find('input').val('http://'+ valor);
-								}
-							}
-						},
-						submitHandler : function(form) {
-							if (!actualizar) {
-								$(".btn").attr("disabled",true);
-								form.submit();
-							}
-						},
-						errorClass : "error-label",
-						onkeyup : false,
-						onclick : false
-					});
-	
-	$('#borrar-btn').on('click',
-						function() {
-							alert("Esta funfición debe ser a nivel de rol de administración");
-							actualizar = true;
-					});
-	
-	$('.borrar-asociacion').on('click').on('click',
-						function() {
-							alert("Esta funfición debe ser a nivel de rol de administración");
-							actualizar = true;
-						});
-	
-	$('#ver-btn').on('click', function() {
-		actualizar = true;
-	});
-	
-	$('#guardar-btn').on('click', function() {
-		actualizar = false;
-		$('#edit-enfrara').submit();
-	});
-	
-	$('.submitCie9Mc').on('click', function() {
-		actualizar = false;
-	});
-	
-	$('.dropdown-toggle').dropdown();
-	
-	$('#btnModalEnfermedades').on('click',function() {
-		$('#modalEnfermedades').modal('show');		
-	});
-	
-	//Lista autocomplete de enfermedades cie9mc
-	$.ajax({ 
-		dataType : "json",
-		url : routeBase + "../cie9mc/" + "json",
-		contentType : "application/json; charset=utf-8",
-		success : function(data) {
-			enfermedades = data;
-			enfermedadesLiterales = $.map(
-					enfermedades, function(v) {
-						return v.cod + ' ' + v.literal;
-					});
-			$("#enfermedadCie9Autocomplete")
-			.autocomplete(
-				{
-					source : enfermedadesLiterales,
-					search : function(event, ui) {
 
-					},
-					select : function(event, ui) {
-						//Accion de seleccionar una enfermedad CIE9MC en el AutoComplete para asociar
-						//ui.item.value es el texto que aparece en el autocomplete seleccionado
-						base = /*[[|${route.baseUrl}addcie9mc/${enfermedadRaraModel.enfermedadRaraId}/|]]*/'';
-						$(location).attr('href',base + extraeCIE9mc(ui.item.value));
-					},
-					minLength : 3
-				});
-			
-	//Lista autocomplete de enfermedades cie10
-	$.ajax({
-		dataType : "json",
-		url : routeBase	+ "../cie10/" + "json",
-		contentType : "application/json; charset=utf-8",
-		success : function(data) {
-			enfermedades = data;
-			enfermedadesLiterales = $.map(
-					enfermedades,function(v) {
-						return v.cod + ' ' + v.literal;
-					});
-			$("#enfermedadCie10Autocomplete")
-			.autocomplete(
-				{
-					source : enfermedadesLiterales,
-					search : function(event,ui) {
-
-					},
-					select : function(event,ui) {
-						//Accion de seleccionar una enfermedad CIE10 en el AutoComplete para asociar
-						//ui.item.value es el texto que aparece en el autocomplete seleccionado
-						base = /*[[|${route.baseUrl}addcie10/${enfermedadRaraModel.enfermedadRaraId}/|]]*/'';
-						$(location).attr('href',base+ extraeCIE10(ui.item.value));
-					},
-					minLength : 3
-				});
-			if ($("#enfermedadCie10Autocomplete").val() != '') {
-				agregaBotonesEnlace($("#enfermedadCie10Autocomplete").val());
-			}
-		}
-	});
-
-	if ($("#enfermedadCie9Autocomplete").val() != '') {
-		agregaBotonesEnlace($("#enfermedadCie9Autocomplete").val());
-	}
-}
 });
-});
+
 /*]]>*/
 </script>
 </head>
 <body>
 	<div id="contenido" layout:fragment="content">
-	
+	 <div class="row">
+	 	<a th:href="|/${baseModel.baseApp}/enfermedad/enfrara|" style="margin-right:10px;" class="pull-right btn btn-success">Buscar otra Enfermedad</a>
+		<h4 class="col-md-12 col-sm-12" th:text="|${enfermedadRara.enfermedadRaraId} - ${enfermedadRara.literal}|"></h4>
 	</div>
+	<div class="row">
+		<form id="form-notas-enfRara" method="POST">
+			<input id="enfermedadRaraId" name="enfermedadRaraId" type="hidden" th:value="${enfermedadRara.enfermedadRaraId}"></input>
+			<textarea id="editorEnfRara" th:field="${enfermedadRara.notas}"></textarea>
+			<input style="margin-top:20px" type="submit" class="btn btn-primary pull-right" value="GUARDAR CAMBIOS"></input>
+		</form>
+	</div>
+  </div>
 </body>
 </html>

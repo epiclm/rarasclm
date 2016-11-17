@@ -107,9 +107,12 @@ $("#form-edit-paciente").validate({
 		$("#fallecidoFecha").attr("readonly",true);
 	
 	$("#fallecido").change(function() {
-		if($(this).val()==1)
+		if($(this).val()==1) {
 			$("#fallecidoFecha").attr("readonly",false);
 			$("#fallecidoFecha").focus()
+		} else {
+			$("#fallecidoFecha").attr("readonly",true);
+		}
 	});
 		
 	$("#provinciaResidencia").change(function() {
@@ -129,7 +132,6 @@ $("#form-edit-paciente").validate({
 		})
 	});
 })
-
 /*]]>*/
 </script>
 </head>
@@ -140,27 +142,26 @@ $("#form-edit-paciente").validate({
 			<input type="hidden" id="idPaciente" name="idPaciente" th:field="${paciente.idPaciente}"/>
 			<div class="row">	
 				<h4 class="col-md-6 col-sm-6" >Edición Paciente <span th:text="${paciente.idPaciente}"></span></h4>
-				<a class="btn btn-success pull-right col-md-2 col-sm-3" th:href="|/${baseModel.baseApp}/pacientes/paciente/nuevo|">Paciente Nuevo</a> 
-				<a style="margin-right:10px" class="btn btn-primary pull-right col-md-2 col-sm-3" th:href="|/${baseModel.baseApp}/pacientes/paciente/nuevaBusqueda|">Buscar otro paciente</a> 
-				
+				<a class="btn btn-success pull-right col-md-2 col-sm-2" th:href="|/${baseModel.baseApp}/pacientes/paciente/nuevo|">Paciente Nuevo</a> 
+				<a style="margin-right:10px" class="btn btn-primary pull-right col-md-2 col-sm-2" th:href="|/${baseModel.baseApp}/pacientes/paciente/nuevaBusqueda|">Buscar paciente</a> 
 			</div>
 			<div id="formulario-contenido">
 			<div class="row">
-				<div id="grupo-apellido01-paciente" class="form-group col-md-3 col-sm-3">
+				<div id="grupo-apellido01-paciente" class="form-group col-md-3 col-sm-4">
 					<label class="control-label" for="apellido01">1er Apellido:</label>
 					<input id="apellido01" class="form-control" name="apellido01" type="text" maxlength="65" th:value="${paciente.apellido01}" placeholder="1er apellido"/>
 				</div>
-				<div id="grupo-apellido02-paciente" class="form-group col-md-3 col-sm-3">	
+				<div id="grupo-apellido02-paciente" class="form-group col-md-3 col-sm-4">	
 					<label class="control-label" for="apellido02">2o Apellido:</label>
 					<input id="apellido02" class="form-control" name="apellido02" type="text" maxlength="65" th:value="${paciente.apellido02}" placeholder="2o apellido"/>
 				</div>
-				<div id="grupo-nombre-paciente" class="form-group col-md-3 col-sm-3">		
+				<div id="grupo-nombre-paciente" class="form-group col-md-3 col-sm-4">		
 					<label class="control-label" for="nombre">Nombre:</label>
 					<input id="nombre" class="form-control" name="nombre" type="text" maxlength="65" th:value="${paciente.nombre}" placeholder="nombre"/>
 				</div>
 			</div>
 			<div class="row">
-				<div  class="form-group col-md-3 col-sm-3">
+				<div  class="form-group col-md-3 col-sm-4">
 					<label class="control-label" for="cip">CIP:</label>
 					<input  class="form-control" id="cip" name="cip" type="text" maxlength="16" th:value="${paciente.cip}"/>
 				</div>
@@ -253,7 +254,7 @@ $("#form-edit-paciente").validate({
 				</div>
 			</div>
 			<div class="row">
-				<p><b>CASOS:</b></p>
+				<p style="margin-top:15px"><b>CASOS:</b></p>
 				<ul th:each="caso : ${paciente.casos}">
 					<li> <a  th:href="|/${baseModel.baseApp}/casos/caso/edit/${caso.idCaso}|" th:text="|CASO ${caso.numCaso} - ${caso.codCie9mc} ${caso.codCie10} ${caso.literal}|"></a></li>
 				</ul>

@@ -20,8 +20,6 @@ import es.jclm.cs.rarasclm.entities.UserRarasClm;
 @Service
 public class CasoRevisionService extends BaseCRUDService<CasoRevisionUsuario, CasoRevisionUsuarioId>{
 	
-	private static final long serialVersionUID = 3275353768970476882L;
-	
 	private static final Logger log = LoggerFactory.getLogger(CasoRevisionService.class);
 	
 	@Autowired 

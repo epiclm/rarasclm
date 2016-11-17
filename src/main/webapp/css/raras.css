@@ -1,11 +1,16 @@
 @CHARSET "UTF-8";
 
+/*Overrides bootstrap*/
 
-label {
-
+.pager {
+	margin: 0px !important;
 }
 
- .control-label {
+.tablesorter-blue {
+	margin-top: 0px !important;
+}
+
+.control-label {
 	font-family: sans-serif;
 	font-size: 11px;
 	font-style: italic;
@@ -81,7 +86,7 @@ h5 {
 }
 
 .cip {
-	font-family: monospace;
+	font-family: monospace !important;
 	font-weight: bold;
 }
 
@@ -268,10 +273,10 @@ li.rclmEnfermedadModal p{
 	background-color: #f5f5f5 !important;
 }
 
-#grupo-acciones-bajo {
-	padding-top: 30px;
-	padding-bottom: 10px;
-}
+/* #grupo-acciones-bajo { */
+/* 	padding-top: 30px; */
+/* 	padding-bottom: 10px; */
+/* } */
 
 
 
@@ -461,6 +466,32 @@ input[type=date]  {
 	padding: 10px;
 }
 
-#formulario-contenido div.row:last-child{
-	padding: 10px;
+/****************************/
+/* TODOS LOS FORMULARIOS    */
+
+form div.row:last-child{
+	padding-top: 30px;
+	padding-bottom: 20px;
 }
+
+form div.row:last-child button{
+	margin-right: 10px;
+}
+
+
+/****************************/
+/*ADMIN ENFERMEDADES        */
+
+#tabla-enfermedades tbody td {
+	font-size: 12px;
+	padding: 4px !important;
+}
+
+/****************************/
+/*USUARIO                   */
+#historicoRevisiones tbody td {
+	font-size: 12px;
+	padding: 4px !important;
+}
+
+

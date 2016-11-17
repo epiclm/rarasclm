@@ -16,8 +16,8 @@
 	</ul>
 	<ul class="nav navbar-nav navbar-right">
 	  <li>
-		<a href="usuario" th:if="${route.modulo}=='usuario'" class="active">Usuario</a>
-		<a href="usuario" th:if="${route.modulo}!='usuario'">Usuario</a>
+		<a th:href="|/${baseModel.baseApp}/usuario|" th:if="${route.modulo}=='usuario'" class="active">Usuario</a>
+		<a th:href="|/${baseModel.baseApp}/usuario|" th:if="${route.modulo}!='usuario'">Usuario</a>
 	  </li>
 	  <li>
 	  	<a th:href="|/${baseModel.baseApp}/logout|">Salir&nbsp;<i class="glyphicon glyphicon-log-out pull-right"></i></a>

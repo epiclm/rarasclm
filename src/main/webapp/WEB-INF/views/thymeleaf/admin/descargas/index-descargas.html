@@ -10,7 +10,11 @@
 <body>
 	<div id="contenido" layout:fragment="content">
 		<ol th:replace="fragment/adminBarra"></ol>
-		<h2>Descargas!</h2>
+		<form>
+			<div class="row">
+				<a class="btn btn-success" th:href="|/${baseModel.baseApp}/admin/descargas/datosExplotacion|">Bajar fichero de explotación</a>
+			</div>
+		</form>
 	</div>
 </body>
 </html>

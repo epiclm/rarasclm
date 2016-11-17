@@ -3,14 +3,98 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout/rarasClmLayout">
 <head>
+<link rel="stylesheet" th:href="@{/bower_components/jquery.tablesorter/dist/css/jquery.tablesorter.pager.min.css}"/>
+<link rel="stylesheet" th:href="@{/bower_components/jquery.tablesorter/dist/css/theme.blue.min.css}"/>
+<script type="text/javascript" th:src="@{/bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.min.js}"></script>
+<script type="text/javascript" th:src="@{/bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.widgets.min.js}"></script>
+<script type="text/javascript" th:src="@{/bower_components/jquery.tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
+$(document)
 
+/*<![CDATA[*/
+.ready(function() {	
+	addMensanjesFuncionalidad();
+	//Adaptacion de un ejemplo http://jsfiddle.net/Mottie/wty134u7/
+	$('#tabla-enfermedades').tablesorter({
+		theme:'blue',
+		widthFixed: true,
+		 initWidgets: true,
+		 widgets: ['zebra','resizable','filter'],
+		 widgetOptions: {
+		      resizable_addLastColumn : true,
+		      filter_external : '.search',
+		      // add a default type search to the first name column
+		      filter_defaultFilter: { 1 : '~{query}' },
+		      // include column filters
+		      filter_columnFilters: true,
+		      filter_placeholder: { search : 'Filtar...' },
+		      filter_saveFilters : true,
+		      filter_reset: '.reset'
+		    }
+	}).tablesorterPager({
+	    container: $(".pager"),
+	    ajaxUrl: null,
+	    output: 'de {startRow} a {endRow} (TOTAL: {totalRows})',
+	    updateArrows: true,
+	    page: 0,
+	    size: 10,
+	    fixedHeight: true,
+	    removeRows: false,
+	    cssNext: '.next',
+	    cssPrev: '.prev',
+	    cssFirst: '.first',
+	    cssLast: '.last',
+	    cssGoto: '.gotoPage',
+	    cssPageDisplay: '.pagedisplay',
+	    cssPageSize: '.pagesize',
+	    cssDisabled: 'disabled'
+	});
+})
+/*]]>*/
 </script>
 </head>
 <body>
 	<div id="contenido" layout:fragment="content">
 		<ol th:replace="fragment/adminBarra"></ol>
-		<h2>Enfermedades!</h2>
+		<div class="row barra-admin">
+			<a class="btn btn-primary pull-right" th:href="@{/admin/enfermedades/enfrara/nueva}">Nueva Enfermedad</a>
+		</div>
+		<div id="paginador" class="pager"> 
+	        <button class="first"><i class="glyphicon glyphicon-fast-backward"></i></button> 
+	        <button class="prev"><i class="glyphicon glyphicon-step-backward"></i></button> 
+	        <span class="pagedisplay"></span> <!-- this can be any element, including an input --> 
+	        <button class="next"><i class="glyphicon glyphicon-step-forward"></i></button> 
+	        <button class="last"><i class="glyphicon glyphicon-fast-forward"></i></button> 
+	        <select class="pagesize" title="Select page size"> 
+	            <option selected="selected" value="10" style="width:20px">10</option> 
+	            <option value="20">20</option> 
+	            <option value="30">30</option> 
+	            <option value="40">40</option> 
+	        </select>						  
+		</div>
+		<table id="tabla-enfermedades" class="table">
+			<thead>
+				<tr>
+					<td>ID</td>
+					<td>Literal</td>
+					<td>Descrita</td>
+					<td>CIE9MC</td>
+					<td>CIE10</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="enf : ${allRaras}">
+					<td><a th:href="|/${baseModel.baseApp}/admin/enfermedades/enfrara/edit/${enf.enfermedadRaraId}|" th:text="${enf.enfermedadRaraId}"></a></td>
+					<td th:text="${enf.literal}"></td>
+					<td>
+						<span th:if="${enf.notas==null or enf.notas.equals('')}">NO</span>
+						<span th:if="${enf.notas!=null and not enf.notas.equals('')}">SI</span>
+					</td>
+					<td th:text="${enf.cie9mc}"></td>
+					<td th:text="${enf.cie10}"></td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </body>
 </html>

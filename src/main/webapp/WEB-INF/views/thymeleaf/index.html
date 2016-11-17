@@ -5,10 +5,9 @@
 <head>
 <link rel="stylesheet" href="bower_components/jquery.tablesorter/dist/css/jquery.tablesorter.pager.min.css"/>
 <link rel="stylesheet" href="bower_components/jquery.tablesorter/dist/css/theme.blue.min.css"/>
-<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
-<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
-
+	<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.min.js"></script>
+	<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/jquery.tablesorter.widgets.min.js"></script>
+	<script type="text/javascript" src="bower_components/jquery.tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
            
@@ -113,12 +112,16 @@
 <body>
 	<div id="contenido"  layout:fragment="content">	
 		<div class="row">
+			<p class="col-md-12" th:text="|${userCLM.nombre} ${userCLM.apellido01} ${userCLM.apellido02}, último acceso ${#dates.format(userCLM.ultimoAcceso,'dd/MM/yyyy  HH:mm')}|"></p>
+		</div>
+		<div class="row">
 			<div class="col-md-12">
+			<h4>Casos por revisar:</h4>
 			<div th:if="${revisionesPorHacer==null or #lists.isEmpty(revisionesPorHacer)}">
 				<p style="padding: 20px 10px 10px 15px">No hay revisiones de casos.</p>
 			</div>
 			<div th:if="${not #lists.isEmpty(revisionesPorHacer)}">
-				<div id="tabla-revisiones-contenedor">
+				<div id="tabla-revisiones-contenedor" class="row">
 					<div id="paginador" class="pager"> 
 				        <button class="first"><i class="glyphicon glyphicon-fast-backward"></i></button> 
 				        <button class="prev"><i class="glyphicon glyphicon-step-backward"></i></button> 

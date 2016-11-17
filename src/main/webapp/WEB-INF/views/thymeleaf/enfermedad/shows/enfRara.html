@@ -1,9 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout/rarasClmLayout">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title th:text="|${enfermedadRaraModel.literal} -(${enfermedadRaraModel.enfermedadRaraId})|">CIE9MC FICHA XXX</title>
+<title th:text="|${enfermedadRara.literal} -(${enfermedadRara.enfermedadRaraId})|"> ENFERMEDAD RARA</title>
+<link type="text/css" th:href="@{/bower_components/normalize-css/normalize.css}" rel="stylesheet" />
+<link type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.css}" rel="stylesheet" />
+<link type="text/css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap-theme.css}" rel="stylesheet"/>
+<link type="text/css" th:href="@{/bower_components/jquery-ui/themes/redmond/jquery-ui.min.css}" rel="stylesheet"/>
+   
+<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+
+<!--<link th:href="@{/assets/js/google-code-prettify/prettify.css}" rel="stylesheet"/>-->
+<link type="text/css" th:href="@{/css/raras.css}" rel="stylesheet" />
+         
+<script type="text/javascript" th:src="@{/bower_components/jquery/dist/jquery.min.js}" ></script>
+<script type="text/javascript" th:src="@{/bower_components/jquery-validate/dist/jquery.validate.min.js}" ></script>
+<script type="text/javascript" th:src="@{/bower_components/jquery-ui/jquery-ui.min.js}" ></script>
+<script type="text/javascript" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>  
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
         var routeBase  = /*[[${route.baseUrl}]]*/'';
@@ -12,35 +27,7 @@
 		var enfermedades;
 		var enfermedadesLiterales;
 		$(document).ready(function() {
-			$('.dropdown-toggle').dropdown();
-			$('.close').on('click' , function() { 
-				  $('#modalEnf').modal('hide');
-				});
-			$.ajax({ //Lista autocomplete de enfermedades raras
-				dataType : "json",
-				url :  routeBase + "json",
-				contentType : "application/json; charset=utf-8",
-				success : function(data) {
-					enfermedades = data;
-					enfermedadesLiterales = $.map(enfermedades, function(v) {
-						return  v.enfermedadRaraId + ' ' +  v.literal;
-					});
-					$("#enfermedadAutocomplete").autocomplete({
-						source : enfermedadesLiterales,
-						search : function(event, ui) {
-							
-						},
-						select : function(event, ui) {
-							//agregaBotonesEnlace(ui.item.value);
-						},
-						minLength : 3
-					});
-					if($("#enfermedadAutocomplete").val()!='')
-					{
-						agregaBotonesEnlace($("#enfermedadAutocomplete").val());
-					}
-				}
-			});
+
 		});
  /*]]>*/
 </script>
@@ -48,10 +35,15 @@
 <body>
 	<div id="contenido"  class="container" layout:fragment="content">
 	  <div class="row">
-	  	<a th:href="|/${baseModel.baseApp}/enfermedad/enfrara|" class="pull-right col-md-3 col-sm-3 btn btn-primary">Buscar otra Enfermedad</a>
+	  	<a th:href="|/${baseModel.baseApp}/enfermedad/enfrara/edit/${enfermedadRara.enfermedadRaraId}|" class="pull-right  btn btn-success">Editar</a>
+	  	<a th:href="|/${baseModel.baseApp}/enfermedad/enfrara|" style="margin-right:10px;" class="pull-right btn btn-primary">Buscar otra Enfermedad</a>
 	  </div>
-	  <div class="row"></div>
-		<h4 class="col-md-11 col-sm-12" th:text="|${enfermedadRaraModel.enfermedadRaraId} - ${enfermedadRaraModel.literal}|"></h4>
+	  <div class="row">
+		<h4 style="padding-left:0;margin-left:0" class="col-md-11 col-sm-12" th:text="|${enfermedadRara.enfermedadRaraId} - ${enfermedadRara.literal}|"></h4>
 	  </div>
+	  <div class="row" th:utext="${enfermedadRara.notas}">
+	  	
+	  </div>
+	</div>
 </body>
 </html>

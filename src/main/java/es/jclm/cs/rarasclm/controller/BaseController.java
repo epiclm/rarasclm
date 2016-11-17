@@ -27,6 +27,7 @@ import es.jclm.cs.rarasclm.entities.RouteParameters;
 import es.jclm.cs.rarasclm.entities.UserRarasClm;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 import es.jclm.cs.rarasclm.service.UsuarioService;
+import es.jclm.cs.rarasclm.util.RarasClmConstantes;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -34,7 +35,6 @@ import es.jclm.cs.rarasclm.service.UsuarioService;
  */
 public class BaseController {
 	
-	public static final String OBJETO_MENSAJE_SESION = "mensaje";
 	
 	private static final Logger log = LoggerFactory.getLogger(BaseController.class);
 
@@ -65,7 +65,7 @@ public class BaseController {
 	public IBaseModel getBaseModel(HttpServletRequest request) {
 		//para enviar la baseApp o contextPath a la vista
 		String baseApp = request.getContextPath().replace("/", "");
-		MensajeResultado mensaje = (MensajeResultado)request.getSession().getAttribute(OBJETO_MENSAJE_SESION);
+		MensajeResultado mensaje = (MensajeResultado)request.getSession().getAttribute(RarasClmConstantes.OBJETO_MENSAJE_SESION);
 		base.setMensaje(mensaje);
 		base.setBaseapp(baseApp);
 		return base;
@@ -163,7 +163,7 @@ public class BaseController {
 	@RequestMapping(value = "/resetMensaje", method = RequestMethod.POST)
 	public @ResponseBody String resetMensaje() {
 		try {
-			request.getSession().setAttribute("mensaje", null);
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_MENSAJE_SESION, null);
 			return "ok";
 		} catch(Exception ex) {
 			return "ko";

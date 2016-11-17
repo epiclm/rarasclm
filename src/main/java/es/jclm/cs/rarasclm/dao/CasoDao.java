@@ -301,9 +301,9 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 				if (addCie9)
 					sHqlCie9mc = "(c.codCie9mc = :cie9) ";
 				if (addCie10)
-					sHqlCie10 = "(c.codCie10 = :cie10) ";
+					sHqlCie10  = "(c.codCie10 = :cie10) ";
 				if (addEnfRaraClm)
-					sHqlEnfRaraClm = "(c.codEnfRara = :enfRara) ";
+					sHqlEnfRaraClm = "(c.enfermedadRara.enfermedadRaraId = :enfRara) ";
 				if (addCie9 && !addCie10 && !addEnfRaraClm) {
 					sHql += "and " + sHqlCie9mc;
 				} else if (!addCie9 && addCie10 && !addEnfRaraClm) {

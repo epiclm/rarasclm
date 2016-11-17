@@ -12,8 +12,8 @@
 /*<![CDATA[*/
 var routeBase  = /*[[${route.baseUrl}]]*/'';
 var contextApp = /*[[${baseModel.baseApp}]]*/'';
-var municipio = /*[[${busqueda.municipio}]]*/'';
-var provincia = /*[[${busqueda.provincia}]]*/'';
+var municipio =  /*[[${busqueda.municipio}]]*/'';
+var provincia =  /*[[${busqueda.provincia}]]*/'';
 var enfermedades;
 var enfermedadesLiterales;
 
@@ -95,7 +95,7 @@ $(document)
 	    $(this).toggleClass('hover');
 	});
 	
-	
+
 	//Adaptacion de un ejemplo http://jsfiddle.net/Mottie/wty134u7/
 	$('#tabla-resultados').tablesorter({
 		theme:'blue',
@@ -390,11 +390,11 @@ $(document)
 					<div class="col-md-offset-1 col-sm-offset-1">
 						<form id="form-edit-paciente" class="form-edit-busqueda" method='POST'>
 							<div class="row">
-								<div id="grupo-apellido01-paciente" class="form-group col-md-3 col-sm-3">
+								<div id="grupo-apellido01-paciente" class="form-group col-md-3 col-sm-4">
 									<label class="control-label" for="apellido01">1er Apellido:</label>
 									<input id="apellido01" class="form-control" name="apellido01" type="text"  th:value="${busqueda.apellido01}" placeholder="1er Apellido"/>
 								</div>
-								<div id="grupo-apellido02-paciente" class="form-group col-md-3 col-sm-3">	
+								<div id="grupo-apellido02-paciente" class="form-group col-md-3 col-sm-4">	
 									<label class="control-label" for="apellido02">2o Apellido:</label>
 									<input id="apellido02" class="form-control" name="apellido02" type="text" th:value="${busqueda.apellido02}" placeholder="2o Apellido"/>
 								</div>
@@ -404,7 +404,7 @@ $(document)
 								</div>
 							</div>
 							<div class="row">
-								<div  class="form-group col-md-3 col-sm-3">
+								<div  class="form-group col-md-3 col-sm-4">
 									<label class="control-label" for="cip">CIP:</label>
 									<input  class="form-control" id="cip" name="cip" type="text" maxlength="16" th:value="${busqueda.cip}" placeholder="CIP"/>
 								</div>

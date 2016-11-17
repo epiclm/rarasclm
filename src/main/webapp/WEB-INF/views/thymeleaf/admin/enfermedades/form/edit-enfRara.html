@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/rarasClmLayout">
+<head>
+<title>EDITAR enfRaras</title>
+<script type="text/javascript" th:src="@{/js/rarasclm-fauxiliares.js}"></script>
+
+
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var routeBase  = /*[[${route.baseUrl}]]*/'';
+var contextApp = /*[[${baseModel.baseApp}]]*/'';  
+
+$(document)
+.ready(
+function() {
+	
+	addMensanjesFuncionalidad();
+
+	if (CKEDITOR.env.ie && CKEDITOR.env.version < 9)
+		CKEDITOR.tools.enableHtml5Elements(document);
+
+	CKEDITOR.replace(editorEnfRara);
+	CKEDITOR.config.height = 250;
+	CKEDITOR.config.width = 'auto';
+
+});
+
+/*]]>*/
+</script>
+</head>
+<body>
+	<div id="contenido" layout:fragment="content">
+	<ol th:replace="fragment/adminBarra"></ol>
+	<div class="row barra-admin">
+		<a class="btn btn-warning" th:href="@{/admin/enfermedades}"><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Volver</a>
+		<a class="btn btn-primary pull-right" th:href="@{/admin/enfermedades/enfrara/nueva}">Nueva Enfermedad</a>
+	</div>
+	<div class="row">
+		<h4 class="col-md-12 col-sm-12" th:text="|${enfermedadRara.enfermedadRaraId} - ${enfermedadRara.literal}|"></h4>
+	</div>
+	<div class="row">
+		<form id="form-notas-enfRara" method="POST">
+		<div id="campos" class="row">
+			<input id="enfermedadRaraId" name="enfermedadRaraId" type="hidden" th:value="${enfermedadRara.enfermedadRaraId}"></input>
+			<div id="campos-enfermedad-rara-literal" class="row">
+				<div id="grupo-nombre-paciente" class="form-group col-md-9 col-sm-10">
+					<label class="control-label" for="literal">Literal:</label>
+					<input type="text" id="literal" class="form-control"  th:field="${enfermedadRara.literal}" placeholder="Literal"></input>
+				</div>
+			</div>
+			<div id="campos-enfermedad-rara-literal" class="row">
+				<div id="grupo-nombre-paciente" class="form-group col-md-2 col-sm-3">
+					<label class="control-label" for="literal">CIE9MC:</label>
+					<input type="text" id="literal" name="cie9mc"  maxlength="6"  class="form-control" th:field="${enfermedadRara.cie9mc}" placeholder="CIE9MC"></input>
+				</div>
+				<div id="grupo-nombre-paciente" class="form-group col-md-2 col-sm-3">
+					<label class="control-label" for="literal">CIE10:</label>
+					<input type="text" id="literal"  name="cie10"  maxlength="5"  class="form-control"  th:field="${enfermedadRara.cie10}" placeholder="CIE10"></input>
+				</div>
+			</div>
+		<div class="row">
+			<textarea id="editorEnfRara" name="notas" th:field="${enfermedadRara.notas}"></textarea>
+			<input style="margin-top:20px" type="submit" class="btn btn-primary pull-right" value="GUARDAR CAMBIOS"></input>
+		</div>
+	    </div>
+		</form>
+	</div>
+  </div>
+</body>
+</html>

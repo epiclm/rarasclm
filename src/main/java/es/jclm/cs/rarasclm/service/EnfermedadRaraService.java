@@ -51,12 +51,13 @@ public class EnfermedadRaraService extends BaseCRUDService<EnfermedadRara,String
 	}
 
 	
-	public void save(EnfermedadRara enf) {
+	public void save(EnfermedadRara enf)  throws ServiceRarasCLMException {
 		try {
 			dao.update(enf);
 			actualizaCache(enf.getEnfermedadRaraId());
 		} catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
+			log.error(ex.getMessage());
+			throw new ServiceRarasCLMException(ex);
 		}
 	}
 

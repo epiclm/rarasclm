@@ -1,5 +1,7 @@
 package es.jclm.cs.rarasclm.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import es.jclm.cs.rarasclm.entities.AccionResultado;
+import es.jclm.cs.rarasclm.entities.CasoRevisionUsuario;
 import es.jclm.cs.rarasclm.entities.CasoRevisionUsuarioId;
 import es.jclm.cs.rarasclm.entities.UserRarasClm;
 import es.jclm.cs.rarasclm.service.CasoRevisionService;
@@ -96,6 +99,22 @@ public class UsuarioController extends BaseController {
 			log.error(ex.getMessage(),ex);
 		}
 		return resultado;
+	}
+	
+	
+	@RequestMapping(value="/ultimasrevisiones")
+	public String ultimasRevisones(Model model) {
+		UserRarasClm user = (UserRarasClm)model.asMap().get("userCLM");
+		AccionResultado resultado = (AccionResultado)model.asMap().get("resultado");
+		try {
+			List<CasoRevisionUsuario> revisionesHechas = revisionService.getRevisionesHechas(user.getUsername(), 100, 1);
+			model.addAttribute("historico",revisionesHechas);
+		} catch(Exception ex) {
+			resultado.setError(true);
+			resultado.setMensaje(ex.getMessage());
+			log.error(ex.getMessage(),ex);
+		}
+		return "usuario/index-usuario";
 	}
 
 
