@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.jclm.cs.rarasclm.dao.EnfermedadRaraCie10Dao;
-import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie10;
 import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
+import es.jclm.cs.rarasclm.util.DatosAuxiliaresCacheados;
 
 
 // TODO: Auto-generated Javadoc

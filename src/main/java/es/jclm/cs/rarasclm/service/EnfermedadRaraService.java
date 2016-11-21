@@ -13,10 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.jclm.cs.rarasclm.dao.EnfermedadRaraDao;
-import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
-import es.jclm.cs.rarasclm.entities.Hospital;
+import es.jclm.cs.rarasclm.util.DatosAuxiliaresCacheados;
 
 
 // TODO: Auto-generated Javadoc

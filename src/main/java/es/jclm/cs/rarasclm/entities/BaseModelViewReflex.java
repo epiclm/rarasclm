@@ -15,6 +15,7 @@ import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.controller.BaseController;
 import es.jclm.cs.rarasclm.util.ClassFinder;
+import es.jclm.cs.rarasclm.util.DatosAuxiliaresCacheados;
 
 public class BaseModelViewReflex implements IBaseModel {
 

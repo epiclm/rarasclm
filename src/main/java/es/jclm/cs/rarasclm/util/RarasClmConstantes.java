@@ -9,4 +9,6 @@ public class RarasClmConstantes {
 	public static final String OBJETO_PACIENTE_PRE_SESSION        = "paciente-pre";
 	public static final String OBJETO_PACIENTE_NUEVO_SESSION      = "paciente-nuevo";
 	public static final String OBJETO_ENFRARA_SESION              = "enfermedadRara";
+	public static final String ARCHIVO_PROPIEDADES 			 	  = "rarasclm.properties";
+	public static final String DIR_ARCHIVO_PROPIEDADES			  = "";
 }

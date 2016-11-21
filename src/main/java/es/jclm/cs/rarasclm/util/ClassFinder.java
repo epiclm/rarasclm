@@ -9,8 +9,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
-
 public class ClassFinder {
 
 	static Log log = LogFactory.getLog(ClassFinder.class.getName());

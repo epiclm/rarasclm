@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie10;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
 import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
@@ -31,17 +30,16 @@ import es.jclm.cs.rarasclm.service.EnfermedadRaraCie9mcService;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
 import es.jclm.cs.rarasclm.service.HospitalService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
+import es.jclm.cs.rarasclm.util.DatosAuxiliaresCacheados;
+import es.jclm.cs.rarasclm.util.RarasClmConstantes;
 
 
 // TODO: Auto-generated Javadoc
 public class DataContextRarasClmAppListener implements ApplicationListener<ContextRefreshedEvent> {
 
 	static Log log = LogFactory.getLog(DataContextRarasClmAppListener.class.getName());
-	
-	static String ARCHIVO_PROPIEDADES = "rarasclm.properties";
+		
 	String DIR_PROPIEDADES = "";
-	
-	//String ARCHIVOS_PROPIEDADES="";
 	
 	@Autowired
 	private DatosAuxiliaresCacheados cache;
@@ -109,16 +107,16 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 			
 			//Carga el archivo de propiedades
 			InputStream inputStream;
-			if(DIR_PROPIEDADES.equals("")) {
-				inputStream = getClass().getClassLoader().getResourceAsStream(ARCHIVO_PROPIEDADES);		
+			if(!DIR_PROPIEDADES.equals("")) {
+				inputStream = getClass().getClassLoader().getResourceAsStream(RarasClmConstantes.ARCHIVO_PROPIEDADES);		
 				if (inputStream != null) {
 					cache.getPropiedades().load(inputStream);
 					log.info(String.format("Leído el archivo de propiedades por defecto"));
 				} else {
-					throw new FileNotFoundException("El archivo '" + ARCHIVO_PROPIEDADES + "' no se encuentra");
+					throw new FileNotFoundException("El archivo '" + RarasClmConstantes.ARCHIVO_PROPIEDADES + "' no se encuentra");
 				} 
 			} else {
-				String s_archivo_propiedades = String.format("%s%s%s",DIR_PROPIEDADES,File.separator,ARCHIVO_PROPIEDADES);
+				String s_archivo_propiedades = String.format("%s%s%s",RarasClmConstantes.DIR_ARCHIVO_PROPIEDADES,File.separator,RarasClmConstantes.ARCHIVO_PROPIEDADES);
 				try { 
 					inputStream = new FileInputStream(s_archivo_propiedades);
 					cache.getPropiedades().load(inputStream);
@@ -127,7 +125,6 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 					throw new FileNotFoundException("El archivo '" + s_archivo_propiedades + "' no se encuentra");
 				} 
 			}
-			
 			
 			cache.setNumMaxResultadosBusqueda(300);
 			if(cache.getPropiedades().getProperty("rarasclm.max_resultados_busqueda")!=null)

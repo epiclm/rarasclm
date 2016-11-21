@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.jclm.cs.rarasclm.dao.HospitalDao;
-import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.Hospital;
+import es.jclm.cs.rarasclm.util.DatosAuxiliaresCacheados;
 
 @Service
 public class HospitalService extends BaseCRUDService<Hospital,String>{

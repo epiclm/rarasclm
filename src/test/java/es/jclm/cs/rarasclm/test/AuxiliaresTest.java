@@ -8,19 +8,16 @@ import java.util.Date;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.annotation.Order;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
+import es.jclm.cs.rarasclm.util.DatosAuxiliaresCacheados;
+
 import org.junit.Assert;
 
-@ComponentScan(basePackages={"es.jclm.cs.rarasclm.dao"})
-@ContextConfiguration(locations = "file:src/test/config/root-context.xml")
-@RunWith(SpringJUnit4ClassRunner.class)
-@Order(4)
+
 public class AuxiliaresTest {
 
 	public AuxiliaresTest() {

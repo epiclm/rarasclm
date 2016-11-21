@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 import es.jclm.cs.rarasclm.dao.MunicipiosDao;
 import es.jclm.cs.rarasclm.dao.ProvinciasDao;
-import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.Municipio;
 import es.jclm.cs.rarasclm.entities.Provincia;
+import es.jclm.cs.rarasclm.util.DatosAuxiliaresCacheados;
 
 
 @Service

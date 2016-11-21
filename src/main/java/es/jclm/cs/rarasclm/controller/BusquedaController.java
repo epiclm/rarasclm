@@ -17,7 +17,6 @@ import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.dao.CasoDao;
 import es.jclm.cs.rarasclm.entities.BusquedaModelView;
 import es.jclm.cs.rarasclm.entities.Caso;
-import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.MensajeResultado;
 import es.jclm.cs.rarasclm.entities.MensajeTipo;
 import es.jclm.cs.rarasclm.entities.UserRarasClm;
@@ -27,6 +26,7 @@ import es.jclm.cs.rarasclm.service.CasoService;
 import es.jclm.cs.rarasclm.service.LocalizacionesService;
 import es.jclm.cs.rarasclm.service.PacienteService;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
+import es.jclm.cs.rarasclm.util.DatosAuxiliaresCacheados;
 
 @Controller
 @RequestMapping("/busqueda")

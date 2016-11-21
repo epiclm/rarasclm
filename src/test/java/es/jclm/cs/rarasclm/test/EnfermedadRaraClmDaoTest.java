@@ -1,0 +1,38 @@
+package es.jclm.cs.rarasclm.test;
+
+import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.annotation.Order;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import es.jclm.cs.rarasclm.dao.EnfermedadRaraDao;
+import es.jclm.cs.rarasclm.entities.EnfermedadRara;
+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+//@WebAppConfiguration
+@ContextConfiguration(locations = "file:src/test/resources/root-context.xml")
+@Order(3)
+public class EnfermedadRaraClmDaoTest {
+	
+	@Autowired
+	EnfermedadRaraDao dao;
+	
+	public EnfermedadRaraClmDaoTest() {
+		System.out.println("EnfermedadDaoTest");
+	}
+	
+	@Test
+	public void EnfermedadRaraListar()
+	{
+		List<EnfermedadRara> l = dao.getAllEnfermedadesRaras();
+		System.out.println(l.size());
+	}
+}

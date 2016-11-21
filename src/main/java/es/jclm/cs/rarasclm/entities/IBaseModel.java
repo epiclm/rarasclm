@@ -1,5 +1,7 @@
 package es.jclm.cs.rarasclm.entities;
 
+import es.jclm.cs.rarasclm.util.DatosAuxiliaresCacheados;
+
 public interface IBaseModel {
 
 	String getBaseapp();

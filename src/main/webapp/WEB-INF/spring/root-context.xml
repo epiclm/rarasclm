@@ -18,7 +18,7 @@
 	<bean id="rarasClmListener"
 		class="es.jclm.cs.rarasclm.listeners.DataContextRarasClmAppListener"></bean>
 	<bean id="datosAuxiliares"  
-		class="es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados"></bean>
+		class="es.jclm.cs.rarasclm.util.DatosAuxiliaresCacheados"></bean>
 	<bean id="baseModelView"    
 		class="es.jclm.cs.rarasclm.entities.BaseModelViewReflex"></bean>
 	<bean id="mySuccessAuthenticationHandler" 
@@ -52,8 +52,6 @@
 		 <property name="jndiName" value="java:comp/env/jdbc/rarasclmDS" />
 	</bean>
 
-<!--  	<jee:jndi-lookup id="dataSourceRarasCLM" jndi-name="java:comp/env/jdbc/rarasclmDS" expected-type="javax.sql.DataSource" /> -->
-   			
    			
 <!-- Hibernate 4 SessionFactory Bean definition -->
 	<bean id="hibernate4RarasCLMAnnotatedSessionFactory"

@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemMenu;
 import es.jclm.cs.rarasclm.anotations.RarasClmItemModulo;
 import es.jclm.cs.rarasclm.entities.CasoRevisionUsuario;
-import es.jclm.cs.rarasclm.entities.DatosAuxiliaresCacheados;
 import es.jclm.cs.rarasclm.entities.MensajeResultado;
 import es.jclm.cs.rarasclm.entities.MensajeTipo;
 import es.jclm.cs.rarasclm.entities.UserRarasClm;
 import es.jclm.cs.rarasclm.service.CasoRevisionService;
+import es.jclm.cs.rarasclm.util.DatosAuxiliaresCacheados;
 
 
 /**

@@ -1,6 +1,9 @@
 package es.jclm.cs.rarasclm.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.slf4j.Logger;
@@ -8,8 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import es.jclm.cs.rarasclm.entities.Caso;
-
-
+import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -209,9 +211,6 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 			}
 		}
 	}
-
-	
-	
 	
 	private String createBodyQuery(int seccion, 
 			String cip, 
@@ -333,4 +332,24 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 		}
 
 	}
+
+	//Agregados útiles para estadísticas básicas
+	public Map<Integer,Integer> getBasesDiagnosticoCount() throws ServiceRarasCLMException {
+		HashMap<Integer, Integer> ret = new HashMap<>();
+		String sHql = "select c.baseDiagnostico, count(c.baseDiagnostico) from Caso c group by c.baseDiagnostico";
+		Session session = this.sf.openSession();
+		try {
+			Query q = session.createQuery(sHql);
+			List queryResult = q.list();
+			int tamanio = queryResult.size();
+			return ret;
+		} catch (Exception ex) {
+			throw new ServiceRarasCLMException(ex.getMessage());
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}
+	
 }
