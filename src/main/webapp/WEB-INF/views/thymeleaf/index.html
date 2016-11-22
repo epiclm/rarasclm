@@ -112,7 +112,8 @@
 <body>
 	<div id="contenido"  layout:fragment="content">	
 		<div class="row">
-			<p class="col-md-12" th:text="|${userCLM.nombre} ${userCLM.apellido01} ${userCLM.apellido02}, último acceso ${#dates.format(userCLM.ultimoAcceso,'dd/MM/yyyy  HH:mm')}|"></p>
+			<p class="col-md-12" th:if="${userCLM.ultimoAcceso!=null}" th:text="|${userCLM.nombre} ${userCLM.apellido01} ${userCLM.apellido02}, último acceso ${#dates.format(userCLM.ultimoAcceso,'dd/MM/yyyy HH:mm')}|"></p>
+			<p class="col-md-12" th:if="${userCLM.ultimoAcceso==null}" th:text="|${userCLM.nombre} ${userCLM.apellido01} ${userCLM.apellido02}, último acceso (No Conocido)|"></p>
 		</div>
 		<div class="row">
 			<div class="col-md-12">

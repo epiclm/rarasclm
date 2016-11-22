@@ -132,7 +132,6 @@ public class EnfermedadRaraController extends BaseController {
 		return "redirect:/enfermedad/enfrara/show/" + enf.getEnfermedadRaraId();
 	}
 
-
 	@RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
 	public String setupShowForm(@PathVariable String id, Model model) {
 		getRoute().setId(id);

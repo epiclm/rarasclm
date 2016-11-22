@@ -3,15 +3,94 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout/rarasClmLayout">
 <head>
+<script type="text/javascript" th:inline="javascript"></script>
+<script type="text/javascript" th:src="@{/bower_components/chart.js/dist/Chart.min.js}"></script>  
 <script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+$(document)
+.ready(function() {	
+	
+	var ctxSectoresBaseDTCO = document.getElementById("chart-sectores-baseDTCO").getContext("2d");
+	var datosSectoresBaseDTCO = [];
+	var chartSectoresBaseDTCO = null;
+	
+	$.ajax({
+		url:'/'+ contextApp + '/admin/estadistica/basedtco/json',
+		dataType:'json',
+	}).fail(function(jqXHR, textStatus, errorThrown)   {
 
+	}).done(function(data, textStatus, jqXHR)   {
+		var datos = []; 
+		$.map(data,function(val,i) {
+			datos[val.baseDiagnostico.baseDTCO-1] = val.numCasos;
+		});
+		creaChartSectoresBaseDTCO(datos);
+	}).always(function() {
+		
+	});
+	
+	function creaChartSectoresBaseDTCO(datos) {
+		chartSectoresBaseDTCO = new Chart(ctxSectoresBaseDTCO, 
+			{
+				type: 'pie',
+				maintainAspectRatio: true,
+				responsive: false,
+				data: {
+				    datasets: [{
+				        data: datos,
+				        backgroundColor: [
+				            "#27D910",
+				            "#FBC020",
+				            "#777E66",
+				            "#ABABAB",
+				            "#88AACC",
+				            "#DF9573",
+				            "#749F94",
+				            "#946F94",
+				            "#555555"
+				        ],
+				        label: 'My dataset' // for legend
+				    }],
+				    labels: [
+				        "1 Evidencia",
+				        "2 Revisión HC",
+				        "3 CMBD C1",
+				        "4 CMBD Sucesivos",
+				        "5 Otras Fuentes",
+				        "6 HC Masiva",
+				        "7 En Espera",
+				        "8 No Rara Validado",
+				        "9 DESCONOCIDO"
+				    ]
+				}
+			});
+	}
+	
+});       
+/*]]>*/
 </script>
 </head>
 <body>
 	<div id="contenido" layout:fragment="content">
 		<ol th:replace="fragment/adminBarra"></ol>
 		<div class="row">
-			<h2>Inicio</h2>
+			<h3>Datos del Registro:</h3>
+			<ul>
+				<li>
+				<h4>Número de casos según la base del diagnóstico:</h4>
+				<canvas id="chart-sectores-baseDTCO" height="80" ></canvas>
+				<table style="margin-top:15px;" class="table table-condensed" th:if="${estadisticaCasosBaseDTCO}!=null">
+					<tr>
+						<td></td>
+						<td>Num. Casos</td>
+					</tr>
+					<tr th:each=" b : ${estadisticaCasosBaseDTCO}">
+						<td th:text="|${b.baseDiagnostico.baseDTCO} ${b.baseDiagnostico.deno}|"></td>
+						<td class="cip" th:text="${b.numCasos}"></td>
+					</tr>
+				</table>
+				</li>
+			</ul>
 		</div>
 	</div>
 </body>

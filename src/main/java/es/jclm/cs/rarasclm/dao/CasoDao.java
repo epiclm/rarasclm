@@ -10,7 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import es.jclm.cs.rarasclm.entities.BaseDiagnostico;
+import es.jclm.cs.rarasclm.entities.BasesDiagnosticoSpainRDR;
 import es.jclm.cs.rarasclm.entities.Caso;
+import es.jclm.cs.rarasclm.entities.EstadisticaModelCasosBaseDTCO;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 
 @Repository
@@ -334,15 +337,13 @@ public class CasoDao extends BaseEntityDao<Caso, String> {
 	}
 
 	//Agregados útiles para estadísticas básicas
-	public Map<Integer,Integer> getBasesDiagnosticoCount() throws ServiceRarasCLMException {
-		HashMap<Integer, Integer> ret = new HashMap<>();
-		String sHql = "select c.baseDiagnostico, count(c.baseDiagnostico) from Caso c group by c.baseDiagnostico";
+	public List<EstadisticaModelCasosBaseDTCO> getBasesDiagnosticoCount() throws ServiceRarasCLMException {
+		String sHql = "select new es.jclm.cs.rarasclm.entities.EstadisticaModelCasosBaseDTCO(c.baseDiagnostico, count(c.baseDiagnostico)) from Caso c group by c.baseDiagnostico";
 		Session session = this.sf.openSession();
 		try {
 			Query q = session.createQuery(sHql);
-			List queryResult = q.list();
-			int tamanio = queryResult.size();
-			return ret;
+			List<EstadisticaModelCasosBaseDTCO> queryResult = q.list();
+			return queryResult;
 		} catch (Exception ex) {
 			throw new ServiceRarasCLMException(ex.getMessage());
 		} finally {
