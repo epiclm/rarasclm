@@ -174,6 +174,8 @@ public class PacienteController extends BaseController {
 		if(request.getSession().getAttribute(RarasClmConstantes.OBJETO_PACIENTE_PRE_SESSION)!=null) {
 			nuevoPaciente = (NuevoPacienteModelView)request.getSession().getAttribute(RarasClmConstantes.OBJETO_PACIENTE_PRE_SESSION);
 		} else {
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_PACIENTE_SESION,null);
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_CASO_SESION,null);
 			nuevoPaciente = new NuevoPacienteModelView();
 			nuevoPaciente.setSexo('9');
 		}

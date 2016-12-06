@@ -69,8 +69,6 @@ function mensajeSuccess(mensaje) {
 	$('#mensaje-modal').modal('show');
 }
 
-
-
 function showMensaje(mensaje) {
 	if(mensaje.tipo>0) {
 		mensajeSuccess(mensaje.mensaje);
@@ -133,6 +131,11 @@ function addMensanjesFuncionalidad(configuracion) {
 		   </div>
 		</div>
 	</div>
+<!-- 	<div id="barra-debug" style="position:absolute; left:450px; top:60px; background-color: #000; color: #FFF; z-index: 9999"> -->
+<!-- 		<div> -->
+<!-- 			<p th:text="|Modulo:${route.modulo} Entidad:${route.entidad} Acción:${route.accion} id:${route.id} id2:${route.id2} baseUrl:${route.baseUrl}|"></p> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
 	<div id="contenido" class="container"  layout:fragment="content">
 
 	</div>
