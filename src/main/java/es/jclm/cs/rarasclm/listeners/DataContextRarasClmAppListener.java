@@ -12,11 +12,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.ContextStartedEvent;
+import org.springframework.web.context.support.AbstractRefreshableWebApplicationContext;
 
 import es.jclm.cs.rarasclm.entities.EnfermedadCie10;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
@@ -72,7 +77,37 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 	
 	
 	public void onApplicationEvent(ContextRefreshedEvent evt) {
-	
+		
+		//Mensaje de inicio 
+		StringBuffer sbInicio = new StringBuffer();
+		
+		//obtenemos el contexto web de la aplicación
+		ApplicationContext applicationContext = ((ContextRefreshedEvent) evt).getApplicationContext();
+		
+		//El contexto en el que se ejecuta spring tiene que ser una aplicación web.
+		AbstractRefreshableWebApplicationContext webApplicationContext = null;
+		ServletContext servletContext = null;
+		
+		//Se comprueba que es una aplicación web y se obtiene referencia al ServletContext
+		if(applicationContext instanceof AbstractRefreshableWebApplicationContext) {
+			webApplicationContext = (AbstractRefreshableWebApplicationContext)applicationContext;
+			servletContext = webApplicationContext.getServletContext();
+		}
+		sbInicio.append("\n\n*****************************************************************\n");
+		sbInicio.append("* WEB RARAS CLM                                                    \n");
+		if(System.getProperty("catalina.base")!=null)
+			sbInicio.append(String.format("* CATALINA_BASE = %s\n",System.getProperty("catalina.base")).toString());
+		if(System.getProperty("catalina.home")!=null)
+			sbInicio.append(String.format("* CATALINA_HOME = %s\n",System.getProperty("catalina.home")).toString());
+		if(servletContext!=null) {
+			sbInicio.append(String.format("* Servidor de Aplicaciones %s\n",  servletContext.getServerInfo()));
+			sbInicio.append(String.format("* Directorio de despliegue : %s\n",servletContext.getRealPath(File.separator)));
+			sbInicio.append(String.format("* Servidor de Aplicaciones %s\n",  servletContext.getServerInfo()));
+			sbInicio.append(String.format("* Servlet API versión: %s.%s\n",   servletContext.getMajorVersion(), servletContext.getMinorVersion()));
+		}
+		sbInicio.append("*****************************************************************\n");
+		sbInicio.append("\n");
+		log.info(sbInicio.toString());
 		log.info("Generando la estructura de módulos de la aplicación rarasCLM");
 		try {
 			log.info("Cargando entidades auxiliares de la aplicación de RarasCLM");
@@ -174,7 +209,5 @@ public class DataContextRarasClmAppListener implements ApplicationListener<Conte
 		}
 		return ret;
 	}
-
-	
 	
 }

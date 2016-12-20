@@ -15,7 +15,11 @@ public class InterceptorGenera extends HandlerInterceptorAdapter {
 	static Log log = LogFactory.getLog(InterceptorGenera.class.getName());
 
 	
-	
+	/******************************************************************
+	 * Este interceptor examina el atributo del usuario Generar
+	 * SI VERDADERO - Redirecciona a la página de regenerar contraseña
+	 * SI FALSO - No hace nada
+	 ******************************************************************/
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler)
 		    throws Exception {
@@ -43,8 +47,6 @@ public class InterceptorGenera extends HandlerInterceptorAdapter {
 		//after the handler is executed
 		public void postHandle(
 			HttpServletRequest request, HttpServletResponse response,
-			Object handler, ModelAndView modelAndView) {
-
-		
+			Object handler, ModelAndView modelAndView) {	
 		}
 }
