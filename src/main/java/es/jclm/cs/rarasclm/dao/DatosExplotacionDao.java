@@ -5,6 +5,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
 import javax.transaction.Transactional;
 
 import org.hibernate.FlushMode;
@@ -16,6 +17,7 @@ import org.hibernate.internal.SessionFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -24,21 +26,35 @@ import java.sql.ResultSet;
 
 import es.jclm.cs.rarasclm.entities.VPacienteCaso;
 
+/*
+ * DAO de exportación de datos
+ * 
+Nota: El rendimiento con Hibernate era muy deficiente
+      Por esta razón se recurre a obtener la conexión y lanzar
+      la consulta con SQL directamente
+*/
+
 @Repository
 @Transactional
 public class DatosExplotacionDao {
 	
 	private static final Logger log = LoggerFactory.getLogger(DatosExplotacionDao.class);
 	
+	private String szSql = "SELECT pc FROM VPacienteCaso pc ORDER BY pc.idPaciente asc, pc.numCaso asc";
+	
+	@Autowired 
+	private ApplicationContext appSpringContext;
+	
 	@Autowired
 	protected SessionFactory sf;
 	
+	//Rendimiento no óptimo (Mediante Hibernate)
 	public List<VPacienteCaso> getDatosExplotacionHibernate() throws BusquedaDAOException {
 		Session session = sf.openSession();
 		session.setDefaultReadOnly(true);
 		session.setFlushMode(FlushMode.NEVER);
 		try {
-			Query query = session.createQuery("SELECT pc FROM VPacienteCaso pc ORDER BY pc.idPaciente asc, pc.numCaso asc");
+			Query query = session.createQuery(szSql);
 			query.setReadOnly(true);
 			return (List<VPacienteCaso>) query.list();
 		} catch (Exception ex) {
@@ -51,13 +67,26 @@ public class DatosExplotacionDao {
 		}
 	}
 	
-	public List<VPacienteCaso> getDatosExplotacionJDBC() throws BusquedaDAOException {
-		Session session = sf.getCurrentSession();
-		org.hibernate.SessionFactory sessionFactory=session.getSessionFactory();
-		ConnectionProvider cp=((SessionFactoryImpl)sessionFactory).getConnectionProvider();
+	public List<VPacienteCaso> getDatosExplotacionJDBC() throws BusquedaDAOException, SQLException {
+		
+		/*Intento de obtener el datasourece a través de de la sesion de hibernate
+		* ERROR DETECTADO AL SUBIR A SERVIDOR AZSI DE PRUEBAS
+		*		-> Se mandaba siempre el usuario root al servidor de bd.
+		*		   cuando mysql no lo tenía configurado
+		*		   Daba error, cuando era root funcionaba bien
+		* 		   (Esto se hace para no "hardcorear" la conexión aquí)
+		*/
+		
+		//Session session = sf.getCurrentSession();
+		//org.hibernate.SessionFactory sessionFactory=session.getSessionFactory();
+		//ConnectionProvider cp=((SessionFactoryImpl)sessionFactory).getConnectionProvider();
+		/* Segundo intento obtener el datasource, esta vez mediante spring */
+		DataSource ds = (DataSource) appSpringContext.getBean("dataSourceRarasCLM");
+		Connection connection = ds.getConnection();
+		
 		try {
 			List<VPacienteCaso> ret = new ArrayList<VPacienteCaso>();
-			Connection connection = cp.getConnection();
+			//Connection connection = cp.getConnection();
 			Statement st = connection.createStatement();
 			String sSqlQuery = "SELECT * FROM v_paciente_caso ORDER BY id_caso";
 			ResultSet rs = st.executeQuery(sSqlQuery);
@@ -141,11 +170,11 @@ public class DatosExplotacionDao {
 			st.close();
 			return ret;
 		} catch (SQLException ex) {
-			log.error(ex.getMessage());
+			log.error(ex.getMessage(),ex);
 			throw new BusquedaDAOException(ex);
 		} finally {
-			if (session != null && session.isOpen()) {
-				session.close();
+			if (connection!=null && !connection.isClosed()) {
+				connection.close();
 			}
 		}
 	}
