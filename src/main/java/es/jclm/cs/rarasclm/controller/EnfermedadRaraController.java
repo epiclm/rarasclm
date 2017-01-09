@@ -7,6 +7,8 @@ package es.jclm.cs.rarasclm.controller;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ import es.jclm.cs.rarasclm.entities.AccionResultado;
 import es.jclm.cs.rarasclm.entities.EnfermedadCie9mc;
 import es.jclm.cs.rarasclm.entities.EnfermedadCodigoLiteral;
 import es.jclm.cs.rarasclm.entities.EnfermedadRara;
+import es.jclm.cs.rarasclm.entities.MensajeResultado;
+import es.jclm.cs.rarasclm.entities.MensajeTipo;
 import es.jclm.cs.rarasclm.entities.MergeResult;
 import es.jclm.cs.rarasclm.entities.Paciente;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraCie10Service;
@@ -37,6 +41,7 @@ import es.jclm.cs.rarasclm.service.EnfermedadRaraCie9mcService;
 import es.jclm.cs.rarasclm.service.EnfermedadRaraService;
 import es.jclm.cs.rarasclm.service.ServiceRarasCLMException;
 import es.jclm.cs.rarasclm.util.MergeEntity;
+import es.jclm.cs.rarasclm.util.RarasClmConstantes;
 
 /**
  * The Class EnfermedadRaraController.
@@ -55,6 +60,9 @@ public class EnfermedadRaraController extends BaseController {
 
 	@Autowired
 	private EnfermedadRaraCie10Service enfermedadCie10Service;
+	
+	@Autowired
+	HttpServletRequest request;
 
 	static Log log = LogFactory.getLog(EnfermedadRaraController.class.getName());
 
@@ -89,7 +97,13 @@ public class EnfermedadRaraController extends BaseController {
 	/*Carga el formulario*/
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public String setupEditForm(@PathVariable String id, Model model) {
-		model.addAttribute("enfermedadRara", enfermedadService.getEnfermedadRaraById(id));
+		EnfermedadRara enfermedadRara;
+		enfermedadRara = enfermedadService.getEnfermedadRaraById(id);
+		if(enfermedadRara==null) {
+			//evita errores en la vista
+			enfermedadRara = new EnfermedadRara();
+		}
+		model.addAttribute("enfermedadRara", enfermedadRara);
 		return "enfermedad/forms/enfRaraEdit";
 	}
 
@@ -98,12 +112,22 @@ public class EnfermedadRaraController extends BaseController {
 	/* Procesa el formulario */
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String submitForm(@PathVariable String id, @ModelAttribute("enfermedadRara") EnfermedadRara enf, SessionStatus status) {
+		MensajeResultado mensaje = new MensajeResultado();
+		EnfermedadRara enfermedadRara;
 		try {	
-			EnfermedadRara enfermedadRara = enfermedadService.Buscar(id);
+			enfermedadRara = enfermedadService.Buscar(id);
 			MergeResult<EnfermedadRara> enfermedadMerge = new MergeEntity<EnfermedadRara>().merge(enfermedadRara,enf);
 			enfermedadService.Actualizar(enfermedadMerge.getMergeObject());
+			StringBuilder sb = new StringBuilder();
+			sb.append(String.format("<p><b>ACTUALIZACIÓN CORRECTA</b></p>Enfermedad : %s</p>\n",enfermedadRara.getLiteral()));
+			mensaje.setTipo(MensajeTipo.OK);
+			mensaje.setMensaje(sb.toString());
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_MENSAJE_SESION,mensaje);
 		} catch (Exception ex) {
-			
+			mensaje.setTipo(MensajeTipo.ERROR);
+			mensaje.setMensaje(ex.getMessage());
+			request.getSession().setAttribute(RarasClmConstantes.OBJETO_MENSAJE_SESION,mensaje);
+			log.error(ex.getMessage(),ex);
 		}
 		return "redirect:/enfermedad/enfrara/edit/"+id;
 	}

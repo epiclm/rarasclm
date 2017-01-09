@@ -26,6 +26,7 @@
     "ckeditor": "4.5.10",
     "bootstrap": "3.3.7",
     "bootstrap-switch": "3.3.2",
-    "chart.js": "^2.4.0"
+    "chart.js": "^2.4.0",
+    "jscip": "^1.0.2"
   }
 }

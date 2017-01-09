@@ -1,0 +1,23 @@
+{
+  "name": "jscip",
+  "version": "1.0.1",
+  "description": "Validador de Código de Identificador de Paciente del Servicio de Salud de Castilla-La Mancha SESCAM",
+  "main": "CIP.js",
+  "authors": [
+    "Ricardo Ortega Galiana"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "CIP",
+    "SESCAM",
+    "JCCM"
+  ],
+  "homepage": "https://github.com/ricortegal/jscip",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
