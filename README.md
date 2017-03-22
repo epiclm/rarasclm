@@ -1,2 +1,5 @@
-# Registro de Enfermedades Raras de Castilla-La Mancha #
+# Registro de Enfermedades Raras de Castilla-La Mancha 
+
+Proyecto financiado con los fondos para ESTRATEGIAS  FRENTE A ENFERMEDADES RARAS Y OTRAS ESTRATEGIAS EN SALUD
+SEGÚN ACUERDO DEL CONSEJO INTERTERRITORIAL DEL SNS DE 13/04/2016
 
